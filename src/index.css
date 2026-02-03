@@ -1,0 +1,23 @@
+:root {
+  font-family: "Georgia", "Times New Roman", serif;
+  line-height: 1.6;
+  font-weight: 400;
+  color: #1f1f1f;
+  background-color: #0b2b3c;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}

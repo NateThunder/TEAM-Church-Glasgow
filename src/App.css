@@ -1,0 +1,113 @@
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  color: #f7f9fb;
+  background: #0b2b3c;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.nav-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #ffffff;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.action-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(5, 15, 25, 0.25);
+}
+
+.action-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.action-watch {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.action-give {
+  background: linear-gradient(120deg, #7c35ff, #a637ff);
+}
+
+.brand-strong {
+  font-weight: 700;
+}
+
+.brand-light {
+  font-weight: 300;
+  opacity: 0.85;
+}
+
+.nav-links {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #e9eef2;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.nav-link-active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.page-content {
+  flex: 1;
+  padding: 40px 32px;
+}
+
+.page {
+  max-width: 900px;
+  color: #ffffff;
+}
+
+.site-footer {
+  padding: 20px 32px;
+  border-top: 1px solid #e7e7e7;
+  font-size: 14px;
+  color: #666;
+}
