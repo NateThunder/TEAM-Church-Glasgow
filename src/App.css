@@ -2,15 +2,58 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: #04141c;
+  color: #ffffff;
+  font-family: "Roboto", system-ui, sans-serif;
+}
+
+.video-hero {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  min-height: 420px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 20, 28, 0.2) 0%,
+    rgba(4, 20, 28, 0.6) 100%
+  );
 }
 
 .site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 18px 32px;
   color: #f7f9fb;
-  background: #0b2b3c;
+  background: rgba(11, 43, 60, var(--frost-alpha));
+  backdrop-filter: blur(var(--frost-blur));
+  -webkit-backdrop-filter: blur(var(--frost-blur));
+  box-shadow: 0 10px 24px rgba(6, 18, 28, var(--frost-shadow));
+  z-index: 10;
+  transition: background 150ms ease, box-shadow 150ms ease,
+    backdrop-filter 150ms ease;
+  --frost-alpha: 0;
+  --frost-blur: 0px;
+  --frost-shadow: 0;
 }
 
 .brand {
@@ -20,6 +63,29 @@
   font-size: 20px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
+}
+
+.brand-logo {
+  height: 62px;
+  width: auto;
+  display: block;
+}
+
+.logo-dark {
+  display: block;
+}
+
+.logo-light {
+  display: none;
+}
+
+.brand-strong {
+  font-weight: 700;
+}
+
+.brand-light {
+  font-weight: 300;
+  opacity: 0.85;
 }
 
 .nav-center {
@@ -62,16 +128,7 @@
 }
 
 .action-give {
-  background: linear-gradient(120deg, #7c35ff, #a637ff);
-}
-
-.brand-strong {
-  font-weight: 700;
-}
-
-.brand-light {
-  font-weight: 300;
-  opacity: 0.85;
+  background: #7851a9;
 }
 
 .nav-links {
@@ -97,17 +154,45 @@
 
 .page-content {
   flex: 1;
-  padding: 40px 32px;
+  padding: 48px 32px 40px;
+  position: relative;
+  z-index: 1;
 }
 
 .page {
   max-width: 900px;
   color: #ffffff;
+  margin: 0 auto;
 }
 
 .site-footer {
   padding: 20px 32px;
-  border-top: 1px solid #e7e7e7;
+  border-top: 1px solid #1c3342;
   font-size: 14px;
-  color: #666;
+  color: #b7c2cb;
+}
+
+@media (max-width: 768px) {
+  .video-hero {
+    height: 60vh;
+    min-height: 360px;
+  }
+
+  .site-header {
+    padding: 16px 20px;
+  }
+
+  .page-content {
+    padding: 40px 20px 32px;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .logo-dark {
+    display: none;
+  }
+
+  .logo-light {
+    display: block;
+  }
 }
