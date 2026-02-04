@@ -12,11 +12,90 @@ interface LayoutProps {
   children: ReactNode
 }
 
+function DrawerIcon({ name }: { name: string }) {
+  switch (name) {
+    case 'Home':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 11L12 4l8 7v8a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z" />
+        </svg>
+      )
+    case 'Watch':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="12" rx="2" />
+          <path d="M10 9l5 3-5 3z" />
+        </svg>
+      )
+    case 'About':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 10v6" />
+          <circle cx="12" cy="7" r="1" />
+        </svg>
+      )
+    case 'Connect':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="7" cy="12" r="3" />
+          <circle cx="17" cy="12" r="3" />
+          <path d="M10 12h4" />
+        </svg>
+      )
+    case 'Groups':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="9" cy="8" r="3" />
+          <circle cx="17" cy="9" r="2.5" />
+          <path d="M4 20c0-3 3-5 6-5s6 2 6 5" />
+          <path d="M14.5 15.5c2.2.4 4 1.8 4 4.5" />
+        </svg>
+      )
+    case 'Serve':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 21c-4-2.5-7-5.5-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 3.5-3 6.5-7 9z" />
+        </svg>
+      )
+    case 'Events':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M3 9h18" />
+          <path d="M8 3v4M16 3v4" />
+        </svg>
+      )
+    case 'Give':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 21c-4-2.5-7-5.5-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 3.5-3 6.5-7 9z" />
+        </svg>
+      )
+    case 'WatchLive':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="14" height="12" rx="2" />
+          <path d="M8 9l5 3-5 3z" />
+          <path d="M19 8a3 3 0 0 1 0 6" />
+          <path d="M21 6a5 5 0 0 1 0 10" />
+        </svg>
+      )
+    default:
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+        </svg>
+      )
+  }
+}
+
 export default function Layout({ navItems, children }: LayoutProps) {
   const location = useLocation()
   const isHome = location.pathname === '/'
   const headerRef = useRef<HTMLElement | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isPortraitMobile, setIsPortraitMobile] = useState(false)
 
   useEffect(() => {
     const header = headerRef.current
@@ -58,6 +137,61 @@ export default function Layout({ navItems, children }: LayoutProps) {
     }
   }, [])
 
+  useEffect(() => {
+    const update = () => {
+      setIsPortraitMobile(window.innerHeight > window.innerWidth)
+    }
+
+    update()
+    window.addEventListener('resize', update)
+    window.addEventListener('orientationchange', update)
+
+    return () => {
+      window.removeEventListener('resize', update)
+      window.removeEventListener('orientationchange', update)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isMenuOpen) return
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false)
+      }
+    }
+
+    const scrollY = window.scrollY || window.pageYOffset
+    const body = document.body
+    const html = document.documentElement
+
+    body.style.position = 'fixed'
+    body.style.top = `-${scrollY}px`
+    body.style.left = '0'
+    body.style.right = '0'
+    body.style.width = '100%'
+    body.style.overflow = 'hidden'
+    html.style.height = '100%'
+    body.style.height = '100%'
+
+    window.addEventListener('keydown', onKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      const top = body.style.top
+      body.style.position = ''
+      body.style.top = ''
+      body.style.left = ''
+      body.style.right = ''
+      body.style.width = ''
+      body.style.overflow = ''
+      html.style.height = ''
+      body.style.height = ''
+      const y = top ? -parseInt(top, 10) : 0
+      window.scrollTo(0, y)
+    }
+  }, [isMenuOpen])
+
   const toggleMenu = () => {
     setIsMenuOpen((current) => !current)
   }
@@ -66,19 +200,28 @@ export default function Layout({ navItems, children }: LayoutProps) {
     setIsMenuOpen(false)
   }
 
+  const mobileDrawerItems = navItems
+
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${isPortraitMobile ? 'is-portrait' : ''}`}>
       {isHome ? (
         <div className="video-hero" aria-hidden="true">
           <video className="hero-video" autoPlay loop muted playsInline>
             <source src="/Video/TEAM%20Church%20Banner.mp4" type="video/mp4" />
           </video>
           <div className="video-overlay" />
+          <div className="hero-banner desktop" aria-live="polite">
+            Sundays at 11:00 AM {'\u00B7'} 12 Whitehill Street Glasgow
+          </div>
+          <div className="hero-banner mobile" aria-live="polite">
+            <span>Sunday at 11:00 AM</span>
+            <span>12 Whitehill Street Glasgow</span>
+          </div>
         </div>
       ) : null}
 
       <header className="site-header" ref={headerRef}>
-        <div className="brand">
+        <NavLink to="/" className="brand" aria-label="Home" onClick={closeMenu}>
           <img
             className="brand-logo logo-dark"
             src="/Logo/Logo-white.png"
@@ -89,7 +232,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
             src="/Logo/Logo-black.png"
             alt="Team Church"
           />
-        </div>
+        </NavLink>
         <div className="nav-center">
           <nav className="nav-links">
             {navItems.map((item) => (
@@ -108,10 +251,10 @@ export default function Layout({ navItems, children }: LayoutProps) {
         </div>
         <div className="nav-actions">
           <a className="action-button action-watch" href="/watch">
-            <span className="action-icon">▶︎</span>Watch Live
+            <span className="action-icon">{'\u25B6'}</span>Watch Live
           </a>
           <a className="action-button action-give" href="/give">
-            <span className="action-icon">♡</span>Give
+            <span className="action-icon">{'\u2661'}</span>Give
           </a>
         </div>
         <button
@@ -127,32 +270,40 @@ export default function Layout({ navItems, children }: LayoutProps) {
         </button>
       </header>
 
-      <div className={`nav-drawer ${isMenuOpen ? 'nav-drawer-open' : ''}`}>
+      <div
+        className={`nav-drawer ${isMenuOpen ? 'nav-drawer-open' : ''}`}
+        aria-hidden={isMenuOpen ? 'false' : 'true'}
+      >
         <button
           className="nav-drawer-backdrop"
           type="button"
           aria-label="Close navigation"
           onClick={closeMenu}
         />
-        <div className="nav-drawer-panel" role="dialog" aria-modal="true">
+        <div
+          className="nav-drawer-panel"
+          role="dialog"
+          aria-modal="true"
+          onClick={(event) => event.stopPropagation()}
+        >
           <div className="nav-drawer-header">
             <span>Menu</span>
-            <button className="nav-drawer-close" type="button" onClick={closeMenu}>
-              �
-            </button>
           </div>
           <nav className="nav-mobile-links">
-            {navItems.map((item) => (
+            {mobileDrawerItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  ['nav-link', isActive ? 'nav-link-active' : ''].join(' ')
+                  ['nav-mobile-link', isActive ? 'nav-link-active' : ''].join(' ')
                 }
                 end={item.path === '/'}
                 onClick={closeMenu}
               >
-                {item.label}
+                <span className="nav-link-icon">
+                  <DrawerIcon name={item.label} />
+                </span>
+                <span className="nav-link-label">{item.label}</span>
               </NavLink>
             ))}
           </nav>
@@ -162,14 +313,14 @@ export default function Layout({ navItems, children }: LayoutProps) {
               href="/watch"
               onClick={closeMenu}
             >
-              <span className="action-icon">?</span>Watch Live
+              <span className="action-icon">{'\u25B6'}</span>Watch Live
             </a>
             <a
               className="action-button action-give"
               href="/give"
               onClick={closeMenu}
             >
-              <span className="action-icon">?</span>Give
+              <span className="action-icon">{'\u2661'}</span>Give
             </a>
           </div>
         </div>
@@ -178,7 +329,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
       <main className="page-content">{children}</main>
 
       <footer className="site-footer">
-        <p>� 2026 Team Church Glasgow</p>
+        <p>{'\u00A9'} 2026 Team Church Glasgow</p>
       </footer>
     </div>
   )
