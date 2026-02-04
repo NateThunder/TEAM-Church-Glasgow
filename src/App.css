@@ -56,6 +56,33 @@
   --frost-shadow: 0;
 }
 
+.hero-banner {
+  position: absolute;
+  top: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: fit-content;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 10px 24px rgba(6, 18, 28, 0.28);
+  text-align: center;
+  z-index: 2;
+}
+
+.hero-banner.mobile {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -184,6 +211,44 @@
   margin-bottom: 14px;
 }
 
+.nav-mobile-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #e9eef2;
+  font-weight: 600;
+}
+
+.nav-link-icon {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.nav-link-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  fill: none;
+}
+
+.nav-link-icon svg path,
+.nav-link-icon svg rect,
+.nav-link-icon svg circle {
+  vector-effect: non-scaling-stroke;
+}
+
+.nav-link-label {
+  font-size: 15px;
+}
+
 .nav-mobile-actions {
   display: flex;
   flex-direction: column;
@@ -194,7 +259,7 @@
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 9;
+  z-index: 9999;
 }
 
 .nav-drawer-backdrop {
@@ -210,7 +275,8 @@
   position: absolute;
   top: 0;
   right: 0;
-  height: 100%;
+  height: 100vh;
+  height: 100dvh;
   width: min(82vw, 320px);
   background: rgba(8, 24, 34, 0.96);
   backdrop-filter: blur(18px);
@@ -222,6 +288,8 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .nav-drawer-open {
@@ -275,6 +343,24 @@
   color: #b7c2cb;
 }
 
+.app-shell.is-portrait .nav-center,
+.app-shell.is-portrait .nav-actions {
+  display: none;
+}
+
+.app-shell.is-portrait .nav-toggle {
+  display: inline-flex !important;
+}
+
+.app-shell.is-portrait .nav-drawer {
+  display: block !important;
+}
+
+
+.app-shell.is-portrait .page-content {
+  padding: 40px 20px 32px;
+}
+
 @media (max-width: 768px) {
   .video-hero {
     height: 60vh;
@@ -308,7 +394,24 @@
   .page-content {
     padding: 40px 20px 32px;
   }
+
+  .hero-banner {
+    top: 86px;
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+
+  .hero-banner.desktop {
+    display: none;
+  }
+
+  .hero-banner.mobile {
+    display: flex;
+  }
+
 }
+
+
 
 @media (min-width: 769px) {
   .nav-drawer {
