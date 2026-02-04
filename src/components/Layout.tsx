@@ -1,5 +1,5 @@
-﻿import type { ReactNode } from 'react'
-import { useEffect, useRef } from 'react'
+import type { ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 
 interface NavItem {
@@ -16,6 +16,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
   const location = useLocation()
   const isHome = location.pathname === '/'
   const headerRef = useRef<HTMLElement | null>(null)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   useEffect(() => {
     const header = headerRef.current
@@ -37,6 +38,10 @@ export default function Layout({ navItems, children }: LayoutProps) {
       header.style.setProperty('--frost-alpha', alpha.toFixed(3))
       header.style.setProperty('--frost-blur', `${blur.toFixed(2)}px`)
       header.style.setProperty('--frost-shadow', shadow.toFixed(3))
+      document.documentElement.style.setProperty(
+        '--header-height',
+        `${header.offsetHeight}px`
+      )
     }
 
     const onScroll = () => {
@@ -52,6 +57,14 @@ export default function Layout({ navItems, children }: LayoutProps) {
       if (frameId) window.cancelAnimationFrame(frameId)
     }
   }, [])
+
+  const toggleMenu = () => {
+    setIsMenuOpen((current) => !current)
+  }
+
+  const closeMenu = () => {
+    setIsMenuOpen(false)
+  }
 
   return (
     <div className="app-shell">
@@ -95,18 +108,77 @@ export default function Layout({ navItems, children }: LayoutProps) {
         </div>
         <div className="nav-actions">
           <a className="action-button action-watch" href="/watch">
-            <span className="action-icon">▶</span>Watch Live
+            <span className="action-icon">▶︎</span>Watch Live
           </a>
           <a className="action-button action-give" href="/give">
             <span className="action-icon">♡</span>Give
           </a>
         </div>
+        <button
+          className="nav-toggle"
+          type="button"
+          aria-label="Toggle navigation"
+          aria-expanded={isMenuOpen}
+          onClick={toggleMenu}
+        >
+          <span className="nav-toggle-line" />
+          <span className="nav-toggle-line" />
+          <span className="nav-toggle-line" />
+        </button>
       </header>
+
+      <div className={`nav-drawer ${isMenuOpen ? 'nav-drawer-open' : ''}`}>
+        <button
+          className="nav-drawer-backdrop"
+          type="button"
+          aria-label="Close navigation"
+          onClick={closeMenu}
+        />
+        <div className="nav-drawer-panel" role="dialog" aria-modal="true">
+          <div className="nav-drawer-header">
+            <span>Menu</span>
+            <button className="nav-drawer-close" type="button" onClick={closeMenu}>
+              �
+            </button>
+          </div>
+          <nav className="nav-mobile-links">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  ['nav-link', isActive ? 'nav-link-active' : ''].join(' ')
+                }
+                end={item.path === '/'}
+                onClick={closeMenu}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+          <div className="nav-mobile-actions">
+            <a
+              className="action-button action-watch"
+              href="/watch"
+              onClick={closeMenu}
+            >
+              <span className="action-icon">?</span>Watch Live
+            </a>
+            <a
+              className="action-button action-give"
+              href="/give"
+              onClick={closeMenu}
+            >
+              <span className="action-icon">?</span>Give
+            </a>
+          </div>
+        </div>
+      </div>
 
       <main className="page-content">{children}</main>
 
       <footer className="site-footer">
-        <p>© 2026 Team Church Glasgow</p>
+        <p>� 2026 Team Church Glasgow</p>
       </footer>
     </div>
   )
