@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 import { useEffect, useRef, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
 import { NavLink, useLocation } from 'react-router-dom'
 
 interface NavItem {
@@ -217,6 +219,13 @@ export default function Layout({ navItems, children }: LayoutProps) {
             <span>Sunday at 11:00 AM</span>
             <span>12 Whitehill Street Glasgow</span>
           </div>
+          <div className="hero-banner-spacer" aria-hidden="true" />
+          <NavLink to="/connect" className="hero-cta">
+            <span className="hero-cta-icon" aria-hidden="true">
+              <FontAwesomeIcon icon={faLocationDot} />
+            </span>
+            Plan a Visit
+          </NavLink>
         </div>
       ) : null}
 
