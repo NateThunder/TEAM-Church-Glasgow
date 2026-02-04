@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
-import { NavLink, useLocation } from 'react-router-dom'
+import { faClock, faLocationDot, faPlay } from '@fortawesome/free-solid-svg-icons'
+import { NavLink, useLocation, useSearchParams } from 'react-router-dom'
 
 interface NavItem {
   path: string
@@ -95,9 +95,22 @@ function DrawerIcon({ name }: { name: string }) {
 export default function Layout({ navItems, children }: LayoutProps) {
   const location = useLocation()
   const isHome = location.pathname === '/'
+  const isWatch = location.pathname === '/watch'
   const headerRef = useRef<HTMLElement | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isPortraitMobile, setIsPortraitMobile] = useState(false)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const query = searchParams.get('q') ?? ''
+
+  const updateQuery = (value: string) => {
+    const next = new URLSearchParams(searchParams)
+    if (value) {
+      next.set('q', value)
+    } else {
+      next.delete('q')
+    }
+    setSearchParams(next, { replace: true })
+  }
 
   useEffect(() => {
     const header = headerRef.current
@@ -210,19 +223,29 @@ export default function Layout({ navItems, children }: LayoutProps) {
         <div className="video-hero" aria-hidden="true">
           <video className="hero-video" autoPlay loop muted playsInline>
             <source src="/Video/TEAM%20Church%20Banner.mp4" type="video/mp4" />
-          </video>
-          <div className="video-overlay" />
-          <div className="hero-banner desktop" aria-live="polite">
-            Sundays at 11:00 AM {'\u00B7'} 12 Whitehill Street Glasgow
-          </div>
-          <div className="hero-banner mobile" aria-live="polite">
-            <span>Sunday at 11:00 AM</span>
-            <span>12 Whitehill Street Glasgow</span>
-          </div>
-          <div className="hero-banner-spacer" aria-hidden="true" />
-          <NavLink to="/connect" className="hero-cta">
-            <span className="hero-cta-icon" aria-hidden="true">
-              <FontAwesomeIcon icon={faLocationDot} />
+            </video>
+            <div className="video-overlay" />
+            <div className="hero-service-banner" aria-live="polite">
+              <div className="hero-service-banner-inner">
+                <div className="hero-service-info">
+                  <span className="hero-service-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faClock} />
+                  </span>
+                  <span className="hero-service-text">
+                    Every Sunday at 11:00 AM {'\u00B7'} 12 Whitehill Street, Glasgow G31 2LH
+                  </span>
+                </div>
+                <NavLink to="/watch" className="hero-service-button">
+                  <span className="hero-service-button-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faPlay} />
+                  </span>
+                  Watch Live Sunday
+                </NavLink>
+              </div>
+            </div>
+            <NavLink to="/connect" className="hero-cta">
+              <span className="hero-cta-icon" aria-hidden="true">
+                <FontAwesomeIcon icon={faLocationDot} />
             </span>
             Plan a Visit
           </NavLink>
@@ -242,6 +265,17 @@ export default function Layout({ navItems, children }: LayoutProps) {
             alt="Team Church"
           />
         </NavLink>
+        {isWatch ? (
+          <div className="nav-search" aria-label="Search videos">
+            <input
+              className="watch-search"
+              type="search"
+              placeholder="Search videos"
+              value={query}
+              onChange={(event) => updateQuery(event.target.value)}
+            />
+          </div>
+        ) : null}
         <div className="nav-center">
           <nav className="nav-links">
             {navItems.map((item) => (
