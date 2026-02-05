@@ -136,27 +136,25 @@ export default function HomePage() {
                   {status === 'loading' || !featured ? (
                     <div className="latest-skeleton latest-skeleton-featured" />
                   ) : (
-                    <a
-                      className="latest-featured-card"
-                      href={featured.videoUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`Play ${featured.title}`}
-                    >
-                      <div className="latest-featured-media">
-                        <img src={featured.thumbnailUrl} alt={featured.title} />
-                        <div className="latest-featured-overlay" />
+                <Link
+                  className="latest-featured-card"
+                  to={`/watch?v=${featured.id}`}
+                  aria-label={`Play ${featured.title}`}
+                >
+                  <div className="latest-featured-media">
+                    <img src={featured.thumbnailUrl} alt={featured.title} />
+                    <div className="latest-featured-overlay" />
                         <span className="latest-play" aria-hidden="true">
                           <svg viewBox="0 0 24 24" focusable="false">
                             <path d="M9 7l8 5-8 5z" />
                           </svg>
                         </span>
                       </div>
-                      <div className="latest-featured-body">
-                        <h3>{featured.title}</h3>
-                        <p>Team Church Glasgow</p>
-                      </div>
-                    </a>
+                  <div className="latest-featured-body">
+                    <h3>{featured.title}</h3>
+                    <p>Team Church Glasgow</p>
+                  </div>
+                </Link>
                   )}
                 </div>
                 <div className="latest-list">
@@ -168,25 +166,23 @@ export default function HomePage() {
                     </>
                   ) : (
                     list.map((video) => (
-                      <a
-                        key={video.id}
-                        className="latest-item"
-                        href={video.videoUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={`Play ${video.title}`}
-                      >
-                        <div className="latest-thumb">
-                          <img src={video.thumbnailUrl} alt={video.title} />
-                        </div>
-                        <div className="latest-item-body">
-                          <h4>{video.title}</h4>
-                          <p>Team Church Glasgow</p>
-                        </div>
-                      </a>
-                    ))
-                  )}
-                </div>
+                  <Link
+                    key={video.id}
+                    className="latest-item"
+                    to={`/watch?v=${video.id}`}
+                    aria-label={`Play ${video.title}`}
+                  >
+                    <div className="latest-thumb">
+                      <img src={video.thumbnailUrl} alt={video.title} />
+                    </div>
+                    <div className="latest-item-body">
+                      <h4>{video.title}</h4>
+                      <p>Team Church Glasgow</p>
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
               </div>
             )}
           </section>
