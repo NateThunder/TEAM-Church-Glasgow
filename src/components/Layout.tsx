@@ -99,8 +99,11 @@ export default function Layout({ navItems, children }: LayoutProps) {
   const headerRef = useRef<HTMLElement | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isPortraitMobile, setIsPortraitMobile] = useState(false)
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark')
   const [searchParams, setSearchParams] = useSearchParams()
   const query = searchParams.get('q') ?? ''
+  const urlMode = searchParams.get('mode')
+  const mode: 'recorded' | 'live' = urlMode === 'live' ? 'live' : 'recorded'
 
   const updateQuery = (value: string) => {
     const next = new URLSearchParams(searchParams)
@@ -108,6 +111,16 @@ export default function Layout({ navItems, children }: LayoutProps) {
       next.set('q', value)
     } else {
       next.delete('q')
+    }
+    setSearchParams(next, { replace: true })
+  }
+
+  const updateMode = (value: 'recorded' | 'live') => {
+    const next = new URLSearchParams(searchParams)
+    if (value === 'live') {
+      next.set('mode', 'live')
+    } else {
+      next.delete('mode')
     }
     setSearchParams(next, { replace: true })
   }
@@ -168,6 +181,31 @@ export default function Layout({ navItems, children }: LayoutProps) {
   }, [])
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const media = window.matchMedia('(prefers-color-scheme: light)')
+    const applyTheme = (isLight: boolean) => {
+      const nextTheme = isLight ? 'light' : 'dark'
+      setTheme(nextTheme)
+      document.documentElement.style.colorScheme = nextTheme
+    }
+
+    applyTheme(media.matches)
+
+    const handler = (event: MediaQueryListEvent) => {
+      applyTheme(event.matches)
+    }
+
+    if (typeof media.addEventListener === 'function') {
+      media.addEventListener('change', handler)
+      return () => media.removeEventListener('change', handler)
+    }
+
+    media.addListener(handler)
+    return () => media.removeListener(handler)
+  }, [])
+
+  useEffect(() => {
     if (!isMenuOpen) return
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -216,9 +254,18 @@ export default function Layout({ navItems, children }: LayoutProps) {
   }
 
   const mobileDrawerItems = navItems
+  const navItemsForHeader = isWatch
+    ? navItems.filter(
+        (item) => item.path !== '/watch' && item.path !== '/give'
+      )
+    : navItems
 
   return (
-    <div className={`app-shell ${isPortraitMobile ? 'is-portrait' : ''}`}>
+    <div
+      className={`app-shell theme-${theme} ${isHome ? 'is-home' : ''} ${
+        isWatch ? 'is-watch' : ''
+      } ${isPortraitMobile ? 'is-portrait' : ''}`}
+    >
       {isHome ? (
         <div className="video-hero" aria-hidden="true">
           <video className="hero-video" autoPlay loop muted playsInline>
@@ -235,7 +282,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
                     Every Sunday at 11:00 AM {'\u00B7'} 12 Whitehill Street, Glasgow G31 2LH
                   </span>
                 </div>
-                <NavLink to="/watch" className="hero-service-button">
+                <NavLink to="/watch?mode=live" className="hero-service-button">
                   <span className="hero-service-button-icon" aria-hidden="true">
                     <FontAwesomeIcon icon={faPlay} />
                   </span>
@@ -266,34 +313,143 @@ export default function Layout({ navItems, children }: LayoutProps) {
           />
         </NavLink>
         {isWatch ? (
-          <div className="nav-search" aria-label="Search videos">
-            <input
-              className="watch-search"
-              type="search"
-              placeholder="Search videos"
-              value={query}
-              onChange={(event) => updateQuery(event.target.value)}
-            />
+          <div className="nav-utility-mobile">
+            <div
+              className="nav-utility"
+              role="search"
+              aria-label="Search videos"
+            >
+              <label className="sr-only" htmlFor="watch-search-mobile">
+                Search videos
+              </label>
+              <span className="watch-search-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M16.5 16.5L21 21" />
+                </svg>
+              </span>
+              <input
+                id="watch-search-mobile"
+                className="watch-search"
+                type="search"
+                placeholder="Search"
+                value={query}
+                disabled={mode === 'live'}
+                aria-disabled={mode === 'live'}
+                onChange={(event) => updateQuery(event.target.value)}
+              />
+              <div className="watch-toggle" role="tablist" aria-label="Video type">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={mode === 'recorded'}
+                  className={`watch-toggle-button${
+                    mode === 'recorded' ? ' is-active' : ''
+                  }`}
+                  onClick={() => updateMode('recorded')}
+                >
+                  Messages
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={mode === 'live'}
+                  className={`watch-toggle-button${
+                    mode === 'live' ? ' is-active' : ''
+                  }`}
+                  onClick={() => updateMode('live')}
+                >
+                  Live
+                </button>
+              </div>
+            </div>
           </div>
         ) : null}
         <div className="nav-center">
           <nav className="nav-links">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }) =>
-                  ['nav-link', isActive ? 'nav-link-active' : ''].join(' ')
-                }
-                end={item.path === '/'}
-              >
-                {item.label}
-              </NavLink>
-            ))}
+            {navItemsForHeader.map((item) => {
+              const link = (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    ['nav-link', isActive ? 'nav-link-active' : ''].join(' ')
+                  }
+                  end={item.path === '/'}
+                >
+                  {item.label}
+                </NavLink>
+              )
+
+              if (item.path !== '/connect') {
+                return link
+              }
+
+              return (
+                <div key={`${item.path}-with-utility`} className="nav-link-group">
+                  {link}
+                  {isWatch ? (
+                    <div
+                      className="nav-utility"
+                      role="search"
+                      aria-label="Search videos"
+                    >
+                      <label className="sr-only" htmlFor="watch-search">
+                        Search videos
+                      </label>
+                      <span className="watch-search-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <circle cx="11" cy="11" r="7" />
+                          <path d="M16.5 16.5L21 21" />
+                        </svg>
+                      </span>
+                      <input
+                        id="watch-search"
+                        className="watch-search"
+                        type="search"
+                        placeholder="Search videos"
+                        value={query}
+                        disabled={mode === 'live'}
+                        aria-disabled={mode === 'live'}
+                        onChange={(event) => updateQuery(event.target.value)}
+                      />
+                      <div
+                        className="watch-toggle"
+                        role="tablist"
+                        aria-label="Video type"
+                      >
+                        <button
+                          type="button"
+                          role="tab"
+                          aria-selected={mode === 'recorded'}
+                          className={`watch-toggle-button${
+                            mode === 'recorded' ? ' is-active' : ''
+                          }`}
+                          onClick={() => updateMode('recorded')}
+                        >
+                          Messages
+                        </button>
+                        <button
+                          type="button"
+                          role="tab"
+                          aria-selected={mode === 'live'}
+                          className={`watch-toggle-button${
+                            mode === 'live' ? ' is-active' : ''
+                          }`}
+                          onClick={() => updateMode('live')}
+                        >
+                          Live
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              )
+            })}
           </nav>
         </div>
         <div className="nav-actions">
-          <a className="action-button action-watch" href="/watch">
+          <a className="action-button action-watch" href="/watch?mode=live">
             <span className="action-icon">{'\u25B6'}</span>Watch Live
           </a>
           <a className="action-button action-give" href="/give">
@@ -351,11 +507,11 @@ export default function Layout({ navItems, children }: LayoutProps) {
             ))}
           </nav>
           <div className="nav-mobile-actions">
-            <a
-              className="action-button action-watch"
-              href="/watch"
-              onClick={closeMenu}
-            >
+              <a
+                className="action-button action-watch"
+                href="/watch?mode=live"
+                onClick={closeMenu}
+              >
               <span className="action-icon">{'\u25B6'}</span>Watch Live
             </a>
             <a

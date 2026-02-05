@@ -15,21 +15,60 @@ const formatDate = (value: string) => {
 export default function WatchPage() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([])
   const [selected, setSelected] = useState<YouTubeVideo | null>(null)
+  const [autoPlayId, setAutoPlayId] = useState<string | null>(null)
   const [mode, setMode] = useState<'recorded' | 'live'>('recorded')
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [error, setError] = useState('')
+  const [nextPageToken, setNextPageToken] = useState<string | null>(null)
   const channelId = import.meta.env.VITE_YOUTUBE_CHANNEL_ID as string | undefined
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const query = searchParams.get('q') ?? ''
+  const urlMode = searchParams.get('mode')
+  const resolvedMode: 'recorded' | 'live' =
+    urlMode === 'live' ? 'live' : 'recorded'
 
-  const updateQuery = (value: string) => {
-    const next = new URLSearchParams(searchParams)
-    if (value) {
-      next.set('q', value)
-    } else {
-      next.delete('q')
+  useEffect(() => {
+    setMode(resolvedMode)
+  }, [resolvedMode])
+
+  const handleSelectVideo = (video: YouTubeVideo) => {
+    setSelected(video)
+    setAutoPlayId(video.id)
+    if (typeof window !== 'undefined' && window.innerWidth >= 769) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-    setSearchParams(next, { replace: true })
+  }
+
+  const handleLoadMore = async () => {
+    if (!nextPageToken || isLoadingMore) return
+    setIsLoadingMore(true)
+    try {
+      const data = await getLatestVideos({
+        pageToken: nextPageToken,
+        useCache: false,
+      })
+      setVideos((prev) => [...prev, ...data.videos])
+      setNextPageToken(data.nextPageToken ?? null)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error'
+      setError(message)
+    } finally {
+      setIsLoadingMore(false)
+    }
+  }
+
+  const handleBackToTop = () => {
+    if (typeof window === 'undefined') return
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const getEmbedUrl = (video: YouTubeVideo) => {
+    if (!autoPlayId || autoPlayId !== video.id) return video.embedUrl
+    const url = new URL(video.embedUrl)
+    url.searchParams.set('autoplay', '1')
+
+    return url.toString()
   }
 
   useEffect(() => {
@@ -39,8 +78,9 @@ export default function WatchPage() {
       try {
         const data = await getLatestVideos()
         if (!active) return
-        setVideos(data)
-        setSelected(data[0] || null)
+        setVideos(data.videos)
+        setSelected(data.videos[0] || null)
+        setNextPageToken(data.nextPageToken ?? null)
         setStatus('idle')
       } catch (err) {
         if (!active) return
@@ -64,38 +104,6 @@ export default function WatchPage() {
 
   return (
     <section className="page watch-page">
-      <div className="watch-top">
-        {mode === 'recorded' ? (
-          <input
-            className="watch-search"
-            type="search"
-            placeholder="Search videos"
-            value={query}
-            onChange={(event) => updateQuery(event.target.value)}
-          />
-        ) : null}
-        <div className="watch-toggle" role="tablist" aria-label="Video type">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mode === 'recorded'}
-            className={`watch-toggle-button${mode === 'recorded' ? ' is-active' : ''}`}
-            onClick={() => setMode('recorded')}
-          >
-            Messages
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mode === 'live'}
-            className={`watch-toggle-button${mode === 'live' ? ' is-active' : ''}`}
-            onClick={() => setMode('live')}
-          >
-            Live
-          </button>
-        </div>
-      </div>
-
       {mode === 'recorded' && status === 'loading' ? (
         <div className="watch-state">Loading videos...</div>
       ) : null}
@@ -138,7 +146,7 @@ export default function WatchPage() {
         <div className="watch-player">
           <iframe
             title={selected.title}
-            src={selected.embedUrl}
+            src={getEmbedUrl(selected)}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
@@ -160,7 +168,7 @@ export default function WatchPage() {
               key={video.id}
               className="watch-card"
               type="button"
-              onClick={() => setSelected(video)}
+              onClick={() => handleSelectVideo(video)}
             >
               <img src={video.thumbnailUrl} alt={video.title} />
               <div className="watch-card-body">
@@ -170,6 +178,25 @@ export default function WatchPage() {
               </div>
             </button>
           ))}
+          {nextPageToken ? (
+            <div className="watch-load-more">
+              <button
+                type="button"
+                className="watch-load-more-button"
+                onClick={handleLoadMore}
+                disabled={isLoadingMore}
+              >
+                {isLoadingMore ? 'Loading...' : 'More Videos'}
+              </button>
+              <button
+                type="button"
+                className="watch-load-more-button watch-back-top-button"
+                onClick={handleBackToTop}
+              >
+                Back to Top
+              </button>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </section>
