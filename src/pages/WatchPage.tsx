@@ -2,16 +2,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getLatestVideos, type YouTubeVideo } from '../services/youtube'
 
-const formatDate = (value: string) => {
-  if (!value) return ''
-  const date = new Date(value)
-  return new Intl.DateTimeFormat('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).format(date)
-}
-
 export default function WatchPage() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([])
   const [selected, setSelected] = useState<YouTubeVideo | null>(null)
