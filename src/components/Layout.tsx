@@ -96,6 +96,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
   const location = useLocation()
   const isHome = location.pathname === '/'
   const isWatch = location.pathname === '/watch'
+  const isGroups = location.pathname === '/groups'
   const headerRef = useRef<HTMLElement | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isPortraitMobile, setIsPortraitMobile] = useState(false)
@@ -264,7 +265,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
     <div
       className={`app-shell theme-${theme} ${isHome ? 'is-home' : ''} ${
         isWatch ? 'is-watch' : ''
-      } ${isPortraitMobile ? 'is-portrait' : ''}`}
+      } ${isGroups ? 'is-groups' : ''} ${isPortraitMobile ? 'is-portrait' : ''}`}
     >
       {isHome ? (
         <div className="video-hero" aria-hidden="true">
@@ -312,57 +313,87 @@ export default function Layout({ navItems, children }: LayoutProps) {
             alt="Team Church"
           />
         </NavLink>
-        {isWatch ? (
+        {isWatch || isGroups ? (
           <div className="nav-utility-mobile">
-            <div
-              className="nav-utility"
-              role="search"
-              aria-label="Search videos"
-            >
-              <label className="sr-only" htmlFor="watch-search-mobile">
-                Search videos
-              </label>
-              <span className="watch-search-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="11" cy="11" r="7" />
-                  <path d="M16.5 16.5L21 21" />
-                </svg>
-              </span>
-              <input
-                id="watch-search-mobile"
-                className="watch-search"
-                type="search"
-                placeholder="Search"
-                value={query}
-                disabled={mode === 'live'}
-                aria-disabled={mode === 'live'}
-                onChange={(event) => updateQuery(event.target.value)}
-              />
-              <div className="watch-toggle" role="tablist" aria-label="Video type">
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={mode === 'recorded'}
-                  className={`watch-toggle-button${
-                    mode === 'recorded' ? ' is-active' : ''
-                  }`}
-                  onClick={() => updateMode('recorded')}
+            {isWatch ? (
+              <div
+                className="nav-utility"
+                role="search"
+                aria-label="Search videos"
+              >
+                <label className="sr-only" htmlFor="watch-search-mobile">
+                  Search videos
+                </label>
+                <span className="watch-search-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="M16.5 16.5L21 21" />
+                  </svg>
+                </span>
+                <input
+                  id="watch-search-mobile"
+                  className="watch-search"
+                  type="search"
+                  placeholder="Search"
+                  value={query}
+                  disabled={mode === 'live'}
+                  aria-disabled={mode === 'live'}
+                  onChange={(event) => updateQuery(event.target.value)}
+                />
+                <div
+                  className="watch-toggle"
+                  role="tablist"
+                  aria-label="Video type"
                 >
-                  Messages
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={mode === 'live'}
-                  className={`watch-toggle-button${
-                    mode === 'live' ? ' is-active' : ''
-                  }`}
-                  onClick={() => updateMode('live')}
-                >
-                  Live
-                </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={mode === 'recorded'}
+                    className={`watch-toggle-button${
+                      mode === 'recorded' ? ' is-active' : ''
+                    }`}
+                    onClick={() => updateMode('recorded')}
+                  >
+                    Messages
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={mode === 'live'}
+                    className={`watch-toggle-button${
+                      mode === 'live' ? ' is-active' : ''
+                    }`}
+                    onClick={() => updateMode('live')}
+                  >
+                    Live
+                  </button>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div
+                className="nav-utility nav-utility--groups"
+                role="search"
+                aria-label="Search groups"
+              >
+                <label className="sr-only" htmlFor="groups-search-mobile">
+                  Search groups
+                </label>
+                <span className="watch-search-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="M16.5 16.5L21 21" />
+                  </svg>
+                </span>
+                <input
+                  id="groups-search-mobile"
+                  className="groups-search"
+                  type="search"
+                  placeholder="Search groups..."
+                  value={query}
+                  onChange={(event) => updateQuery(event.target.value)}
+                />
+              </div>
+            )}
           </div>
         ) : null}
         <div className="nav-center">
