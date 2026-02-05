@@ -152,7 +152,6 @@ export default function WatchPage() {
           />
           <div className="watch-player-meta">
             <h2>{selected.title}</h2>
-            <span>{formatDate(selected.publishedAt)}</span>
           </div>
         </div>
       ) : null}
@@ -173,7 +172,6 @@ export default function WatchPage() {
               <img src={video.thumbnailUrl} alt={video.title} />
               <div className="watch-card-body">
                 <h3>{video.title}</h3>
-                <span>{formatDate(video.publishedAt)}</span>
                 <p>{video.description}</p>
               </div>
             </button>

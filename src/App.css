@@ -1,3 +1,8 @@
+html,
+body {
+  overscroll-behavior: none;
+}
+
 .app-shell {
   min-height: 100vh;
   display: flex;
@@ -164,10 +169,10 @@
   justify-content: space-between;
   padding: 12px 32px;
   color: #f7f9fb;
-  background: rgba(11, 43, 60, var(--frost-alpha));
+  background: transparent;
   backdrop-filter: blur(var(--frost-blur));
   -webkit-backdrop-filter: blur(var(--frost-blur));
-  box-shadow: 0 10px 24px rgba(6, 18, 28, var(--frost-shadow));
+  box-shadow: none;
   z-index: 10;
   transition: background 150ms ease, box-shadow 150ms ease,
     backdrop-filter 150ms ease;
@@ -534,6 +539,7 @@
   padding: 48px 32px 40px;
   position: relative;
   z-index: 1;
+  background: inherit;
 }
 
 .app-shell.is-watch .page-content {
@@ -688,6 +694,16 @@
   }
 }
 
+@media (max-width: 768px) and (orientation: portrait) {
+  .watch-player-meta h2 {
+    font-size: 15px;
+  }
+
+  .watch-player-meta span {
+    font-size: 12px;
+  }
+}
+
 @media (max-width: 1024px) and (orientation: landscape) {
   .hero-cta {
     bottom: 120px;
@@ -834,7 +850,7 @@
   gap: 16px;
   padding: 10px 18px;
   border-radius: 18px;
-  background: #9d50f0;
+  background: #7851a9;
   color: #ffffff;
   box-shadow: 0 16px 28px rgba(12, 8, 22, 0.35);
 }
@@ -936,8 +952,8 @@
 
 .app-shell.theme-light .site-header {
   color: #121821;
-  background: rgba(250, 251, 253, var(--frost-alpha));
-  box-shadow: 0 10px 24px rgba(16, 24, 40, var(--frost-shadow));
+  background: transparent;
+  box-shadow: none;
 }
 
 .app-shell.theme-light .nav-link,
@@ -1133,8 +1149,8 @@
 
   .app-shell .site-header {
     color: #121821;
-    background: rgba(250, 251, 253, var(--frost-alpha));
-    box-shadow: 0 10px 24px rgba(16, 24, 40, var(--frost-shadow));
+    background: transparent;
+    box-shadow: none;
   }
 
   .app-shell .nav-link,
