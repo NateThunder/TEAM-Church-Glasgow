@@ -25,7 +25,7 @@ export default function WatchPage() {
   const handleSelectVideo = (video: YouTubeVideo) => {
     setSelected(video)
     setAutoPlayId(video.id)
-    if (typeof window !== 'undefined' && window.innerWidth >= 769) {
+    if (typeof window !== 'undefined' && window.innerWidth < 769) {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
