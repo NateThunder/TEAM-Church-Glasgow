@@ -483,9 +483,9 @@ export default function Layout({ navItems, children }: LayoutProps) {
           <NavLink to="/watch?mode=live" className="action-button action-watch">
             <span className="action-icon">{'\u25B6'}</span>Watch Live
           </NavLink>
-          <a className="action-button action-give" href="/give">
+          <NavLink to="/give" className="action-button action-give">
             <span className="action-icon">{'\u2661'}</span>Give
-          </a>
+          </NavLink>
         </div>
         <button
           className="nav-toggle"
@@ -545,13 +545,13 @@ export default function Layout({ navItems, children }: LayoutProps) {
             >
               <span className="action-icon">{'\u25B6'}</span>Watch Live
             </NavLink>
-            <a
+            <NavLink
               className="action-button action-give"
-              href="/give"
+              to="/give"
               onClick={closeMenu}
             >
               <span className="action-icon">{'\u2661'}</span>Give
-            </a>
+            </NavLink>
           </div>
         </div>
       </div>
