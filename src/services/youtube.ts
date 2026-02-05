@@ -13,6 +13,7 @@ export interface YouTubeVideo {
 interface CachePayload {
   timestamp: number
   data: YouTubeVideo[]
+  nextPageToken?: string
 }
 
 const CACHE_KEY = 'teamchurch_youtube_cache_v1'
@@ -60,10 +61,11 @@ const loadCache = (): CachePayload | null => {
   }
 }
 
-const saveCache = (data: YouTubeVideo[]) => {
+const saveCache = (data: YouTubeVideo[], nextPageToken?: string) => {
   const payload: CachePayload = {
     timestamp: Date.now(),
     data,
+    nextPageToken,
   }
   memoryCache = payload
   if (typeof window === 'undefined') return
@@ -85,6 +87,7 @@ interface ChannelResponse {
 }
 
 interface PlaylistItemsResponse {
+  nextPageToken?: string
   items?: Array<{
     snippet?: {
       title?: string
@@ -131,15 +134,21 @@ const getUploadsPlaylistId = async (apiKey: string, channelId: string) => {
   return uploadsId
 }
 
-const getPlaylistItems = async (apiKey: string, playlistId: string) => {
+const getPlaylistItems = async (
+  apiKey: string,
+  playlistId: string,
+  pageToken?: string,
+  maxResults = 21
+) => {
   const response = await fetchJson<PlaylistItemsResponse>('playlistItems', {
     part: 'snippet,contentDetails',
     playlistId,
-    maxResults: '20',
+    maxResults: String(maxResults),
     key: apiKey,
+    ...(pageToken ? { pageToken } : {}),
   })
 
-  return (
+  const items =
     response.items
       ?.map((item) => {
         const snippet = item.snippet
@@ -166,7 +175,8 @@ const getPlaylistItems = async (apiKey: string, playlistId: string) => {
       publishedAt: string
       thumbnailUrl: string
     }> || []
-  )
+
+  return { items, nextPageToken: response.nextPageToken }
 }
 
 const getVideoDetails = async (apiKey: string, ids: string[]) => {
@@ -188,9 +198,16 @@ const getVideoDetails = async (apiKey: string, ids: string[]) => {
   return map
 }
 
-export const getLatestVideos = async (): Promise<YouTubeVideo[]> => {
-  const cached = loadCache()
-  if (cached) return cached.data
+export const getLatestVideos = async (options?: {
+  pageToken?: string
+  maxResults?: number
+  useCache?: boolean
+}): Promise<{ videos: YouTubeVideo[]; nextPageToken?: string }> => {
+  const { pageToken, maxResults = 21, useCache = true } = options ?? {}
+  const cached = !pageToken && useCache ? loadCache() : null
+  if (cached && cached.nextPageToken !== undefined) {
+    return { videos: cached.data, nextPageToken: cached.nextPageToken }
+  }
 
   const apiKey = getEnv('VITE_YOUTUBE_API_KEY')
   const channelId = getEnv('VITE_YOUTUBE_CHANNEL_ID')
@@ -201,13 +218,18 @@ export const getLatestVideos = async (): Promise<YouTubeVideo[]> => {
 
   // NOTE: Restrict your API key in Google Cloud Console (HTTP referrers for web).
   const uploadsPlaylistId = await getUploadsPlaylistId(apiKey, channelId)
-  const playlistItems = await getPlaylistItems(apiKey, uploadsPlaylistId)
+  const playlistResult = await getPlaylistItems(
+    apiKey,
+    uploadsPlaylistId,
+    pageToken,
+    maxResults
+  )
   const detailsMap = await getVideoDetails(
     apiKey,
-    playlistItems.map((item) => item.id)
+    playlistResult.items.map((item) => item.id)
   )
 
-  const videos: YouTubeVideo[] = playlistItems.map((item) => {
+  const videos: YouTubeVideo[] = playlistResult.items.map((item) => {
     const details = detailsMap.get(item.id)
     return {
       id: item.id,
@@ -222,6 +244,8 @@ export const getLatestVideos = async (): Promise<YouTubeVideo[]> => {
     }
   })
 
-  saveCache(videos)
-  return videos
+  if (!pageToken) {
+    saveCache(videos, playlistResult.nextPageToken)
+  }
+  return { videos, nextPageToken: playlistResult.nextPageToken }
 }
