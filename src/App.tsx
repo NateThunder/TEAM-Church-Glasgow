@@ -2,6 +2,7 @@
 import './App.css'
 import Layout from './components/Layout'
 import NavigationTracker from './components/NavigationTracker'
+import ScrollToTop from './components/ScrollToTop'
 import AboutPage from './pages/AboutPage'
 import HomePage from './pages/HomePage'
 import WatchPage from './pages/WatchPage'
@@ -29,6 +30,7 @@ export default function App() {
     <BrowserRouter>
       {/* Track navigation for analytics later */}
       <NavigationTracker />
+      <ScrollToTop />
 
       {/* Layout wraps all pages */}
       <Layout navItems={routes.map(({ path, label }) => ({ path, label }))}>
