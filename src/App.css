@@ -590,7 +590,12 @@ body {
   .video-hero {
     height: 60vh;
     min-height: 360px;
-  }
+  
+  .connect-header {
+  margin-top: 96px;
+}
+
+}
 
   .hero-cta {
     bottom: 130px;
@@ -1477,6 +1482,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.connect-header {
+  margin-top: 56px;
 }
 
 .connect-header h1 {
