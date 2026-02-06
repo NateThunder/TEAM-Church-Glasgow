@@ -73,6 +73,17 @@
 
 }
 
+.connect-info-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.connect-info-link:focus-visible {
+  outline: 2px solid #7851a9;
+  outline-offset: 3px;
+}
+
 .connect-icon {
 
   width: 40px;
@@ -204,6 +215,18 @@
 
 }
 
+.connect-info-box {
+
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  line-height: 1.5;
+
+}
+
 .connect-form input:focus-visible,
 .connect-form textarea:focus-visible {
 
@@ -220,6 +243,24 @@
   gap: 10px;
   font-size: 14px;
 
+}
+
+.connect-checkbox input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  accent-color: #7851a9;
+}
+
+.connect-checkbox label {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.connect-checkbox input[type='checkbox']:focus-visible {
+  outline: 2px solid #7851a9;
+  outline-offset: 2px;
 }
 
 .connect-submit {
@@ -280,6 +321,14 @@
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(17, 24, 39, 0.12);
   color: #111827;
+
+}
+
+.app-shell.theme-light .connect-info-box {
+
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  color: rgba(17, 24, 39, 0.7);
 
 }
 
