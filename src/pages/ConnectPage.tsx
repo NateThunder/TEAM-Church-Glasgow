@@ -8,8 +8,8 @@ import {
   faPhone,
 } from '@fortawesome/free-solid-svg-icons'
 
-const CHURCH_LAT = 55.8679
-const CHURCH_LNG = -4.2222
+const CHURCH_LAT = 55.8589
+const CHURCH_LNG = -4.2186
 const MAP_DELTA = 0.01
 
 const buildMapSrc = () => {
@@ -50,7 +50,13 @@ export default function ConnectPage() {
       <div className="connect-grid">
         <aside className="connect-left">
           <div className="connect-info">
-            <div className="connect-info-item">
+            <a
+              className="connect-info-item connect-info-link"
+              href="https://www.google.com/maps/dir/?api=1&destination=12+Whitehill+Street,+Glasgow+G31+2LH"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Open Google Maps for 12 Whitehill Street, Glasgow G31 2LH"
+            >
               <span className="connect-icon" aria-hidden="true">
                 <FontAwesomeIcon icon={faLocationDot} />
               </span>
@@ -58,14 +64,14 @@ export default function ConnectPage() {
                 <h3>Location</h3>
                 <p>12 Whitehill Street, Glasgow G31 2LH</p>
               </div>
-            </div>
+            </a>
             <div className="connect-info-item">
               <span className="connect-icon" aria-hidden="true">
                 <FontAwesomeIcon icon={faClock} />
               </span>
               <div>
                 <h3>Service Times</h3>
-                <p>Sundays at 10:30am</p>
+                <p>Sundays at 11:00am</p>
               </div>
             </div>
             <div className="connect-info-item">
@@ -143,18 +149,14 @@ export default function ConnectPage() {
                   Phone Number
                   <input name="phone" type="tel" />
                 </label>
-                <fieldset>
-                  <legend>Which service will you attend?</legend>
-                  <label className="connect-radio">
-                    <input
-                      type="radio"
-                      name="service"
-                      value="Sunday 10:30am"
-                      defaultChecked
-                    />
-                    Sunday 10:30am (Main Gathering)
-                  </label>
-                </fieldset>
+                <label>
+                  Additional Info
+                  <textarea
+                    name="additionalInfo"
+                    rows={4}
+                    placeholder="Share anything that would help us prepare for your visit."
+                  />
+                </label>
                 <button className="connect-submit" type="submit">
                   Submit
                 </button>
@@ -175,10 +177,14 @@ export default function ConnectPage() {
                   Request *
                   <textarea name="request" rows={4} required />
                 </label>
-                <label className="connect-checkbox">
-                  <input name="confidential" type="checkbox" />
-                  Keep this confidential
-                </label>
+                <div className="connect-checkbox">
+                  <input
+                    id="confidential"
+                    name="confidential"
+                    type="checkbox"
+                  />
+                  <label htmlFor="confidential">Keep this confidential</label>
+                </div>
                 <button className="connect-submit" type="submit">
                   Submit
                 </button>

@@ -6,6 +6,7 @@
   min-height: 420px;
   overflow: hidden;
   z-index: 0;
+  --service-banner-height: 80px;
 
 }
 
@@ -139,7 +140,7 @@
 
   position: absolute;
   left: 50%;
-  bottom: 96px;
+  bottom: calc(var(--service-banner-height) + 16px);
   transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
@@ -164,6 +165,17 @@
   box-shadow: 0 12px 26px rgba(6, 18, 28, 0.45);
   transform: translateX(-50%) translateY(-1px);
 
+}
+
+@media (max-width: 768px) {
+  .video-hero {
+    --service-banner-height: 150px;
+  }
+
+  .hero-cta {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
 }
 
 .hero-cta-icon {
@@ -218,8 +230,8 @@
 
 @media (max-width: 1024px) and (orientation: landscape) {
 
-  .hero-cta {
-    bottom: 120px;
+  .video-hero {
+    --service-banner-height: 120px;
   }
 
 }
