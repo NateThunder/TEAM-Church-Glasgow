@@ -5,8 +5,6 @@ import {
   Calendar,
   Views,
   dateFnsLocalizer,
-  type ToolbarProps,
-  type View,
 } from 'react-big-calendar'
 import {
   format,
@@ -132,8 +130,13 @@ function EventsToolbar({
   onNavigate,
   onView,
   view,
-}: ToolbarProps<CalendarEvent, object>) {
-  const viewOptions: View[] = [Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]
+}: {
+  label: string
+  onNavigate: (action: string) => void
+  onView: (nextView: string) => void
+  view: string
+}) {
+  const viewOptions: string[] = [Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]
 
   return (
     <div className="events-toolbar">
@@ -169,7 +172,7 @@ function EventsToolbar({
 export default function EventsPage() {
   const { status, events, error } = useEvents()
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list')
-  const [calendarView, setCalendarView] = useState<View>(Views.MONTH)
+  const [calendarView, setCalendarView] = useState<string>(Views.MONTH)
   const [activeCategory, setActiveCategory] = useState<EventCategory>('All')
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null)
   const [isMobile, setIsMobile] = useState(false)
