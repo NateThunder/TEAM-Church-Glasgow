@@ -15,8 +15,13 @@ export default function AdminPage() {
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
+  const supabaseAvailable = Boolean(supabase)
 
   useEffect(() => {
+    if (!supabase) {
+      setError('Admin login is unavailable. Configure Supabase environment variables.')
+      return
+    }
     let mounted = true
 
     supabase.auth.getSession().then(({ data }) => {
@@ -46,6 +51,12 @@ export default function AdminPage() {
     setIsSubmitting(true)
     setError(null)
 
+    if (!supabase) {
+      setError('Admin login is unavailable. Configure Supabase environment variables.')
+      setIsSubmitting(false)
+      return
+    }
+
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -59,7 +70,23 @@ export default function AdminPage() {
   }
 
   const handleSignOut = async () => {
+    if (!supabase) return
     await supabase.auth.signOut()
+  }
+
+  if (!supabaseAvailable) {
+    return (
+      <section className="admin-page">
+        <div className="admin-container admin-auth">
+          <div className="admin-card">
+            <h1 className="admin-title">Admin Sign In</h1>
+            <p className="admin-subtitle">
+              Admin login is unavailable. Configure Supabase environment variables.
+            </p>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   if (!user) {

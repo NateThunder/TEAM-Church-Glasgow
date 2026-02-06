@@ -81,6 +81,11 @@ export default function AdminEventsPage() {
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const loadEvents = async () => {
+    if (!supabase) {
+      setStatus('error')
+      setError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+      return
+    }
     setStatus('loading')
     setError(null)
     const { data, error: loadError } = await supabase
@@ -153,6 +158,10 @@ export default function AdminEventsPage() {
 
   const handleSave = async () => {
     if (!validate()) return
+    if (!supabase) {
+      setError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+      return
+    }
     const payload = {
       title: form.title.trim(),
       description: form.description.trim() || null,
@@ -186,6 +195,10 @@ export default function AdminEventsPage() {
 
   const handleDelete = async () => {
     if (!deleteId) return
+    if (!supabase) {
+      setError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+      return
+    }
     const { error: deleteError } = await supabase.from('events').delete().eq('id', deleteId)
     if (deleteError) {
       setError(deleteError.message)

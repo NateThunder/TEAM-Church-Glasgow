@@ -21,6 +21,7 @@ const navItems = [
 export default function AdminLayout({ title, description, action, children }: AdminLayoutProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const navigate = useNavigate()
+  const supabaseAvailable = Boolean(supabase)
 
   useEffect(() => {
     if (!isDrawerOpen) return
@@ -55,6 +56,7 @@ export default function AdminLayout({ title, description, action, children }: Ad
   }, [isDrawerOpen])
 
   const handleSignOut = async () => {
+    if (!supabase) return
     await supabase.auth.signOut()
     navigate('/admin/login')
   }
@@ -86,6 +88,7 @@ export default function AdminLayout({ title, description, action, children }: Ad
             type="button"
             className="admin-btn admin-btn--ghost admin-btn--signout"
             onClick={handleSignOut}
+            disabled={!supabaseAvailable}
           >
             <span className="admin-btn-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
@@ -143,6 +146,7 @@ export default function AdminLayout({ title, description, action, children }: Ad
                 type="button"
                 className="admin-btn admin-btn--ghost admin-btn--signout"
                 onClick={handleSignOut}
+                disabled={!supabaseAvailable}
               >
                 <span className="admin-btn-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
