@@ -1,5 +1,5 @@
 ﻿import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import './App.css'
+import './styles/globals.css'
 import Layout from './components/Layout'
 import NavigationTracker from './components/NavigationTracker'
 import ScrollToTop from './components/ScrollToTop'
