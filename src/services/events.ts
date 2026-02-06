@@ -45,6 +45,14 @@ export function useEvents() {
     const controller = new AbortController()
 
     const load = async () => {
+      if (!supabase) {
+        setState({
+          status: 'error',
+          events: [],
+          error: 'Events are unavailable. Configure Supabase environment variables.',
+        })
+        return
+      }
       setState((prev) => ({ ...prev, status: 'loading', error: null }))
       try {
         const { data, error } = await supabase

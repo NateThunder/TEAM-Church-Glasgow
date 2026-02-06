@@ -51,7 +51,7 @@
   justify-content: center;
   gap: 12px;
   padding: 22px 24px;
-  background: linear-gradient(120deg, #6b41a4 0%, #8f4ae8 100%);
+  background: #7851a9;
   color: #ffffff;
   text-align: center;
 }
@@ -179,7 +179,7 @@
   border: none;
   padding: 14px 20px;
   border-radius: 999px;
-  background: linear-gradient(120deg, #6b41a4 0%, #8f4ae8 100%);
+  background: #7851a9;
   color: #ffffff;
   font-weight: 700;
   font-size: 16px;
