@@ -1,3 +1,4 @@
+import '../styles/watch.css'
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getLatestVideos, type YouTubeVideo } from '../services/youtube'

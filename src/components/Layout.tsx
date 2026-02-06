@@ -269,7 +269,14 @@ export default function Layout({ navItems, children }: LayoutProps) {
     >
       {isHome ? (
         <div className="video-hero" aria-hidden="true">
-          <video className="hero-video" autoPlay loop muted playsInline>
+          <video
+            className="hero-video"
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="/Video/TEAM%20Church%20Banner.png"
+          >
             <source src="/Video/TEAM%20Church%20Banner.mp4" type="video/mp4" />
             </video>
             <div className="video-overlay" />
