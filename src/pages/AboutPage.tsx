@@ -99,10 +99,10 @@ export default function AboutPage() {
             <div className="about-team-photo">
               <img src={collageImage} alt="Pastor James and Sarah Mitchell" />
             </div>
-            <h3>Pastor James &amp; Sarah Mitchell</h3>
-            <span className="about-role">Lead Pastors</span>
+            <h3>Pastor Yinka</h3>
+            <span className="about-role">Head Pastors</span>
             <p>
-              James and Sarah founded Team Church Glasgow in 2010 with a vision
+              Pastor Yinka founded Team Church Glasgow in 2010 with a vision
               to see lives transformed by the Gospel.
             </p>
           </article>
@@ -110,8 +110,8 @@ export default function AboutPage() {
             <div className="about-team-photo">
               <img src={collageImage} alt="David Thompson" />
             </div>
-            <h3>David Thompson</h3>
-            <span className="about-role">Worship Pastor</span>
+            <h3>Unoma Thomas</h3>
+            <span className="about-role">Worship Leader</span>
             <p>
               David leads our worship ministry and is passionate about creating
               space for authentic encounters with God.

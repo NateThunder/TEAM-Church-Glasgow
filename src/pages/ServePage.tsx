@@ -1,4 +1,4 @@
-import '../styles/serve.css'
+﻿import '../styles/serve.css'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -128,68 +128,61 @@ export default function ServePage() {
         </div>
       </section>
 
-<div className="serve-container">
-        <div className="serve-card serve-believers-card">
-          <div className="serve-believers-top">
-            <div className="serve-icon-circle" aria-hidden="true">
-              <span className="serve-icon">BC</span>
-            </div>
-            <div className="serve-believers-copy">
-              <div className="serve-believers-title">
-                <h2>Believers Class</h2>
-                <span className="serve-pill">6 weeks</span>
+      {eligibility === 'no' && (
+        <>
+          <div className="serve-container">
+            <div className="serve-card serve-believers-card">
+              <div className="serve-believers-top">
+                <div className="serve-icon-circle" aria-hidden="true">
+                  <span className="serve-icon">BC</span>
+                </div>
+                <div className="serve-believers-copy">
+                  <div className="serve-believers-title">
+                    <h2>Believers Class</h2>
+                    <span className="serve-pill">6 weeks</span>
+                  </div>
+                  <p>
+                    A 6-week course teaching the foundations of being a believer and how to
+                    live it out day to day.
+                  </p>
+                </div>
               </div>
-              <p>
-                A 6-week course teaching the foundations of being a believer and how to live
-                it out day to day.
-              </p>
+
+              <div className="serve-cohort">
+                <h3>Next cohort</h3>
+                <div className="serve-cohort-grid">
+                  <div>
+                    <span className="serve-cohort-label">Starts</span>
+                    <p>Sunday, 16 March 2026</p>
+                  </div>
+                  <div>
+                    <span className="serve-cohort-label">Time</span>
+                    <p>11:00</p>
+                  </div>
+                  <div>
+                    <span className="serve-cohort-label">Location</span>
+                    <p>12 Whitehill Street, Glasgow G31 2LH</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="serve-believers-actions">
+                <Link to="/connect" className="serve-primary-button">
+                  Register for Believers Class
+                </Link>
+                <details className="serve-details">
+                  <summary>What you&apos;ll learn</summary>
+                  <ul>
+                    <li>Understanding salvation and identity in Christ</li>
+                    <li>Building daily rhythms of prayer and scripture</li>
+                    <li>Walking with the Holy Spirit and living on mission</li>
+                  </ul>
+                </details>
+              </div>
             </div>
           </div>
 
-          <div className="serve-cohort">
-            <h3>Next cohort</h3>
-            <div className="serve-cohort-grid">
-              <div>
-                <span className="serve-cohort-label">Starts</span>
-                <p>Sunday, 16 March 2026</p>
-              </div>
-              <div>
-                <span className="serve-cohort-label">Time</span>
-                <p>11:00</p>
-              </div>
-              <div>
-                <span className="serve-cohort-label">Location</span>
-                <p>12 Whitehill Street, Glasgow G31 2LH</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="serve-believers-actions">
-            <Link to="/connect" className="serve-primary-button">
-              Register for Believers Class
-            </Link>
-            <details className="serve-details">
-              <summary>What you&apos;ll learn</summary>
-              <ul>
-                <li>Understanding salvation and identity in Christ</li>
-                <li>Building daily rhythms of prayer and scripture</li>
-                <li>Walking with the Holy Spirit and living on mission</li>
-              </ul>
-            </details>
-          </div>
-        </div>
-      </div>
-
-            {eligibility === 'no' && (
-        <div className="serve-container">
-          <div className="serve-card serve-callout">
-            <h3>Your next step</h3>
-            <p>To join a serving team, you’ll need to complete Believers Class first.</p>
-            <Link to="/connect" className="serve-primary-button">
-              Register for Believers Class
-            </Link>
-          </div>
-        </div>
+        </>
       )}
 
       {eligibility === 'yes' && (
@@ -226,7 +219,7 @@ export default function ServePage() {
                         <div className="serve-join-panel" id={`${team.id}-form`}>
                           {isSubmitted && (
                             <div className="serve-success">
-                              Thanks! We’ll be in touch soon.
+                              Thanks! We'll be in touch soon.
                             </div>
                           )}
                           <form onSubmit={(event) => handleSubmit(event, team.id)}>
