@@ -1,5 +1,5 @@
 ﻿import '../styles/serve.css'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 type Eligibility = 'yes' | 'no' | null
@@ -84,6 +84,30 @@ export default function ServePage() {
   const [submittedTeams, setSubmittedTeams] = useState<Record<string, boolean>>({})
 
   const teams = useMemo(() => TEAM_GROUPS, [])
+  const teamsHeaderRef = useRef<HTMLDivElement | null>(null)
+  const believersBottomRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!eligibility) {
+      return
+    }
+
+    const target =
+      eligibility === 'yes' ? teamsHeaderRef.current : believersBottomRef.current
+
+    if (!target) {
+      return
+    }
+
+    const raf = requestAnimationFrame(() => {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: eligibility === 'yes' ? 'start' : 'end',
+      })
+    })
+
+    return () => cancelAnimationFrame(raf)
+  }, [eligibility])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>, teamId: string) => {
     event.preventDefault()
@@ -179,6 +203,7 @@ export default function ServePage() {
                   </ul>
                 </details>
               </div>
+              <div ref={believersBottomRef} />
             </div>
           </div>
 
@@ -187,7 +212,7 @@ export default function ServePage() {
 
       {eligibility === 'yes' && (
         <div className="serve-container serve-teams">
-          <div className="serve-section-header">
+          <div className="serve-section-header" ref={teamsHeaderRef}>
             <h2>Serving Teams</h2>
             <p>Find the area where your gifts and passion can make a difference.</p>
           </div>

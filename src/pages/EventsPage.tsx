@@ -30,7 +30,7 @@ type CalendarEvent = {
 const localizer = dateFnsLocalizer({
   format,
   parse,
-  startOfWeek: (date) => startOfWeek(date, { weekStartsOn: 1 }),
+  startOfWeek: (date: Date) => startOfWeek(date, { weekStartsOn: 1 }),
   getDay,
   locales: { 'en-GB': enGB },
 })
@@ -285,7 +285,9 @@ export default function EventsPage() {
               <span className="sr-only">Filter events by category</span>
               <select
                 value={activeCategory}
-                onChange={(event) => setActiveCategory(event.target.value as EventCategory)}
+                onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                  setActiveCategory(event.target.value as EventCategory)
+                }
               >
                 {categories.map((category) => (
                   <option key={category} value={category}>
@@ -375,7 +377,7 @@ export default function EventsPage() {
                 endAccessor="end"
                 style={{ height: isMobile ? 520 : 720 }}
                 popup
-                onSelectEvent={(event) => setSelectedEvent(event.resource)}
+                onSelectEvent={(event: CalendarEvent) => setSelectedEvent(event.resource)}
                 components={{ toolbar: EventsToolbar }}
               />
             </div>
