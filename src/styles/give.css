@@ -1,0 +1,294 @@
+.give-page {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  padding-top: calc(var(--header-height, 96px) + 24px);
+  padding-bottom: 64px;
+}
+
+.give-hero {
+  text-align: center;
+  display: grid;
+  gap: 12px;
+  margin: 0 auto;
+  padding: 0 32px;
+  max-width: 860px;
+}
+
+.give-kicker {
+  font-size: 12px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #7851a9;
+  font-weight: 600;
+  margin: 0;
+}
+
+.give-hero h1 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 40px);
+}
+
+.give-subtext {
+  margin: 0;
+  font-size: 18px;
+  opacity: 0.82;
+}
+
+.give-card {
+  width: min(920px, 100%);
+  margin: 0 auto;
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(8, 20, 30, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 28px 48px rgba(6, 18, 28, 0.32);
+}
+
+.give-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 22px 24px;
+  background: linear-gradient(120deg, #6b41a4 0%, #8f4ae8 100%);
+  color: #ffffff;
+  text-align: center;
+}
+
+.give-card-header h2 {
+  margin: 0;
+  font-size: clamp(18px, 2.6vw, 24px);
+}
+
+.give-heart {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font-size: 18px;
+}
+
+.give-card-body {
+  padding: 28px 32px 32px;
+  display: grid;
+  gap: 24px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.give-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin: 0 auto;
+}
+
+.give-toggle-btn {
+  border: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+
+.give-toggle-btn.is-active {
+  background: #ffffff;
+  color: #1a1330;
+  box-shadow: 0 8px 16px rgba(11, 12, 24, 0.2);
+}
+
+.give-amounts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.give-amount-btn {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  padding: 14px 12px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, border 150ms ease,
+    background 150ms ease;
+}
+
+.give-amount-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgba(6, 18, 28, 0.2);
+}
+
+.give-amount-btn.is-selected {
+  background: rgba(120, 81, 169, 0.2);
+  border-color: rgba(120, 81, 169, 0.6);
+  color: #ffffff;
+}
+
+.give-custom {
+  display: grid;
+  gap: 10px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.give-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0 auto;
+}
+
+.give-input input {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 16px;
+  width: 140px;
+  outline: none;
+}
+
+.give-currency {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.give-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 999px;
+  background: linear-gradient(120deg, #6b41a4 0%, #8f4ae8 100%);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+  width: min(360px, 100%);
+  margin: 0 auto;
+  box-shadow: 0 14px 24px rgba(16, 8, 26, 0.32);
+}
+
+.give-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 28px rgba(16, 8, 26, 0.36);
+}
+
+.give-toggle-btn:focus-visible,
+.give-amount-btn:focus-visible,
+.give-primary:focus-visible,
+.give-input:focus-within {
+  outline: 2px solid #7851a9;
+  outline-offset: 2px;
+}
+
+.app-shell.theme-light .give-card {
+  background: #ffffff;
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  box-shadow: 0 18px 32px rgba(16, 24, 40, 0.14);
+}
+
+.app-shell.theme-light .give-card-body {
+  background: #ffffff;
+}
+
+.app-shell.theme-light .give-toggle {
+  background: rgba(17, 24, 39, 0.05);
+  border: 1px solid rgba(17, 24, 39, 0.12);
+}
+
+.app-shell.theme-light .give-toggle-btn.is-active {
+  background: #111827;
+  color: #ffffff;
+}
+
+.app-shell.theme-light .give-amount-btn {
+  background: #ffffff;
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  color: #111827;
+}
+
+.app-shell.theme-light .give-amount-btn.is-selected {
+  background: rgba(120, 81, 169, 0.12);
+  border-color: rgba(120, 81, 169, 0.5);
+  color: #1f2937;
+}
+
+.app-shell.theme-light .give-custom {
+  color: rgba(17, 24, 39, 0.6);
+}
+
+.app-shell.theme-light .give-input {
+  background: #ffffff;
+  border: 1px solid rgba(17, 24, 39, 0.12);
+}
+
+.app-shell.theme-light .give-input input {
+  color: #111827;
+}
+
+.app-shell.theme-light .give-currency {
+  color: #111827;
+}
+
+@media (max-width: 768px) {
+  .give-page {
+    gap: 28px;
+  }
+
+  .give-hero {
+    padding: 0 20px;
+  }
+
+  .give-card-body {
+    padding: 24px 20px 28px;
+  }
+
+  .give-amounts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .give-input input {
+    width: 120px;
+  }
+}
+
+@media (max-width: 520px) {
+  .give-amounts {
+    grid-template-columns: 1fr;
+  }
+
+  .give-toggle {
+    width: 100%;
+  }
+
+  .give-toggle-btn {
+    width: 100%;
+  }
+
+  .give-input {
+    width: 100%;
+    justify-content: center;
+  }
+}
