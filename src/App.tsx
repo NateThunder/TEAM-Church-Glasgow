@@ -11,6 +11,13 @@ import GroupsPage from './pages/GroupsPage'
 import ServePage from './pages/ServePage'
 import EventsPage from './pages/EventsPage'
 import GivePage from './pages/GivePage'
+import AdminPage from './pages/AdminPage'
+import { AdminDataProvider } from './admin/AdminDataContext'
+import AdminDashboardPage from './admin/AdminDashboardPage'
+import AdminEventsPage from './admin/AdminEventsPage'
+import AdminTeamsPage from './admin/AdminTeamsPage'
+import AdminGroupsPage from './admin/AdminGroupsPage'
+import AdminAnnouncementsPage from './admin/AdminAnnouncementsPage'
 
 // Route table for the site. Add or remove pages here.
 // NOTE: We keep paths lowercase to avoid URL inconsistencies.
@@ -33,13 +40,21 @@ export default function App() {
       <ScrollToTop />
 
       {/* Layout wraps all pages */}
-      <Layout navItems={routes.map(({ path, label }) => ({ path, label }))}>
-        <Routes>
-          {routes.map((route) => (
-            <Route key={route.path} path={route.path} element={route.element} />
-          ))}
-        </Routes>
-      </Layout>
+      <AdminDataProvider>
+        <Layout navItems={routes.map(({ path, label }) => ({ path, label }))}>
+          <Routes>
+            {routes.map((route) => (
+              <Route key={route.path} path={route.path} element={route.element} />
+            ))}
+            <Route path="/admin/login" element={<AdminPage />} />
+            <Route path="/admin" element={<AdminDashboardPage />} />
+            <Route path="/admin/events" element={<AdminEventsPage />} />
+            <Route path="/admin/teams" element={<AdminTeamsPage />} />
+            <Route path="/admin/groups" element={<AdminGroupsPage />} />
+            <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
+          </Routes>
+        </Layout>
+      </AdminDataProvider>
     </BrowserRouter>
   )
 }
