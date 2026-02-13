@@ -13,6 +13,7 @@ import ServePage from './pages/ServePage'
 import EventsPage from './pages/EventsPage'
 import GivePage from './pages/GivePage'
 import AdminPage from './pages/AdminPage'
+import AdminResetPasswordPage from './pages/AdminResetPasswordPage'
 import { AdminDataProvider } from './admin/AdminDataContext'
 import AdminDashboardPage from './admin/AdminDashboardPage'
 import AdminEventsPage from './admin/AdminEventsPage'
@@ -51,6 +52,7 @@ export default function App() {
             ))}
             <Route path="/teams" element={<Navigate to="/serve" replace />} />
             <Route path="/admin/login" element={<AdminPage />} />
+            <Route path="/admin/reset-password" element={<AdminResetPasswordPage />} />
             <Route element={<RequireAdminAuth />}>
               <Route path="/admin" element={<AdminDashboardPage />} />
               <Route path="/admin/events" element={<AdminEventsPage />} />

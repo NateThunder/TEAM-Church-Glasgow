@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import type { Session } from '@supabase/supabase-js'
 import { supabase } from '../services/supabaseClient'
+import { requiresPasswordChange } from './authUtils'
 
-type AuthState = 'loading' | 'authorized' | 'unauthorized'
+type AuthState = 'loading' | 'authorized' | 'unauthorized' | 'must_change_password'
 
 export default function RequireAdminAuth() {
   const [authState, setAuthState] = useState<AuthState>('loading')
@@ -15,18 +17,26 @@ export default function RequireAdminAuth() {
     }
 
     let mounted = true
-
-    supabase.auth.getSession().then(({ data, error }) => {
+    const resolveAuthState = (session: Session | null) => {
       if (!mounted) return
-      if (error) {
+      if (!session) {
         setAuthState('unauthorized')
         return
       }
-      setAuthState(data.session ? 'authorized' : 'unauthorized')
+      setAuthState(requiresPasswordChange(session.user) ? 'must_change_password' : 'authorized')
+    }
+
+    supabase.auth.getSession().then(({ data, error }) => {
+      if (error) {
+        if (!mounted) return
+        setAuthState('unauthorized')
+        return
+      }
+      resolveAuthState(data.session)
     })
 
     const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
-      setAuthState(session ? 'authorized' : 'unauthorized')
+      resolveAuthState(session)
     })
 
     return () => {
@@ -48,8 +58,13 @@ export default function RequireAdminAuth() {
     )
   }
 
+  const from = `${location.pathname}${location.search}${location.hash}`
+
+  if (authState === 'must_change_password') {
+    return <Navigate to="/admin/login" replace state={{ from, forcePasswordChange: true }} />
+  }
+
   if (authState !== 'authorized') {
-    const from = `${location.pathname}${location.search}${location.hash}`
     return <Navigate to="/admin/login" replace state={{ from }} />
   }
 
