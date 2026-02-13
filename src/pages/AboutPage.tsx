@@ -3,6 +3,25 @@ import { Link } from 'react-router-dom'
 import collageImage from '../assets/join.png'
 
 export default function AboutPage() {
+  const storyImages = [
+    {
+      src: '/jonny church pics/C6493T01.JPG',
+      alt: 'Worship moment during service',
+    },
+    {
+      src: '/jonny church pics/C6494T01.JPG',
+      alt: 'Worship leader singing at the front',
+    },
+    {
+      src: '/jonny church pics/DSC03179.JPG',
+      alt: 'Speaker sharing at Sunday service',
+    },
+    {
+      src: '/jonny church pics/DSC03241.JPG',
+      alt: 'Church leader sharing a testimony',
+    },
+  ]
+
   return (
     <section className="page about-page">
       <section className="about-story">
@@ -27,10 +46,9 @@ export default function AboutPage() {
           </p>
         </div>
         <div className="about-collage">
-          <img src={collageImage} alt="Church community" />
-          <img src={collageImage} alt="Worship gathering" />
-          <img src={collageImage} alt="Small group" />
-          <img src={collageImage} alt="Sunday service" />
+          {storyImages.map((image) => (
+            <img key={image.src} src={image.src} alt={image.alt} />
+          ))}
         </div>
       </section>
 

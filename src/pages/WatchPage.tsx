@@ -102,6 +102,17 @@ export default function WatchPage() {
     return url.toString()
   }
 
+  const getFallbackLiveEmbedUrl = (channel: string) => {
+    const url = new URL('https://www.youtube.com/embed/live_stream')
+    url.searchParams.set('channel', channel)
+    url.searchParams.set('autoplay', '1')
+    url.searchParams.set('rel', '0')
+    return url.toString()
+  }
+
+  const youtubeSetupMessage =
+    'Missing YouTube API configuration for this deployment. Add VITE_YOUTUBE_API_KEY and VITE_YOUTUBE_CHANNEL_ID in Netlify environment variables, then redeploy.'
+
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setDebouncedQuery(query.trim())
@@ -240,7 +251,9 @@ export default function WatchPage() {
         {mode === 'recorded' && status === 'error' ? (
           <div className="watch-state">
             {error === 'MISSING_YOUTUBE_CONFIG'
-              ? 'Missing YouTube API configuration. Add VITE_YOUTUBE_API_KEY and VITE_YOUTUBE_CHANNEL_ID to your .env file.'
+              ? youtubeSetupMessage
+              : error.startsWith('YouTube API error')
+              ? `${error} Check Google Cloud API restrictions/quota for this key.`
               : 'Sorry, we could not load videos right now.'}
           </div>
         ) : null}
@@ -257,16 +270,20 @@ export default function WatchPage() {
             {liveStatus === 'loading' ? (
               <div className="watch-state watch-live-state">Checking live stream status...</div>
             ) : null}
-            {liveVideo ? (
+            {channelId ? (
               <div className="watch-player">
                 <iframe
-                  title={liveVideo.title}
-                  src={getLiveEmbedUrl(liveVideo)}
+                  title={liveVideo?.title ?? 'Live stream'}
+                  src={
+                    liveVideo
+                      ? getLiveEmbedUrl(liveVideo)
+                      : getFallbackLiveEmbedUrl(channelId)
+                  }
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
                 <div className="watch-player-meta">
-                  <h2>{liveVideo.title}</h2>
+                  <h2>{liveVideo?.title ?? 'Team Church Glasgow Live'}</h2>
                 </div>
               </div>
             ) : null}
@@ -278,7 +295,9 @@ export default function WatchPage() {
             {liveStatus === 'error' ? (
               <div className="watch-state watch-live-state">
                 {liveError === 'MISSING_YOUTUBE_CONFIG'
-                  ? 'Missing YouTube API configuration. Add VITE_YOUTUBE_API_KEY and VITE_YOUTUBE_CHANNEL_ID to your .env file.'
+                  ? youtubeSetupMessage
+                  : liveError.startsWith('YouTube API error')
+                  ? `${liveError} Using channel live player fallback.`
                   : 'We could not load the live stream right now.'}
                 {channelId ? (
                   <>
