@@ -1,5 +1,6 @@
 ﻿import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './styles/globals.css'
+import { Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import NavigationTracker from './components/NavigationTracker'
 import ScrollToTop from './components/ScrollToTop'
@@ -18,6 +19,8 @@ import AdminEventsPage from './admin/AdminEventsPage'
 import AdminTeamsPage from './admin/AdminTeamsPage'
 import AdminGroupsPage from './admin/AdminGroupsPage'
 import AdminAnnouncementsPage from './admin/AdminAnnouncementsPage'
+import AdminBelieversClassPage from './admin/AdminBelieversClassPage'
+import RequireAdminAuth from './admin/RequireAdminAuth'
 
 // Route table for the site. Add or remove pages here.
 // NOTE: We keep paths lowercase to avoid URL inconsistencies.
@@ -46,12 +49,16 @@ export default function App() {
             {routes.map((route) => (
               <Route key={route.path} path={route.path} element={route.element} />
             ))}
+            <Route path="/teams" element={<Navigate to="/serve" replace />} />
             <Route path="/admin/login" element={<AdminPage />} />
-            <Route path="/admin" element={<AdminDashboardPage />} />
-            <Route path="/admin/events" element={<AdminEventsPage />} />
-            <Route path="/admin/teams" element={<AdminTeamsPage />} />
-            <Route path="/admin/groups" element={<AdminGroupsPage />} />
-            <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
+            <Route element={<RequireAdminAuth />}>
+              <Route path="/admin" element={<AdminDashboardPage />} />
+              <Route path="/admin/events" element={<AdminEventsPage />} />
+              <Route path="/admin/teams" element={<AdminTeamsPage />} />
+              <Route path="/admin/groups" element={<AdminGroupsPage />} />
+              <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
+              <Route path="/admin/believers-class" element={<AdminBelieversClassPage />} />
+            </Route>
           </Routes>
         </Layout>
       </AdminDataProvider>

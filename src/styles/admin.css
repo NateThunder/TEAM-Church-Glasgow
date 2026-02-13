@@ -439,6 +439,20 @@
   font-size: 14px;
 }
 
+.admin-checkbox-row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.admin-checkbox-row input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #7851a9;
+}
+
 .admin-field-error {
   color: #fca5a5;
   font-size: 12px;

@@ -1,89 +1,23 @@
-﻿import '../styles/serve.css'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import '../styles/serve.css'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useBelieversClass } from '../services/believersClass'
+import { useServingTeams } from '../services/servingTeams'
 
 type Eligibility = 'yes' | 'no' | null
 
-type Team = {
-  id: string
-  name: string
-  description: string
+const DEFAULT_BELIEVERS_CLASS = {
+  durationLabel: '6 weeks',
+  startsLabel: 'Sunday, 16 March 2026',
 }
-
-type TeamGroup = {
-  title: string
-  teams: Team[]
-}
-
-const TEAM_GROUPS: TeamGroup[] = [
-  {
-    title: 'Frontline Teams',
-    teams: [
-      {
-        id: 'ushering',
-        name: 'Ushering Team',
-        description: 'Create a welcoming first impression and help guests find their seats.',
-      },
-      {
-        id: 'welcoming',
-        name: 'Welcoming Team',
-        description: 'Host new guests, answer questions, and help people feel at home.',
-      },
-      {
-        id: 'hospitality',
-        name: 'Hospitality',
-        description: 'Serve refreshments and care for guests with warmth and kindness.',
-      },
-    ],
-  },
-  {
-    title: 'Creative & Technical',
-    teams: [
-      {
-        id: 'media',
-        name: 'Media Team',
-        description: 'Capture and share what God is doing through video, graphics, and lighting.',
-      },
-      {
-        id: 'worship',
-        name: 'Worship Team',
-        description: 'Lead our church family into worship with skill and humility.',
-      },
-    ],
-  },
-  {
-    title: 'Next Generation',
-    teams: [
-      {
-        id: 'children',
-        name: 'Children Ministry',
-        description: 'Help kids discover Jesus in a safe and joyful environment.',
-      },
-      {
-        id: 'youth',
-        name: 'Youth Ministry',
-        description: 'Invest in teenagers and help them grow in faith and community.',
-      },
-    ],
-  },
-  {
-    title: 'Support',
-    teams: [
-      {
-        id: 'maintenance',
-        name: 'Maintenance',
-        description: 'Care for our spaces so every gathering feels excellent.',
-      },
-    ],
-  },
-]
 
 export default function ServePage() {
   const [eligibility, setEligibility] = useState<Eligibility>(null)
   const [openTeamId, setOpenTeamId] = useState<string | null>(null)
   const [submittedTeams, setSubmittedTeams] = useState<Record<string, boolean>>({})
-
-  const teams = useMemo(() => TEAM_GROUPS, [])
+  const { status: believersClassStatus, item: believersClassItem } = useBelieversClass()
+  const { status: teamsStatus, groups: teams, error: teamsError } = useServingTeams()
+  const believersClass = believersClassItem ?? DEFAULT_BELIEVERS_CLASS
   const teamsHeaderRef = useRef<HTMLDivElement | null>(null)
   const believersBottomRef = useRef<HTMLDivElement | null>(null)
 
@@ -92,17 +26,24 @@ export default function ServePage() {
       return
     }
 
-    const target =
-      eligibility === 'yes' ? teamsHeaderRef.current : believersBottomRef.current
-
-    if (!target) {
-      return
-    }
-
     const raf = requestAnimationFrame(() => {
-      target.scrollIntoView({
+      if (eligibility === 'yes') {
+        const target = teamsHeaderRef.current
+        if (!target) {
+          return
+        }
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+        return
+      }
+
+      const scrollTarget =
+        document.documentElement?.scrollHeight ?? document.body.scrollHeight
+      window.scrollTo({
+        top: scrollTarget,
         behavior: 'smooth',
-        block: eligibility === 'yes' ? 'start' : 'end',
       })
     })
 
@@ -132,22 +73,36 @@ export default function ServePage() {
 
       <section className="serve-tone">
         <div className="serve-container serve-eligibility">
-          <h2>Have you completed Believers Class?</h2>
-          <div className="serve-toggle" role="group" aria-label="Believers Class eligibility">
-            <button
-              type="button"
-              className={`serve-toggle-btn${eligibility === 'yes' ? ' is-active' : ''}`}
-              onClick={() => setEligibility('yes')}
+          <div className="serve-card serve-step-card">
+            <h2>Have you completed Believers Class?</h2>
+            <p className="serve-step-helper">
+              This helps us show the right serving opportunities.
+            </p>
+            <div
+              className="serve-step-actions"
+              role="group"
+              aria-label="Believers Class eligibility"
             >
-              Yes, I have
-            </button>
-            <button
-              type="button"
-              className={`serve-toggle-btn${eligibility === 'no' ? ' is-active' : ''}`}
-              onClick={() => setEligibility('no')}
-            >
-              Not yet
-            </button>
+              <button
+                type="button"
+                className={`serve-primary-button${
+                  eligibility === 'yes' ? ' is-active' : ''
+                }`}
+                onClick={() => setEligibility('yes')}
+              >
+                Yes, I&apos;ve completed it
+              </button>
+              <button
+                type="button"
+                className={`serve-secondary-button${
+                  eligibility === 'no' ? ' is-active' : ''
+                }`}
+                onClick={() => setEligibility('no')}
+              >
+                Not yet
+              </button>
+            </div>
+            <p className="serve-step-micro">You can update this later.</p>
           </div>
         </div>
       </section>
@@ -163,12 +118,9 @@ export default function ServePage() {
                 <div className="serve-believers-copy">
                   <div className="serve-believers-title">
                     <h2>Believers Class</h2>
-                    <span className="serve-pill">6 weeks</span>
+                    <span className="serve-pill">{believersClass.durationLabel}</span>
                   </div>
-                  <p>
-                    A 6-week course teaching the foundations of being a believer and how to
-                    live it out day to day.
-                  </p>
+                  <p>Find out when the next class starts and plan ahead.</p>
                 </div>
               </div>
 
@@ -177,15 +129,11 @@ export default function ServePage() {
                 <div className="serve-cohort-grid">
                   <div>
                     <span className="serve-cohort-label">Starts</span>
-                    <p>Sunday, 16 March 2026</p>
+                    <p>{believersClass.startsLabel}</p>
                   </div>
                   <div>
-                    <span className="serve-cohort-label">Time</span>
-                    <p>11:00</p>
-                  </div>
-                  <div>
-                    <span className="serve-cohort-label">Location</span>
-                    <p>12 Whitehill Street, Glasgow G31 2LH</p>
+                    <span className="serve-cohort-label">Duration</span>
+                    <p>{believersClass.durationLabel}</p>
                   </div>
                 </div>
               </div>
@@ -194,15 +142,10 @@ export default function ServePage() {
                 <Link to="/connect" className="serve-primary-button">
                   Register for Believers Class
                 </Link>
-                <details className="serve-details">
-                  <summary>What you&apos;ll learn</summary>
-                  <ul>
-                    <li>Understanding salvation and identity in Christ</li>
-                    <li>Building daily rhythms of prayer and scripture</li>
-                    <li>Walking with the Holy Spirit and living on mission</li>
-                  </ul>
-                </details>
               </div>
+              {believersClassStatus === 'loading' ? (
+                <p className="serve-step-micro">Loading class details...</p>
+              ) : null}
               <div ref={believersBottomRef} />
             </div>
           </div>
@@ -217,72 +160,89 @@ export default function ServePage() {
             <p>Find the area where your gifts and passion can make a difference.</p>
           </div>
 
-          {teams.map((group) => (
-            <div key={group.title} className="serve-team-group">
-              <h3>{group.title}</h3>
-              <div className="serve-team-grid">
-                {group.teams.map((team) => {
-                  const isOpen = openTeamId === team.id
-                  const isSubmitted = submittedTeams[team.id]
-                  return (
-                    <div key={team.id} className="serve-card serve-team-card">
-                      <div className="serve-team-body">
-                        <h4>{team.name}</h4>
-                        <p>{team.description}</p>
-                      </div>
-                      <button
-                        type="button"
-                        className="serve-secondary-button"
-                        onClick={() => setOpenTeamId(isOpen ? null : team.id)}
-                        aria-expanded={isOpen}
-                        aria-controls={`${team.id}-form`}
-                      >
-                        Join this team
-                      </button>
+          {teamsStatus === 'loading' ? (
+            <div className="serve-card serve-state-card">Loading serving teams...</div>
+          ) : null}
 
-                      {isOpen && (
-                        <div className="serve-join-panel" id={`${team.id}-form`}>
-                          {isSubmitted && (
-                            <div className="serve-success">
-                              Thanks! We'll be in touch soon.
+          {teamsStatus === 'error' ? (
+            <div className="serve-card serve-state-card">
+              {teamsError ?? 'Unable to load serving teams right now.'}
+            </div>
+          ) : null}
+
+          {teamsStatus === 'success' && teams.length === 0 ? (
+            <div className="serve-card serve-state-card">No serving teams are published yet.</div>
+          ) : null}
+
+          {teamsStatus === 'success'
+            ? teams.map((group) => (
+                <div key={group.title} className="serve-team-group">
+                  <h3>{group.title}</h3>
+                  <div className="serve-team-grid">
+                    {group.teams.map((team) => {
+                      const isOpen = openTeamId === team.id
+                      const isSubmitted = submittedTeams[team.id]
+                      return (
+                        <div key={team.id} className="serve-card serve-team-card">
+                          <div className="serve-team-body">
+                            <h4>{team.name}</h4>
+                            <p>{team.description}</p>
+                          </div>
+                          <button
+                            type="button"
+                            className="serve-secondary-button"
+                            onClick={() => setOpenTeamId(isOpen ? null : team.id)}
+                            aria-expanded={isOpen}
+                            aria-controls={`${team.id}-form`}
+                          >
+                            Join this team
+                          </button>
+
+                          {isOpen && (
+                            <div className="serve-join-panel" id={`${team.id}-form`}>
+                              {isSubmitted && (
+                                <div className="serve-success">
+                                  Thanks! We'll be in touch soon.
+                                </div>
+                              )}
+                              <form onSubmit={(event) => handleSubmit(event, team.id)}>
+                                <label>
+                                  Name
+                                  <input name="name" type="text" required placeholder="Your name" />
+                                </label>
+                                <label>
+                                  Email
+                                  <input
+                                    name="email"
+                                    type="email"
+                                    required
+                                    placeholder="you@email.com"
+                                  />
+                                </label>
+                                <label>
+                                  Message (optional)
+                                  <textarea
+                                    name="message"
+                                    rows={3}
+                                    placeholder="Tell us a little about yourself."
+                                  />
+                                </label>
+                                <button type="submit" className="serve-primary-button">
+                                  Submit interest
+                                </button>
+                              </form>
                             </div>
                           )}
-                          <form onSubmit={(event) => handleSubmit(event, team.id)}>
-                            <label>
-                              Name
-                              <input name="name" type="text" required placeholder="Your name" />
-                            </label>
-                            <label>
-                              Email
-                              <input
-                                name="email"
-                                type="email"
-                                required
-                                placeholder="you@email.com"
-                              />
-                            </label>
-                            <label>
-                              Message (optional)
-                              <textarea
-                                name="message"
-                                rows={3}
-                                placeholder="Tell us a little about yourself."
-                              />
-                            </label>
-                            <button type="submit" className="serve-primary-button">
-                              Submit interest
-                            </button>
-                          </form>
                         </div>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          ))}
+                      )
+                    })}
+                  </div>
+                </div>
+              ))
+            : null}
         </div>
       )}
     </section>
   )
 }
+

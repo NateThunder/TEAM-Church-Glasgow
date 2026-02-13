@@ -20,6 +20,7 @@ const CACHE_KEY = 'teamchurch_youtube_cache_v1'
 const CACHE_TTL_MS = 10 * 60 * 1000
 
 let memoryCache: CachePayload | null = null
+const searchMemoryCache = new Map<string, CachePayload>()
 
 const getEnv = (key: string) => {
   return import.meta.env[key] as string | undefined
@@ -76,6 +77,24 @@ const saveCache = (data: YouTubeVideo[], nextPageToken?: string) => {
   }
 }
 
+const loadSearchCache = (key: string): CachePayload | null => {
+  const cached = searchMemoryCache.get(key)
+  if (!cached) return null
+  if (Date.now() - cached.timestamp > CACHE_TTL_MS) {
+    searchMemoryCache.delete(key)
+    return null
+  }
+  return cached
+}
+
+const saveSearchCache = (key: string, data: YouTubeVideo[], nextPageToken?: string) => {
+  searchMemoryCache.set(key, {
+    timestamp: Date.now(),
+    data,
+    nextPageToken,
+  })
+}
+
 interface ChannelResponse {
   items?: Array<{
     contentDetails?: {
@@ -115,6 +134,63 @@ interface VideosResponse {
       viewCount?: string
     }
   }>
+}
+
+interface SearchResponse {
+  nextPageToken?: string
+  items?: Array<{
+    id?: { videoId?: string }
+    snippet?: {
+      title?: string
+      description?: string
+      publishedAt?: string
+      thumbnails?: {
+        medium?: { url?: string }
+        high?: { url?: string }
+        default?: { url?: string }
+      }
+    }
+  }>
+}
+
+export const getActiveLiveVideo = async (): Promise<YouTubeVideo | null> => {
+  const apiKey = getEnv('VITE_YOUTUBE_API_KEY')
+  const channelId = getEnv('VITE_YOUTUBE_CHANNEL_ID')
+
+  if (!apiKey || !channelId) {
+    throw new Error('MISSING_YOUTUBE_CONFIG')
+  }
+
+  const response = await fetchJson<SearchResponse>('search', {
+    part: 'snippet',
+    channelId,
+    eventType: 'live',
+    type: 'video',
+    maxResults: '1',
+    order: 'date',
+    key: apiKey,
+  })
+
+  const liveItem = response.items?.find((item) => item.id?.videoId)
+  const videoId = liveItem?.id?.videoId
+  if (!liveItem || !videoId) return null
+
+  const snippet = liveItem.snippet
+  const thumbnail =
+    snippet?.thumbnails?.high?.url ||
+    snippet?.thumbnails?.medium?.url ||
+    snippet?.thumbnails?.default?.url ||
+    ''
+
+  return {
+    id: videoId,
+    title: snippet?.title || 'Live stream',
+    description: snippet?.description || '',
+    publishedAt: snippet?.publishedAt || '',
+    thumbnailUrl: thumbnail,
+    embedUrl: `https://www.youtube.com/embed/${videoId}`,
+    videoUrl: `https://www.youtube.com/watch?v=${videoId}`,
+  }
 }
 
 const getUploadsPlaylistId = async (apiKey: string, channelId: string) => {
@@ -248,4 +324,96 @@ export const getLatestVideos = async (options?: {
     saveCache(videos, playlistResult.nextPageToken)
   }
   return { videos, nextPageToken: playlistResult.nextPageToken }
+}
+
+export const searchChannelVideos = async (options: {
+  query: string
+  pageToken?: string
+  maxResults?: number
+  useCache?: boolean
+}): Promise<{ videos: YouTubeVideo[]; nextPageToken?: string }> => {
+  const {
+    query,
+    pageToken,
+    maxResults = 21,
+    useCache = true,
+  } = options
+
+  const normalizedQuery = query.trim()
+  const cacheKey = `search:${normalizedQuery}:${pageToken ?? 'first'}:${maxResults}`
+  const cached = useCache ? loadSearchCache(cacheKey) : null
+  if (cached && cached.nextPageToken !== undefined) {
+    return { videos: cached.data, nextPageToken: cached.nextPageToken }
+  }
+
+  const apiKey = getEnv('VITE_YOUTUBE_API_KEY')
+  const channelId = getEnv('VITE_YOUTUBE_CHANNEL_ID')
+
+  if (!apiKey || !channelId) {
+    throw new Error('MISSING_YOUTUBE_CONFIG')
+  }
+
+  const response = await fetchJson<SearchResponse>('search', {
+    part: 'snippet',
+    channelId,
+    q: normalizedQuery,
+    type: 'video',
+    maxResults: String(maxResults),
+    order: 'relevance',
+    key: apiKey,
+    ...(pageToken ? { pageToken } : {}),
+  })
+
+  const items =
+    response.items
+      ?.map((item) => {
+        const videoId = item.id?.videoId
+        if (!videoId) return null
+        const snippet = item.snippet
+        const thumbnail =
+          snippet?.thumbnails?.high?.url ||
+          snippet?.thumbnails?.medium?.url ||
+          snippet?.thumbnails?.default?.url ||
+          ''
+        return {
+          id: videoId,
+          title: snippet?.title || 'Untitled video',
+          description: snippet?.description || '',
+          publishedAt: snippet?.publishedAt || '',
+          thumbnailUrl: thumbnail,
+        }
+      })
+      .filter(Boolean) as Array<{
+      id: string
+      title: string
+      description: string
+      publishedAt: string
+      thumbnailUrl: string
+    }> || []
+
+  const detailsMap = await getVideoDetails(
+    apiKey,
+    items.map((item) => item.id)
+  )
+
+  const videos: YouTubeVideo[] = items.map((item) => {
+    const details = detailsMap.get(item.id)
+    return {
+      id: item.id,
+      title: item.title,
+      description: item.description,
+      publishedAt: item.publishedAt,
+      thumbnailUrl: item.thumbnailUrl,
+      embedUrl: `https://www.youtube.com/embed/${item.id}`,
+      videoUrl: `https://www.youtube.com/watch?v=${item.id}`,
+      duration: details?.duration,
+      viewCount: details?.viewCount,
+    }
+  })
+
+  if (useCache) {
+    saveSearchCache(cacheKey, videos, response.nextPageToken)
+  }
+
+  return { videos, nextPageToken: response.nextPageToken }
 }

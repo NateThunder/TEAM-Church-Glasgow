@@ -205,7 +205,7 @@ export default function HomePage() {
         </div>
         <div className="next-steps-grid">
           {nextSteps.map((step) => (
-            <article key={step.title} className="next-steps-card">
+            <Link key={step.title} className="next-steps-card" to={step.to}>
               <div className="next-steps-icon" aria-hidden="true">
                 <FontAwesomeIcon icon={step.icon} />
               </div>
@@ -213,13 +213,14 @@ export default function HomePage() {
                 <h3>{step.title}</h3>
                 <p>{step.description}</p>
               </div>
-              <Link className="next-steps-link" to={step.to}>
+              <span className="next-steps-link">
                 {step.linkText} <span aria-hidden="true">→</span>
-              </Link>
-            </article>
+              </span>
+            </Link>
           ))}
         </div>
       </section>
     </section>
   )
 }
+
