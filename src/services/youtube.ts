@@ -38,7 +38,28 @@ const fetchJson = async <T>(
   )
   const response = await fetch(url.toString())
   if (!response.ok) {
-    throw new Error(`YouTube API error: ${response.status}`)
+    let reason = ''
+    let message = response.statusText || 'Request failed'
+    try {
+      const payload = (await response.json()) as {
+        error?: {
+          message?: string
+          errors?: Array<{ reason?: string; message?: string }>
+        }
+      }
+      reason = payload.error?.errors?.[0]?.reason || ''
+      message =
+        payload.error?.errors?.[0]?.message ||
+        payload.error?.message ||
+        message
+    } catch {
+      // Keep a generic status-based message when body parsing fails.
+    }
+    throw new Error(
+      `YouTube API error ${response.status}${
+        reason ? ` (${reason})` : ''
+      }: ${message}`
+    )
   }
   return (await response.json()) as T
 }

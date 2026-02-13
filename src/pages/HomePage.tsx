@@ -8,26 +8,30 @@ import {
   faHandHoldingHeart,
   faHandsPraying,
 } from '@fortawesome/free-solid-svg-icons'
-import welcomeImage from '../assets/join.png'
 import { getLatestVideos, type YouTubeVideo } from '../services/youtube'
 
 type LoadState = 'idle' | 'loading' | 'error'
 
 export default function HomePage() {
+  const welcomeImage = '/jonny church pics/DSC02624.JPG'
   const [videos, setVideos] = useState<YouTubeVideo[]>([])
   const [status, setStatus] = useState<LoadState>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     let active = true
     const load = async () => {
       setStatus('loading')
+      setErrorMessage('')
       try {
         const data = await getLatestVideos({ maxResults: 4 })
         if (!active) return
         setVideos(data.videos.slice(0, 4))
         setStatus('idle')
-      } catch {
+      } catch (err) {
         if (!active) return
+        const message = err instanceof Error ? err.message : 'Unknown error'
+        setErrorMessage(message)
         setStatus('error')
       }
     }
@@ -130,7 +134,13 @@ export default function HomePage() {
             </div>
 
             {status === 'error' ? (
-              <div className="latest-error">Unable to load latest messages.</div>
+              <div className="latest-error">
+                {errorMessage === 'MISSING_YOUTUBE_CONFIG'
+                  ? 'YouTube is not configured for this deployment. Add VITE_YOUTUBE_API_KEY and VITE_YOUTUBE_CHANNEL_ID in Netlify environment variables, then redeploy.'
+                  : errorMessage.startsWith('YouTube API error')
+                  ? `${errorMessage} Check Google Cloud API restrictions/quota for this key.`
+                  : 'Unable to load latest messages.'}
+              </div>
             ) : (
               <div className="latest-grid">
                 <div className="latest-featured">
