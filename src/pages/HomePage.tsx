@@ -13,7 +13,7 @@ import { getLatestVideos, type YouTubeVideo } from '../services/youtube'
 type LoadState = 'idle' | 'loading' | 'error'
 
 export default function HomePage() {
-  const welcomeImage = '/jonny church pics/DSC02624.JPG'
+  const welcomeImage = '/optimized/home-welcome.jpg'
   const [videos, setVideos] = useState<YouTubeVideo[]>([])
   const [status, setStatus] = useState<LoadState>('idle')
   const [errorMessage, setErrorMessage] = useState('')
@@ -24,7 +24,7 @@ export default function HomePage() {
       setStatus('loading')
       setErrorMessage('')
       try {
-        const data = await getLatestVideos({ maxResults: 4 })
+        const data = await getLatestVideos({ maxResults: 4, useCache: false })
         if (!active) return
         setVideos(data.videos.slice(0, 4))
         setStatus('idle')

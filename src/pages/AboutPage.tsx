@@ -5,19 +5,19 @@ import collageImage from '../assets/join.png'
 export default function AboutPage() {
   const storyImages = [
     {
-      src: '/jonny church pics/C6493T01.JPG',
+      src: '/optimized/about-story-1.jpg',
       alt: 'Worship moment during service',
     },
     {
-      src: '/jonny church pics/C6494T01.JPG',
+      src: '/optimized/about-story-2.jpg',
       alt: 'Worship leader singing at the front',
     },
     {
-      src: '/jonny church pics/DSC03179.JPG',
+      src: '/optimized/about-story-3.jpg',
       alt: 'Speaker sharing at Sunday service',
     },
     {
-      src: '/jonny church pics/DSC03241.JPG',
+      src: '/optimized/about-story-4.jpg',
       alt: 'Church leader sharing a testimony',
     },
   ]
@@ -47,7 +47,7 @@ export default function AboutPage() {
         </div>
         <div className="about-collage">
           {storyImages.map((image) => (
-            <img key={image.src} src={image.src} alt={image.alt} />
+            <img key={image.src} src={image.src} alt={image.alt} loading="lazy" decoding="async" />
           ))}
         </div>
       </section>

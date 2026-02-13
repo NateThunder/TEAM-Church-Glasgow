@@ -16,7 +16,7 @@ interface CachePayload {
   nextPageToken?: string
 }
 
-const CACHE_KEY = 'teamchurch_youtube_cache_v1'
+const CACHE_KEY = 'teamchurch_youtube_cache_v2'
 const CACHE_TTL_MS = 10 * 60 * 1000
 
 let memoryCache: CachePayload | null = null
@@ -341,7 +341,7 @@ export const getLatestVideos = async (options?: {
     }
   })
 
-  if (!pageToken) {
+  if (!pageToken && useCache) {
     saveCache(videos, playlistResult.nextPageToken)
   }
   return { videos, nextPageToken: playlistResult.nextPageToken }
