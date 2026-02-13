@@ -45,6 +45,12 @@
 
 }
 
+.tone-section + .watch-page {
+
+  border-top: 1px solid rgba(141, 76, 255, 0.22);
+
+}
+
 .watch-page-wrapper {
 
   width: 100%;
@@ -179,6 +185,15 @@
 
 }
 
+.watch-live .watch-live-state {
+  margin-top: 0;
+}
+
+.watch-live .watch-state a {
+  color: #ffffff;
+  font-weight: 600;
+}
+
 @media (min-width: 769px) {
 
   .watch-live {
@@ -297,18 +312,85 @@
 
 }
 
+.watch-load-more {
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 8px;
+
+}
+
+.watch-load-more-button {
+
+  border: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+  background: linear-gradient(135deg, #5b2cc7, #7b3fe6 55%, #9a5bff);
+  color: #f8f5ff;
+  box-shadow: 0 12px 24px rgba(88, 48, 160, 0.35);
+
+}
+
+.watch-load-more-button::after {
+
+  content: '↓';
+  display: inline-block;
+  margin-left: 8px;
+  font-weight: 700;
+  transform: translateY(-1px);
+
+}
+
+.watch-load-more-button:hover {
+
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+
+}
+
+.watch-load-more-button:disabled {
+
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+
+}
+
+.watch-back-top-button {
+
+  background: rgba(255, 255, 255, 0.08);
+  color: #e8ddff;
+  border: 1px solid rgba(144, 92, 220, 0.45);
+  box-shadow: 0 10px 20px rgba(12, 8, 22, 0.25);
+
+}
+
+.watch-back-top-button::after {
+
+  content: '↑';
+
+}
+
 .watch-page .tone-inner {
 
   max-width: 900px;
   margin: 0 auto;
-  padding: 64px 32px;
+  padding: 144px 32px 32px;
 
 }
 
 @media (max-width: 767px) {
 
   .watch-page .tone-inner {
-    padding: 64px 20px 24px;
+    padding: 132px 20px 20px;
   }
 
 }
@@ -370,6 +452,10 @@
 
 }
 
+.app-shell.theme-light .watch-live .watch-state a {
+  color: #312e81;
+}
+
 .app-shell.theme-light .watch-card {
 
   background: #ffffff;
@@ -403,17 +489,17 @@
 
 .app-shell.theme-light .watch-load-more-button {
 
-  background: #111827;
-  color: #ffffff;
-  box-shadow: 0 10px 20px rgba(16, 24, 40, 0.18);
+  background: linear-gradient(135deg, #4e2bb8, #6e39d1 55%, #8d4cff);
+  color: #fefcff;
+  box-shadow: 0 12px 24px rgba(74, 44, 138, 0.3);
 
 }
 
 .app-shell.theme-light .watch-back-top-button {
 
-  background: rgba(17, 24, 39, 0.08);
-  color: #111827;
-  border: 1px solid rgba(17, 24, 39, 0.12);
-  box-shadow: 0 10px 20px rgba(16, 24, 40, 0.12);
+  background: rgba(94, 58, 164, 0.1);
+  color: #241739;
+  border: 1px solid rgba(94, 58, 164, 0.35);
+  box-shadow: 0 10px 18px rgba(65, 38, 112, 0.18);
 
 }

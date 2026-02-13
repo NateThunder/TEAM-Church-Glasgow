@@ -125,6 +125,18 @@ const formatEventMeta = (event: EventItem) => {
   }
 }
 
+const categoryClassName = (category: EventCategory) =>
+  category.toLowerCase().replace(/\s+/g, '-')
+
+function AgendaEvent({
+  event,
+}: {
+  event: CalendarEvent
+}) {
+  const categoryClass = categoryClassName(event.resource.category)
+  return <span className={`events-agenda-label events-agenda-label--${categoryClass}`}>{event.title}</span>
+}
+
 function EventsToolbar({
   label,
   onNavigate,
@@ -193,9 +205,6 @@ export default function EventsPage() {
     if (isMobile && calendarView === Views.MONTH) {
       setCalendarView(Views.AGENDA)
     }
-    if (!isMobile && calendarView === Views.AGENDA) {
-      setCalendarView(Views.MONTH)
-    }
   }, [isMobile, calendarView])
 
   useEffect(() => {
@@ -246,6 +255,10 @@ export default function EventsPage() {
       })
       .filter(Boolean) as CalendarEvent[]
   }, [filteredEvents])
+
+  const calendarEventProps = (event: CalendarEvent) => ({
+    className: `events-calendar-event events-calendar-event--${categoryClassName(event.resource.category)}`,
+  })
 
   return (
     <>
@@ -327,22 +340,18 @@ export default function EventsPage() {
                       {group.items.map((event) => {
                         const meta = formatEventMeta(event)
                         const date = toDate(event.start)
+                        const categoryClass = categoryClassName(event.category)
                         return (
                           <button
                             key={event.id}
                             type="button"
-                            className="events-card"
+                            className={`events-card events-card--${categoryClass}`}
                             onClick={() => setSelectedEvent(event)}
                           >
-                            <div className="events-card-media">
-                              {event.imageUrl ? (
-                                <img src={event.imageUrl} alt="" />
-                              ) : (
-                                <div className="events-card-placeholder" aria-hidden="true" />
-                              )}
-                            </div>
                             <div className="events-card-body">
-                              <span className="events-pill">{event.category}</span>
+                              <span className={`events-pill events-pill--${categoryClass}`}>
+                                {event.category}
+                              </span>
                               <h3>{event.title}</h3>
                               {event.description ? <p>{event.description}</p> : null}
                               <div className="events-meta">
@@ -378,10 +387,11 @@ export default function EventsPage() {
                 onView={setCalendarView}
                 startAccessor="start"
                 endAccessor="end"
+                eventPropGetter={calendarEventProps}
                 style={{ height: isMobile ? 520 : 720 }}
                 popup
                 onSelectEvent={(event: CalendarEvent) => setSelectedEvent(event.resource)}
-                components={{ toolbar: EventsToolbar }}
+                components={{ toolbar: EventsToolbar, agenda: { event: AgendaEvent } }}
               />
             </div>
           ) : null}
@@ -399,7 +409,11 @@ export default function EventsPage() {
           <div className="events-modal-panel" role="document">
             <div className="events-modal-header">
               <div>
-                <span className="events-pill">{selectedEvent.category}</span>
+                <span
+                  className={`events-pill events-pill--${categoryClassName(selectedEvent.category)}`}
+                >
+                  {selectedEvent.category}
+                </span>
                 <h3>{selectedEvent.title}</h3>
               </div>
               <button

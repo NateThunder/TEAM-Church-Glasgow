@@ -1,6 +1,6 @@
 ﻿import '../styles/admin.css'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../services/supabaseClient'
 
 type AuthUser = {
@@ -15,7 +15,13 @@ export default function AdminPage() {
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
   const supabaseAvailable = Boolean(supabase)
+  const requestedPath = (location.state as { from?: string } | null)?.from
+  const redirectPath =
+    requestedPath && requestedPath.startsWith('/admin') && requestedPath !== '/admin/login'
+      ? requestedPath
+      : '/admin'
 
   useEffect(() => {
     if (!supabase) {
@@ -42,9 +48,9 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (user) {
-      navigate('/admin', { replace: true })
+      navigate(redirectPath, { replace: true })
     }
-  }, [user, navigate])
+  }, [user, navigate, redirectPath])
 
   const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()

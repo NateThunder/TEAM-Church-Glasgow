@@ -1,9 +1,19 @@
 .serve-page {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 0px;
   padding-top: calc(var(--header-height, 96px) + 24px);
   padding-bottom: 64px;
+}
+
+.serve-page h1 {
+  color: #ffffff;
+}
+
+.serve-page h2,
+.serve-page h3,
+.serve-page h4 {
+  color: #7851a9;
 }
 
 .serve-container {
@@ -15,7 +25,15 @@
 .serve-header {
   text-align: center;
   display: grid;
-  gap: 12px;
+  gap: 0px;
+}
+
+.serve-header h1 {
+  margin: 0;
+}
+
+.serve-header h1 {
+  margin: 0;
 }
 
 .serve-kicker {
@@ -38,7 +56,7 @@
   border-radius: 20px;
   padding: 24px;
   box-shadow: 0 18px 32px rgba(6, 18, 28, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(120, 81, 169, 0.35);
 }
 
 .serve-believers-card {
@@ -146,9 +164,10 @@
 }
 
 .serve-primary-button {
-  background: #7851a9;
+  background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
-  box-shadow: 0 10px 20px rgba(16, 8, 26, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: none;
 }
 
 .serve-primary-button:hover {
@@ -160,6 +179,13 @@
   background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.serve-step-actions .is-active {
+  background: #7851a9;
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 10px 20px rgba(16, 8, 26, 0.25);
 }
 
 .serve-secondary-button:hover {
@@ -195,41 +221,42 @@
   width: 100vw;
   margin-left: -50vw;
   margin-right: -50vw;
-  background: color-mix(in srgb, currentColor 6%, transparent);
+  background: transparent;
 }
 
 .serve-eligibility {
-  padding: 48px 0;
-  text-align: center;
+  padding: 28px 0;
   display: grid;
-  gap: 16px;
+  place-items: center;
 }
 
-.serve-toggle {
+.serve-step-card {
+  width: min(680px, 100%);
+  padding: 40px;
+  text-align: center;
+  display: grid;
+  gap: 20px;
+}
+
+.serve-step-helper {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.serve-step-actions {
   display: inline-flex;
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
+  margin-top: 6px;
 }
 
-.serve-toggle-btn {
-  padding: 10px 20px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.04);
-  color: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 150ms ease, color 150ms ease, border 150ms ease;
+.serve-step-micro {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.7;
 }
 
-.serve-toggle-btn.is-active {
-  background: #7851a9;
-  color: #ffffff;
-  border-color: transparent;
-}
-
-.serve-toggle-btn:focus-visible,
 .serve-primary-button:focus-visible,
 .serve-secondary-button:focus-visible {
   outline: 2px solid #7851a9;
@@ -247,12 +274,17 @@
   display: grid;
   gap: 8px;
   margin-bottom: 24px;
+  scroll-margin-top: calc(var(--header-height, 96px) + 16px);
 }
 
 .serve-team-group {
   display: grid;
   gap: 16px;
   margin-bottom: 24px;
+}
+
+.serve-state-card {
+  text-align: center;
 }
 
 .serve-team-grid {
@@ -325,7 +357,11 @@
 .app-shell.theme-light .serve-card {
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 16px 28px rgba(16, 24, 40, 0.1);
-  border: 1px solid rgba(17, 24, 39, 0.12);
+  border: 1px solid rgba(120, 81, 169, 0.3);
+  color: #111827;
+}
+
+.app-shell.theme-light .serve-page h1 {
   color: #111827;
 }
 
@@ -341,11 +377,6 @@
   background: rgba(17, 24, 39, 0.05);
   color: #111827;
   border: 1px solid rgba(17, 24, 39, 0.12);
-}
-
-.app-shell.theme-light .serve-toggle-btn {
-  border: 1px solid rgba(17, 24, 39, 0.18);
-  background: rgba(17, 24, 39, 0.04);
 }
 
 .app-shell.theme-light .serve-join-panel input,
@@ -399,11 +430,11 @@
     width: 100%;
   }
 
-  .serve-toggle {
-    width: 100%;
+  .serve-step-card {
+    padding: 32px;
   }
 
-  .serve-toggle-btn {
+  .serve-step-actions {
     width: 100%;
   }
 }

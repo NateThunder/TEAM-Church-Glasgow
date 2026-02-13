@@ -134,47 +134,60 @@
 }
 
 .events-card {
+  --event-accent: #7851a9;
+  --event-soft: rgba(120, 81, 169, 0.18);
+  --event-border: rgba(120, 81, 169, 0.45);
   display: grid;
-  grid-template-columns: 140px minmax(0, 1fr) 80px;
+  grid-template-columns: minmax(0, 1fr) 80px;
   gap: 18px;
   align-items: center;
   text-align: left;
   color: inherit;
   font: inherit;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 4px solid var(--event-accent);
   border-radius: 20px;
   padding: 16px;
-  background: rgba(8, 20, 28, 0.82);
+  background: linear-gradient(110deg, var(--event-soft) 0%, rgba(8, 20, 28, 0) 44%),
+    rgba(8, 20, 28, 0.82);
   box-shadow: 0 16px 30px rgba(3, 10, 16, 0.2);
   cursor: pointer;
   transition: border-color 150ms ease, transform 150ms ease;
 }
 
 .events-card:hover {
-  border-color: rgba(120, 81, 169, 0.45);
+  border-color: var(--event-border);
   transform: translateY(-1px);
 }
 
-.events-card-media {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: 16px;
-  overflow: hidden;
-  background: rgba(120, 81, 169, 0.18);
-  border: 1px solid rgba(120, 81, 169, 0.2);
+.events-card--all {
+  --event-accent: #7851a9;
+  --event-soft: rgba(120, 81, 169, 0.18);
+  --event-border: rgba(120, 81, 169, 0.45);
 }
 
-.events-card-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+.events-card--worship {
+  --event-accent: #4f83ff;
+  --event-soft: rgba(79, 131, 255, 0.18);
+  --event-border: rgba(79, 131, 255, 0.55);
 }
 
-.events-card-placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(140deg, rgba(120, 81, 169, 0.2), rgba(8, 20, 28, 0.8));
+.events-card--community {
+  --event-accent: #2aa876;
+  --event-soft: rgba(42, 168, 118, 0.18);
+  --event-border: rgba(42, 168, 118, 0.55);
+}
+
+.events-card--youth {
+  --event-accent: #f59e0b;
+  --event-soft: rgba(245, 158, 11, 0.2);
+  --event-border: rgba(245, 158, 11, 0.58);
+}
+
+.events-card--kids {
+  --event-accent: #ec4899;
+  --event-soft: rgba(236, 72, 153, 0.2);
+  --event-border: rgba(236, 72, 153, 0.58);
 }
 
 .events-card-body {
@@ -202,8 +215,34 @@
   font-size: 12px;
   font-weight: 600;
   color: #ffffff;
-  background: rgba(120, 81, 169, 0.9);
+  background: var(--pill-bg, rgba(120, 81, 169, 0.9));
+  border: 1px solid var(--pill-border, rgba(120, 81, 169, 0.75));
   width: fit-content;
+}
+
+.events-pill--all {
+  --pill-bg: #7851a9;
+  --pill-border: rgba(120, 81, 169, 0.75);
+}
+
+.events-pill--worship {
+  --pill-bg: #4f83ff;
+  --pill-border: rgba(79, 131, 255, 0.8);
+}
+
+.events-pill--community {
+  --pill-bg: #2aa876;
+  --pill-border: rgba(42, 168, 118, 0.8);
+}
+
+.events-pill--youth {
+  --pill-bg: #f59e0b;
+  --pill-border: rgba(245, 158, 11, 0.82);
+}
+
+.events-pill--kids {
+  --pill-bg: #ec4899;
+  --pill-border: rgba(236, 72, 153, 0.82);
 }
 
 .events-meta {
@@ -222,7 +261,7 @@
 .events-card-day {
   font-size: 32px;
   font-weight: 700;
-  color: #7851a9;
+  color: var(--event-accent);
 }
 
 .events-card-weekday {
@@ -322,15 +361,48 @@
 
 .events-calendar .rbc-event,
 .events-calendar .rbc-day-slot .rbc-background-event {
-  background: rgba(120, 81, 169, 0.9);
-  border: none;
+  --calendar-event-bg: rgba(120, 81, 169, 0.9);
+  --calendar-event-bg-selected: rgba(120, 81, 169, 1);
+  --calendar-event-border: rgba(120, 81, 169, 0.85);
+  background: var(--calendar-event-bg);
+  border: 1px solid var(--calendar-event-border);
   border-radius: 10px;
   color: #ffffff;
   padding: 2px 6px;
 }
 
+.events-calendar .events-calendar-event--all {
+  --calendar-event-bg: rgba(120, 81, 169, 0.9);
+  --calendar-event-bg-selected: rgba(120, 81, 169, 1);
+  --calendar-event-border: rgba(120, 81, 169, 0.85);
+}
+
+.events-calendar .events-calendar-event--worship {
+  --calendar-event-bg: rgba(79, 131, 255, 0.92);
+  --calendar-event-bg-selected: rgba(79, 131, 255, 1);
+  --calendar-event-border: rgba(79, 131, 255, 0.88);
+}
+
+.events-calendar .events-calendar-event--community {
+  --calendar-event-bg: rgba(42, 168, 118, 0.92);
+  --calendar-event-bg-selected: rgba(42, 168, 118, 1);
+  --calendar-event-border: rgba(42, 168, 118, 0.88);
+}
+
+.events-calendar .events-calendar-event--youth {
+  --calendar-event-bg: rgba(245, 158, 11, 0.92);
+  --calendar-event-bg-selected: rgba(245, 158, 11, 1);
+  --calendar-event-border: rgba(245, 158, 11, 0.88);
+}
+
+.events-calendar .events-calendar-event--kids {
+  --calendar-event-bg: rgba(236, 72, 153, 0.92);
+  --calendar-event-bg-selected: rgba(236, 72, 153, 1);
+  --calendar-event-border: rgba(236, 72, 153, 0.88);
+}
+
 .events-calendar .rbc-selected {
-  background: rgba(120, 81, 169, 1);
+  background: var(--calendar-event-bg-selected);
 }
 
 .events-calendar .rbc-agenda-view table.rbc-agenda-table {
@@ -342,6 +414,45 @@
 .events-calendar .rbc-agenda-event {
   padding: 10px 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.events-agenda-label {
+  --agenda-label-bg: #7851a9;
+  --agenda-label-border: rgba(120, 81, 169, 0.82);
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--agenda-label-bg);
+  border: 1px solid var(--agenda-label-border);
+}
+
+.events-agenda-label--all {
+  --agenda-label-bg: #7851a9;
+  --agenda-label-border: rgba(120, 81, 169, 0.82);
+}
+
+.events-agenda-label--worship {
+  --agenda-label-bg: #4f83ff;
+  --agenda-label-border: rgba(79, 131, 255, 0.84);
+}
+
+.events-agenda-label--community {
+  --agenda-label-bg: #2aa876;
+  --agenda-label-border: rgba(42, 168, 118, 0.84);
+}
+
+.events-agenda-label--youth {
+  --agenda-label-bg: #f59e0b;
+  --agenda-label-border: rgba(245, 158, 11, 0.86);
+}
+
+.events-agenda-label--kids {
+  --agenda-label-bg: #ec4899;
+  --agenda-label-border: rgba(236, 72, 153, 0.86);
 }
 
 .events-modal {
@@ -460,12 +571,22 @@
 }
 
 .app-shell.theme-light .events-state-card,
-.app-shell.theme-light .events-card,
 .app-shell.theme-light .events-calendar,
 .app-shell.theme-light .events-modal-panel {
   background: rgba(255, 255, 255, 0.96);
   border-color: rgba(15, 23, 42, 0.08);
   color: #111827;
+}
+
+.app-shell.theme-light .events-card {
+  background: linear-gradient(110deg, var(--event-soft) 0%, rgba(255, 255, 255, 0) 44%),
+    rgba(255, 255, 255, 0.96);
+  border-color: rgba(15, 23, 42, 0.08);
+  color: #111827;
+}
+
+.app-shell.theme-light .events-card:hover {
+  border-color: var(--event-border);
 }
 
 .app-shell.theme-light .events-card-date,
@@ -499,7 +620,7 @@
 
 @media (max-width: 900px) {
   .events-card {
-    grid-template-columns: 120px minmax(0, 1fr);
+    grid-template-columns: 1fr;
   }
 
   .events-card-date {
@@ -528,10 +649,6 @@
 
   .events-card {
     grid-template-columns: 1fr;
-  }
-
-  .events-card-media {
-    aspect-ratio: 16 / 9;
   }
 }
 
