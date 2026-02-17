@@ -11,6 +11,7 @@ import {
 export default function WatchPage() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([])
   const [selected, setSelected] = useState<YouTubeVideo | null>(null)
+  const [isTheaterMode, setIsTheaterMode] = useState(false)
   const [autoPlayId, setAutoPlayId] = useState<string | null>(null)
   const [mode, setMode] = useState<'recorded' | 'live'>('recorded')
   const [status, setStatus] = useState<
@@ -21,15 +22,10 @@ export default function WatchPage() {
   const [nextPageToken, setNextPageToken] = useState<string | null>(null)
   const [currentQuery, setCurrentQuery] = useState('')
   const [debouncedQuery, setDebouncedQuery] = useState('')
-  const [latestCache, setLatestCache] = useState<{
-    videos: YouTubeVideo[]
-    nextPageToken: string | null
-  } | null>(null)
   const [liveVideo, setLiveVideo] = useState<YouTubeVideo | null>(null)
   const [liveStatus, setLiveStatus] = useState<
     'idle' | 'loading' | 'offline' | 'error'
   >('idle')
-  const [liveError, setLiveError] = useState('')
   const channelId = import.meta.env.VITE_YOUTUBE_CHANNEL_ID as string | undefined
   const [searchParams] = useSearchParams()
   const query = searchParams.get('q') ?? ''
@@ -54,7 +50,6 @@ export default function WatchPage() {
     if (!nextPageToken || isLoadingMore) return
     setIsLoadingMore(true)
     try {
-      // Pagination switches between latest and search based on current query.
       const data = currentQuery
         ? await searchChannelVideos({
             query: currentQuery,
@@ -67,12 +62,6 @@ export default function WatchPage() {
           })
       setVideos((prev) => [...prev, ...data.videos])
       setNextPageToken(data.nextPageToken ?? null)
-      if (!currentQuery) {
-        setLatestCache((prev) => ({
-          videos: [...(prev?.videos ?? []), ...data.videos],
-          nextPageToken: data.nextPageToken ?? null,
-        }))
-      }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unknown error'
       setError(message)
@@ -81,16 +70,10 @@ export default function WatchPage() {
     }
   }
 
-  const handleBackToTop = () => {
-    if (typeof window === 'undefined') return
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
   const getEmbedUrl = (video: YouTubeVideo) => {
     if (!autoPlayId || autoPlayId !== video.id) return video.embedUrl
     const url = new URL(video.embedUrl)
     url.searchParams.set('autoplay', '1')
-
     return url.toString()
   }
 
@@ -98,7 +81,6 @@ export default function WatchPage() {
     const url = new URL(video.embedUrl)
     url.searchParams.set('autoplay', '1')
     url.searchParams.set('rel', '0')
-
     return url.toString()
   }
 
@@ -122,111 +104,49 @@ export default function WatchPage() {
 
   useEffect(() => {
     if (mode !== 'recorded') return
-    let active = true
     const load = async () => {
-      const isSearch = debouncedQuery.length > 0
-      // Query-aware switching between search and latest feeds.
-      setStatus(isSearch ? 'searching' : 'loading')
+      setStatus(debouncedQuery ? 'searching' : 'loading')
       setError('')
-      setIsLoadingMore(false)
-      setVideos([])
-      setSelected(null)
-      setNextPageToken(null)
-      setCurrentQuery(debouncedQuery)
-
-      if (!isSearch && latestCache) {
-        if (!active) return
-        setVideos(latestCache.videos)
-        setNextPageToken(latestCache.nextPageToken)
-        const match = videoId
-          ? latestCache.videos.find((video) => video.id === videoId)
-          : null
-        setSelected(match ?? latestCache.videos[0] ?? null)
-        setAutoPlayId(match ? match.id : null)
-        setStatus('idle')
-        return
-      }
-
       try {
-        const data = isSearch
-          ? await searchChannelVideos({
-              query: debouncedQuery,
-              maxResults: 21,
-              useCache: false,
-            })
-          : await getLatestVideos({ maxResults: 21, useCache: true })
-        if (!active) return
+        const data = debouncedQuery
+          ? await searchChannelVideos({ query: debouncedQuery, useCache: true })
+          : await getLatestVideos({ useCache: true })
         setVideos(data.videos)
         setNextPageToken(data.nextPageToken ?? null)
-        if (!isSearch) {
-          setLatestCache({
-            videos: data.videos,
-            nextPageToken: data.nextPageToken ?? null,
-          })
-        }
-        const match = videoId
-          ? data.videos.find((video) => video.id === videoId)
-          : null
-        setSelected(match ?? data.videos[0] ?? null)
-        setAutoPlayId(match ? match.id : null)
-        setStatus('idle')
+        setCurrentQuery(debouncedQuery)
       } catch (err) {
-        if (!active) return
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)
         setStatus('error')
+        return
       }
+      setStatus('idle')
     }
-
     load()
-    return () => {
-      active = false
-    }
   }, [debouncedQuery, mode])
 
   useEffect(() => {
     if (mode !== 'live') {
       setLiveVideo(null)
       setLiveStatus('idle')
-      setLiveError('')
       return
     }
-    if (!channelId) {
-      setLiveVideo(null)
-      setLiveStatus('error')
-      setLiveError('MISSING_YOUTUBE_CONFIG')
-      return
-    }
-
-    let active = true
-
     const loadLive = async () => {
+      setLiveStatus('loading')
       try {
-        const data = await getActiveLiveVideo()
-        if (!active) return
-        setLiveVideo(data)
-        setLiveStatus(data ? 'idle' : 'offline')
-        setLiveError('')
+        const live = await getActiveLiveVideo()
+        if (live) {
+          setLiveVideo(live)
+          setLiveStatus('idle')
+        } else {
+          setLiveStatus('offline')
+        }
       } catch (err) {
-        if (!active) return
-        const message = err instanceof Error ? err.message : 'Unknown error'
-        setLiveVideo(null)
+        console.error('Error loading live stream:', err)
         setLiveStatus('error')
-        setLiveError(message)
       }
     }
-
-    setLiveStatus('loading')
-    void loadLive()
-
-    const interval = window.setInterval(() => {
-      void loadLive()
-    }, 60_000)
-
-    return () => {
-      active = false
-      window.clearInterval(interval)
-    }
+    loadLive()
   }, [channelId, mode])
 
   useEffect(() => {
@@ -237,152 +157,181 @@ export default function WatchPage() {
     setAutoPlayId(match.id)
   }, [videoId, videos])
 
+  const recentVideos = videos.slice(0, 6)
+  const pastVideos = videos.slice(6)
+
   return (
-    <div className="watch-page-wrapper">
-      <section className="page watch-page">
-        {mode === 'recorded' && status === 'loading' ? (
-          <div className="watch-state">Loading videos...</div>
-        ) : null}
-
-        {mode === 'recorded' && status === 'searching' ? (
-          <div className="watch-state">Searching...</div>
-        ) : null}
-
-        {mode === 'recorded' && status === 'error' ? (
-          <div className="watch-state">
-            {error === 'MISSING_YOUTUBE_CONFIG'
-              ? youtubeSetupMessage
-              : error.startsWith('YouTube API error')
-              ? `${error} Check Google Cloud API restrictions/quota for this key.`
-              : 'Sorry, we could not load videos right now.'}
-          </div>
-        ) : null}
-
-        {mode === 'live' ? (
-          <div className="watch-live">
-            <div className="watch-live-card">
-              <div className="watch-live-meta">
-                <h2>Live Stream</h2>
-                <span>Sundays at 11:00 AM</span>
-              </div>
-              <span className="watch-live-pill">Live</span>
+    <div className={`watch-page-wrapper${isTheaterMode ? ' theater-mode' : ''}`}>
+      <section className={`watch-container ${selected ? 'has-selected' : 'grid-mode'}`}>
+        <div className="watch-main-col">
+          {mode === 'recorded' && (status === 'loading' || status === 'searching') && !selected ? (
+            <div className="watch-state">
+              {status === 'searching' ? 'Searching...' : 'Loading videos...'}
             </div>
-            {liveStatus === 'loading' ? (
-              <div className="watch-state watch-live-state">Checking live stream status...</div>
-            ) : null}
-            {channelId ? (
-              <div className="watch-player">
+          ) : null}
+
+          {mode === 'recorded' && status === 'error' && !selected ? (
+            <div className="watch-state">
+              {error === 'MISSING_YOUTUBE_CONFIG'
+                ? youtubeSetupMessage
+                : error.startsWith('YouTube API error')
+                ? `${error} Check Google Cloud API restrictions/quota for this key.`
+                : 'Sorry, we could not load videos right now.'}
+            </div>
+          ) : null}
+
+          {mode === 'live' && (
+            <div className="watch-live">
+              <div className="watch-live-card">
+                <div className="watch-live-meta">
+                  <h2>Live Stream</h2>
+                  <span>Sundays at 11:00 AM</span>
+                </div>
+                <span className="watch-live-pill">Live</span>
+              </div>
+              {liveStatus === 'loading' ? (
+                <div className="watch-state watch-live-state">Checking live stream status...</div>
+              ) : null}
+              {channelId && (
+                <div className="watch-player-area">
+                  <div className="watch-video-container">
+                    <iframe
+                      title={liveVideo?.title ?? 'Live stream'}
+                      src={
+                        liveVideo
+                          ? getLiveEmbedUrl(liveVideo)
+                          : getFallbackLiveEmbedUrl(channelId)
+                      }
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                  <div className="watch-player-meta">
+                    <h2>{liveVideo?.title ?? 'Team Church Glasgow Live'}</h2>
+                    <p>Sundays at 11:00 AM</p>
+                  </div>
+                </div>
+              )}
+              {liveStatus === 'offline' && (
+                <div className="watch-state watch-live-state">
+                  We are not live right now. Join us Sundays at 11:00 AM.
+                </div>
+              )}
+              {liveStatus === 'error' && (
+                 <div className="watch-state watch-live-state">
+                   Unable to load live stream status. Please try again later.
+                 </div>
+              )}
+            </div>
+          )}
+
+          {mode === 'recorded' && selected && (
+            <div className="watch-player-area">
+              <div className="watch-video-container">
                 <iframe
-                  title={liveVideo?.title ?? 'Live stream'}
-                  src={
-                    liveVideo
-                      ? getLiveEmbedUrl(liveVideo)
-                      : getFallbackLiveEmbedUrl(channelId)
-                  }
+                  title={selected.title}
+                  src={getEmbedUrl(selected)}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
-                <div className="watch-player-meta">
-                  <h2>{liveVideo?.title ?? 'Team Church Glasgow Live'}</h2>
-                </div>
+                <button
+                  className="theater-toggle"
+                  onClick={() => setIsTheaterMode(!isTheaterMode)}
+                  title="Toggle Theater Mode"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 19H5V5h14v14zm-2-2V7H7v10h10z" />
+                  </svg>
+                </button>
               </div>
-            ) : null}
-            {liveStatus === 'offline' ? (
-              <div className="watch-state watch-live-state">
-                We are not live right now. Join us Sundays at 11:00 AM.
-              </div>
-            ) : null}
-            {liveStatus === 'error' ? (
-              <div className="watch-state watch-live-state">
-                {liveError === 'MISSING_YOUTUBE_CONFIG'
-                  ? youtubeSetupMessage
-                  : liveError.startsWith('YouTube API error')
-                  ? `${liveError} Using channel live player fallback.`
-                  : 'We could not load the live stream right now.'}
-                {channelId ? (
-                  <>
-                    {' '}
-                    <a
-                      href={`https://www.youtube.com/channel/${channelId}/live`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Open on YouTube
-                    </a>
-                    .
-                  </>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
-        ) : null}
-      </section>
-
-      {mode === 'recorded' && selected ? (
-        <section className="tone-section">
-          <div className="tone-inner">
-            <div className="watch-player">
-              <iframe
-                title={selected.title}
-                src={getEmbedUrl(selected)}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
               <div className="watch-player-meta">
                 <h2>{selected.title}</h2>
+                <div className="watch-meta-details">
+                   <span>Team Church Glasgow</span>
+                   <span className="dot">·</span>
+                   <span>{new Date(selected.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                </div>
+                <div className="watch-description">
+                  <p>{selected.description}</p>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
-      ) : null}
+          )}
 
-      <section className="page watch-page">
-        {mode === 'recorded' &&
-        status === 'idle' &&
-        currentQuery &&
-        videos.length === 0 ? (
-          <div className="watch-state">
-            No results for '{currentQuery}'. Try clearing the search.
-          </div>
-        ) : null}
+          {mode === 'recorded' && !selected && status === 'idle' && (
+             <div className="watch-browse-feed">
+                {recentVideos.length > 0 && (
+                  <div className="watch-feed-section">
+                    <h2 className="watch-section-title">Most Recent</h2>
+                    <div className="watch-grid">
+                      {recentVideos.map(video => (
+                        <button key={video.id} className="watch-card" onClick={() => handleSelectVideo(video)}>
+                          <div className="watch-card-thumb">
+                            <img src={video.thumbnailUrl} alt="" />
+                          </div>
+                          <div className="watch-card-info">
+                            <h3>{video.title}</h3>
+                            <p>Team Church Glasgow</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-        {mode === 'recorded' ? (
-          <div className="watch-grid">
-            {videos.map((video) => (
-              <button
-                key={video.id}
-                className="watch-card"
-                type="button"
-                onClick={() => handleSelectVideo(video)}
-              >
-                <img src={video.thumbnailUrl} alt={video.title} />
-                <div className="watch-card-body">
-                  <h3>{video.title}</h3>
-                  <p>{video.description}</p>
-                </div>
-              </button>
-            ))}
-            {nextPageToken ? (
-              <div className="watch-load-more">
-                <button
-                  type="button"
-                  className="watch-load-more-button"
-                  onClick={handleLoadMore}
-                  disabled={isLoadingMore}
-                >
-                  {isLoadingMore ? 'Loading...' : 'Show more'}
+                {pastVideos.length > 0 && (
+                  <div className="watch-feed-section">
+                    <h2 className="watch-section-title">Past Messages</h2>
+                    <div className="watch-grid">
+                      {pastVideos.map(video => (
+                        <button key={video.id} className="watch-card" onClick={() => handleSelectVideo(video)}>
+                          <div className="watch-card-thumb">
+                            <img src={video.thumbnailUrl} alt="" />
+                          </div>
+                          <div className="watch-card-info">
+                            <h3>{video.title}</h3>
+                            <p>Team Church Glasgow</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {videos.length === 0 && !debouncedQuery && (
+                  <div className="watch-state">No videos found.</div>
+                )}
+
+                {videos.length === 0 && debouncedQuery && (
+                  <div className="watch-state">No videos found matching "{debouncedQuery}".</div>
+                )}
+             </div>
+          )}
+        </div>
+
+        {selected && (
+          <div className="watch-sidebar">
+            <h3 className="sidebar-title">Up Next</h3>
+            <div className="sidebar-list">
+              {videos.filter(v => v.id !== selected.id).map(video => (
+                <button key={video.id} className="sidebar-item" onClick={() => handleSelectVideo(video)}>
+                  <div className="sidebar-item-thumb">
+                    <img src={video.thumbnailUrl} alt="" />
+                  </div>
+                  <div className="sidebar-item-info">
+                    <h4>{video.title}</h4>
+                    <p>Team Church Glasgow</p>
+                  </div>
                 </button>
-                <button
-                  type="button"
-                  className="watch-load-more-button watch-back-top-button"
-                  onClick={handleBackToTop}
-                >
-                  Back to Top
-                </button>
-              </div>
-            ) : null}
+              ))}
+            </div>
+            {nextPageToken && (
+               <button className="sidebar-load-more" onClick={handleLoadMore} disabled={isLoadingMore}>
+                 {isLoadingMore ? 'Loading...' : 'Show more'}
+               </button>
+            )}
           </div>
-        ) : null}
+        )}
       </section>
     </div>
   )
