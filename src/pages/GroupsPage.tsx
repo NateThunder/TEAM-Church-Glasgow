@@ -112,9 +112,6 @@ export default function GroupsPage() {
         <div className="groups-grid">
           {visibleGroups.map((group) => (
             <article key={group.id} className="groups-card">
-              <div className="groups-card-media" aria-hidden="true">
-                <div className="groups-card-media-inner" />
-              </div>
               <div className="groups-card-body">
                 <span className="groups-pill">{group.category}</span>
                 <h3 className="groups-title">{group.title}</h3>
