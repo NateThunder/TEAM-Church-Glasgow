@@ -5,12 +5,26 @@ body {
 
 }
 
+:root {
+  --royal-purple: #7851a9;
+  --royal-purple-soft: rgba(120, 81, 169, 0.15);
+  --royal-purple-glow: rgba(120, 81, 169, 0.35);
+  --deep-bg: #04141c;
+  --glass-bg: rgba(4, 20, 28, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 32px;
+  --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-deep: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+}
+
 .app-shell {
 
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #04141c;
+  background: var(--deep-bg);
   color: #ffffff;
   font-family: "Roboto", system-ui, sans-serif;
 
@@ -28,13 +42,13 @@ body {
   padding: 16px 32px;
   color: #f7f9fb;
   background: rgba(4, 20, 28, var(--frost-alpha));
-  backdrop-filter: blur(var(--frost-blur));
-  -webkit-backdrop-filter: blur(var(--frost-blur));
-  border-bottom: 1px solid rgba(255, 255, 255, calc(var(--frost-alpha) * 0.8));
-  box-shadow: 0 4px 30px rgba(0, 0, 0, calc(var(--frost-shadow) * 0.5));
+  backdrop-filter: blur(calc(var(--frost-blur) + 10px));
+  -webkit-backdrop-filter: blur(calc(var(--frost-blur) + 10px));
+  border-bottom: 1px solid rgba(255, 255, 255, calc(var(--frost-alpha) * 0.1));
+  box-shadow: 0 4px 30px rgba(0, 0, 0, calc(var(--frost-shadow) * 0.3));
   z-index: 10;
-  transition: background 150ms ease, box-shadow 150ms ease,
-    backdrop-filter 150ms ease;
+  transition: background 200ms ease, box-shadow 200ms ease,
+    backdrop-filter 200ms ease;
   --frost-alpha: 0;
   --frost-blur: 0px;
   --frost-shadow: 0;
@@ -229,11 +243,11 @@ body {
   gap: 10px;
   padding: 6px 10px 6px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 20px 25px -5px rgba(6, 18, 28, 0.3), 0 8px 10px -6px rgba(6, 18, 28, 0.2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-deep);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   flex: 1 1 auto;
   min-width: 0;
 

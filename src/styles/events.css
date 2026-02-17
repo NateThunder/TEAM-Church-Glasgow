@@ -134,30 +134,33 @@
 }
 
 .events-card {
-  --event-accent: #7851a9;
-  --event-soft: rgba(120, 81, 169, 0.18);
-  --event-border: rgba(120, 81, 169, 0.45);
+  --event-accent: var(--royal-purple);
+  --event-soft: var(--royal-purple-soft);
+  --event-border: var(--royal-purple-glow);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 80px;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) 60px;
+  gap: 12px;
   align-items: center;
   text-align: left;
   color: inherit;
   font: inherit;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
   border-left: 4px solid var(--event-accent);
-  border-radius: 20px;
-  padding: 16px;
-  background: linear-gradient(110deg, var(--event-soft) 0%, rgba(8, 20, 28, 0) 44%),
-    rgba(8, 20, 28, 0.82);
-  box-shadow: 0 16px 30px rgba(3, 10, 16, 0.2);
+  border-radius: var(--radius-md, 20px);
+  padding: 12px;
+  background: linear-gradient(110deg, var(--event-soft) 0%, rgba(8, 20, 28, 0.02) 60%),
+    var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-soft);
   cursor: pointer;
-  transition: border-color 150ms ease, transform 150ms ease;
+  transition: border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
 }
 
 .events-card:hover {
   border-color: var(--event-border);
-  transform: translateY(-1px);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-deep);
 }
 
 .events-card--all {
@@ -259,15 +262,17 @@
 }
 
 .events-card-day {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--event-accent);
+  line-height: 1;
 }
 
 .events-card-weekday {
-  font-size: 13px;
-  letter-spacing: 0.2em;
+  font-size: 11px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  opacity: 0.7;
 }
 
 .events-calendar {

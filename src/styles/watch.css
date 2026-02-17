@@ -60,14 +60,20 @@
 .watch-search {
 
   min-width: 0;
-  padding: 0;
+  padding: 0 16px;
   height: 32px;
   border-radius: 999px;
-  border: none;
-  background: transparent;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.05);
   color: #ffffff;
   outline: none;
+  transition: border-color 150ms ease, background 150ms ease;
 
+}
+
+.watch-search:focus {
+  border-color: var(--royal-purple);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .watch-search-icon {
@@ -160,8 +166,8 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   border: none;
-  border-radius: 16px;
-  box-shadow: 0 18px 32px rgba(6, 18, 28, 0.45);
+  border-radius: var(--radius-lg, 32px);
+  box-shadow: var(--shadow-deep);
 
 }
 
@@ -253,21 +259,24 @@
 .watch-card {
 
   text-align: left;
-  border: none;
+  border: 1px solid var(--glass-border);
   padding: 0;
-  background: rgba(9, 24, 34, 0.65);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: inherit;
-  border-radius: 16px;
+  border-radius: var(--radius-md, 20px);
   overflow: hidden;
   cursor: pointer;
-  transition: transform 150ms ease, box-shadow 100ms ease;
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
 
 }
 
 .watch-card:hover {
 
-  transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(6, 18, 28, 0.4);
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-deep);
+  border-color: var(--royal-purple);
 
 }
 
