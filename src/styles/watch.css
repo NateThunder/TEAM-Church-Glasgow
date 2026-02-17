@@ -197,7 +197,7 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   background: #000;
-  border-radius: var(--radius-md, 20px);
+  border-radius: 18px;
   overflow: hidden;
   box-shadow: var(--shadow-deep);
 }
@@ -373,13 +373,11 @@
 .watch-card {
 
   text-align: left;
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--surface-border);
   padding: 0;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: var(--surface-matted);
   color: inherit;
-  border-radius: var(--radius-md, 20px);
+  border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
   transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
@@ -388,7 +386,7 @@
 
 .watch-card:hover {
 
-  transform: translateY(-8px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-deep);
   border-color: var(--royal-purple);
 

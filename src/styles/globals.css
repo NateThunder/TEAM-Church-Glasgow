@@ -12,11 +12,18 @@ body {
   --deep-bg: #04141c;
   --glass-bg: rgba(4, 20, 28, 0.65);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --radius-sm: 12px;
-  --radius-md: 20px;
-  --radius-lg: 32px;
-  --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --shadow-deep: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --shadow-soft: 0 12px 24px -6px rgba(0, 0, 0, 0.12), 0 8px 16px -8px rgba(0, 0, 0, 0.1);
+  --shadow-deep: 0 30px 60px -12px rgba(0, 0, 0, 0.45);
+  --surface-matted: rgba(16, 18, 28, 0.88);
+  --surface-border: rgba(255, 255, 255, 0.08);
+}
+
+.app-shell.theme-light {
+  --surface-matted: rgba(255, 255, 255, 0.88);
+  --surface-border: rgba(17, 24, 39, 0.08);
 }
 
 .app-shell {

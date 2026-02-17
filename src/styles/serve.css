@@ -52,13 +52,11 @@
 }
 
 .serve-card {
-  background: var(--glass-bg, rgba(9, 24, 34, 0.6));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: var(--radius-md, 20px);
+  background: var(--surface-matted);
+  border-radius: 18px;
   padding: 24px;
   box-shadow: var(--shadow-soft);
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--surface-border);
   transition: transform 200ms ease, box-shadow 200ms ease;
 }
 
@@ -83,7 +81,7 @@
 .serve-icon-circle {
   width: 56px;
   height: 56px;
-  border-radius: 16px;
+  border-radius: 12px;
   background: rgba(120, 81, 169, 0.2);
   display: inline-flex;
   align-items: center;
@@ -120,8 +118,8 @@
 
 .serve-cohort {
   background: rgba(120, 81, 169, 0.08);
-  border-radius: 16px;
-  padding: 18px;
+  border-radius: 18px;
+  padding: 24px;
   display: grid;
   gap: 12px;
 }
