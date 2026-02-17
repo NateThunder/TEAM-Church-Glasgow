@@ -39,7 +39,7 @@
 
 .watch-page-wrapper {
   width: 100%;
-  padding-top: 100px;
+  padding-top: 120px;
   min-height: 100vh;
 }
 
@@ -168,6 +168,30 @@
   gap: 16px;
 }
 
+.watch-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: #b7c2cb;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 8px;
+  transition: color 200ms;
+}
+
+.watch-back-btn:hover {
+  color: #fff;
+}
+
+.watch-back-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
 .watch-video-container {
   position: relative;
   width: 100%;
@@ -232,6 +256,16 @@
 
 .watch-meta-details .dot {
   font-weight: 900;
+}
+
+.watch-youtube-link {
+  color: var(--royal-purple);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.watch-youtube-link:hover {
+  text-decoration: underline;
 }
 
 .watch-description {
@@ -744,4 +778,16 @@
   border: 1px solid rgba(94, 58, 164, 0.35);
   box-shadow: 0 10px 18px rgba(65, 38, 112, 0.18);
 
+}
+
+.app-shell.theme-light .watch-back-btn {
+  color: #64748b;
+}
+
+.app-shell.theme-light .watch-back-btn:hover {
+  color: #111827;
+}
+
+.app-shell.theme-light .watch-youtube-link {
+  color: #4e2bb8;
 }

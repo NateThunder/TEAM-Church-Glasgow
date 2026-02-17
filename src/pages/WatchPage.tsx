@@ -27,7 +27,7 @@ export default function WatchPage() {
     'idle' | 'loading' | 'offline' | 'error'
   >('idle')
   const channelId = import.meta.env.VITE_YOUTUBE_CHANNEL_ID as string | undefined
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const query = searchParams.get('q') ?? ''
   const videoId = searchParams.get('v')
   const urlMode = searchParams.get('mode')
@@ -38,9 +38,18 @@ export default function WatchPage() {
     setMode(resolvedMode)
   }, [resolvedMode])
 
-  const handleSelectVideo = (video: YouTubeVideo) => {
+  const handleSelectVideo = (video: YouTubeVideo | null) => {
     setSelected(video)
-    setAutoPlayId(video.id)
+    setAutoPlayId(video?.id ?? null)
+
+    const next = new URLSearchParams(searchParams)
+    if (video) {
+      next.set('v', video.id)
+    } else {
+      next.delete('v')
+    }
+    setSearchParams(next, { replace: true })
+
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
@@ -150,7 +159,11 @@ export default function WatchPage() {
   }, [channelId, mode])
 
   useEffect(() => {
-    if (!videoId || videos.length === 0) return
+    if (!videoId) {
+      setSelected(null)
+      return
+    }
+    if (videos.length === 0) return
     const match = videos.find((video) => video.id === videoId)
     if (!match) return
     setSelected(match)
@@ -189,9 +202,17 @@ export default function WatchPage() {
                 </div>
                 <span className="watch-live-pill">Live</span>
               </div>
+
+              {!channelId && (
+                <div className="watch-state">
+                  {youtubeSetupMessage}
+                </div>
+              )}
+
               {liveStatus === 'loading' ? (
                 <div className="watch-state watch-live-state">Checking live stream status...</div>
               ) : null}
+
               {channelId && (
                 <div className="watch-player-area">
                   <div className="watch-video-container">
@@ -208,13 +229,31 @@ export default function WatchPage() {
                   </div>
                   <div className="watch-player-meta">
                     <h2>{liveVideo?.title ?? 'Team Church Glasgow Live'}</h2>
+                    <div className="watch-meta-details">
+                       <span>Team Church Glasgow</span>
+                       {liveVideo && (
+                         <>
+                           <span className="dot">·</span>
+                           <a href={liveVideo.videoUrl} target="_blank" rel="noopener noreferrer" className="watch-youtube-link">
+                             Watch on YouTube
+                           </a>
+                         </>
+                       )}
+                    </div>
                     <p>Sundays at 11:00 AM</p>
                   </div>
                 </div>
               )}
               {liveStatus === 'offline' && (
                 <div className="watch-state watch-live-state">
-                  We are not live right now. Join us Sundays at 11:00 AM.
+                  <p>We are not live right now. Join us Sundays at 11:00 AM.</p>
+                  {channelId && (
+                    <p style={{ marginTop: '12px' }}>
+                      <a href={`https://www.youtube.com/channel/${channelId}/live`} target="_blank" rel="noopener noreferrer" className="watch-youtube-link">
+                        Visit our YouTube Live page
+                      </a>
+                    </p>
+                  )}
                 </div>
               )}
               {liveStatus === 'error' && (
@@ -227,6 +266,12 @@ export default function WatchPage() {
 
           {mode === 'recorded' && selected && (
             <div className="watch-player-area">
+              <button className="watch-back-btn" onClick={() => handleSelectVideo(null)}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                Back to all messages
+              </button>
               <div className="watch-video-container">
                 <iframe
                   title={selected.title}
@@ -250,6 +295,10 @@ export default function WatchPage() {
                    <span>Team Church Glasgow</span>
                    <span className="dot">·</span>
                    <span>{new Date(selected.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                   <span className="dot">·</span>
+                   <a href={selected.videoUrl} target="_blank" rel="noopener noreferrer" className="watch-youtube-link">
+                     Watch on YouTube
+                   </a>
                 </div>
                 <div className="watch-description">
                   <p>{selected.description}</p>
