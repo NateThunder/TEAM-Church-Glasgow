@@ -21,6 +21,12 @@ body {
   --surface-border: rgba(255, 255, 255, 0.08);
 }
 
+@media (max-width: 768px) {
+  :root {
+    --radius-lg: 20px;
+  }
+}
+
 .app-shell.theme-light {
   --surface-matted: rgba(255, 255, 255, 0.88);
   --surface-border: rgba(17, 24, 39, 0.08);
@@ -474,6 +480,18 @@ body {
 
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: 32px; }
+  h2 { font-size: 26px; }
+  h3 { font-size: 20px; }
+  h4 { font-size: 18px; }
+}
+
 .site-footer {
 
   padding: 20px 32px;
@@ -608,14 +626,16 @@ body {
 
   .app-shell.is-watch .nav-utility-mobile {
     display: flex;
-    margin: 0 6px;
-    flex: 0 1 auto;
-    max-width: 42vw;
+    margin: 0;
+    flex: 1;
+    justify-content: center;
+    max-width: none;
     z-index: 1;
   }
 
   .app-shell.is-watch .nav-utility-mobile .nav-utility {
-    width: min(36vw, 240px);
+    width: 100%;
+    margin: 0 8px;
   }
 
   .app-shell.is-watch .nav-utility-mobile .watch-toggle {

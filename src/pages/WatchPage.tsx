@@ -113,6 +113,8 @@ export default function WatchPage() {
 
   useEffect(() => {
     if (mode !== 'recorded') return
+    let active = true
+
     const load = async () => {
       setStatus(debouncedQuery ? 'searching' : 'loading')
       setError('')
@@ -120,18 +122,27 @@ export default function WatchPage() {
         const data = debouncedQuery
           ? await searchChannelVideos({ query: debouncedQuery, useCache: true })
           : await getLatestVideos({ useCache: true })
+
+        if (!active) return
+
         setVideos(data.videos)
         setNextPageToken(data.nextPageToken ?? null)
         setCurrentQuery(debouncedQuery)
       } catch (err) {
+        if (!active) return
         const message = err instanceof Error ? err.message : 'Unknown error'
         setError(message)
         setStatus('error')
         return
       }
-      setStatus('idle')
+      if (active) {
+        setStatus('idle')
+      }
     }
     load()
+    return () => {
+      active = false
+    }
   }, [debouncedQuery, mode])
 
   useEffect(() => {
@@ -140,10 +151,14 @@ export default function WatchPage() {
       setLiveStatus('idle')
       return
     }
+    let active = true
+
     const loadLive = async () => {
       setLiveStatus('loading')
       try {
         const live = await getActiveLiveVideo()
+        if (!active) return
+
         if (live) {
           setLiveVideo(live)
           setLiveStatus('idle')
@@ -151,11 +166,15 @@ export default function WatchPage() {
           setLiveStatus('offline')
         }
       } catch (err) {
+        if (!active) return
         console.error('Error loading live stream:', err)
         setLiveStatus('error')
       }
     }
     loadLive()
+    return () => {
+      active = false
+    }
   }, [channelId, mode])
 
   useEffect(() => {

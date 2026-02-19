@@ -304,7 +304,19 @@
 @media (max-width: 767px) {
 
   .connect-tabs {
-    flex-direction: column;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+  }
+
+  .connect-tab {
+    flex-shrink: 0;
+  }
+
+  .connect-panel {
+    padding: 16px;
   }
 
 }

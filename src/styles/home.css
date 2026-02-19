@@ -254,6 +254,13 @@
 
 }
 
+@media (max-width: 768px) {
+  .welcome-section {
+    padding: 40px 0 40px;
+    gap: 32px;
+  }
+}
+
 .welcome-content {
 
   display: flex;
@@ -666,6 +673,14 @@
 
 }
 
+@media (max-width: 768px) {
+  .next-steps {
+    padding-top: 40px;
+    padding-bottom: 60px;
+    gap: 32px;
+  }
+}
+
 .next-steps-header {
 
   text-align: center;
@@ -851,10 +866,6 @@
 
   .welcome-section {
     padding-top: 24px;
-  }
-
-  .welcome-title {
-    font-size: 32px;
   }
 
 }
