@@ -99,6 +99,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
   const isGroups = location.pathname === '/groups'
   const headerRef = useRef<HTMLElement | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
   const [isPortraitMobile, setIsPortraitMobile] = useState(false)
   const [theme, setTheme] = useState<'light' | 'dark'>('dark')
   const [searchParams, setSearchParams] = useSearchParams()
@@ -139,9 +140,11 @@ export default function Layout({ navItems, children }: LayoutProps) {
         window.scrollY || document.documentElement.scrollTop || 0
       const progress = Math.min(Math.max(scrollTop / fadeRange, 0), 1)
 
-      const alpha = 0.15 * progress
-      const blur = 14 * progress
-      const shadow = 0.2 * progress
+      const alpha = 0.85 * progress
+      const blur = 20 * progress
+      const shadow = 0.4 * progress
+
+      setIsScrolled(scrollTop > 20)
 
       header.style.setProperty('--frost-alpha', alpha.toFixed(3))
       header.style.setProperty('--frost-blur', `${blur.toFixed(2)}px`)
@@ -265,7 +268,9 @@ export default function Layout({ navItems, children }: LayoutProps) {
     <div
       className={`app-shell theme-${theme} ${isHome ? 'is-home' : ''} ${
         isWatch ? 'is-watch' : ''
-      } ${isGroups ? 'is-groups' : ''} ${isPortraitMobile ? 'is-portrait' : ''}`}
+      } ${isGroups ? 'is-groups' : ''} ${isPortraitMobile ? 'is-portrait' : ''} ${
+        isScrolled ? 'is-scrolled' : ''
+      }`}
     >
       {isHome ? (
         <div className="video-hero" aria-hidden="true">

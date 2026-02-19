@@ -184,28 +184,36 @@ function EventsToolbar({
 export default function EventsPage() {
   const { status, events, error } = useEvents()
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list')
-  const [calendarView, setCalendarView] = useState<string>(Views.MONTH)
+  const [calendarView, setCalendarView] = useState<string>(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches) {
+      return Views.AGENDA
+    }
+    return Views.MONTH
+  })
   const [activeCategory, setActiveCategory] = useState<EventCategory>('All')
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(max-width: 768px)').matches
+    }
+    return false
+  })
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 768px)')
-    const update = () => setIsMobile(media.matches)
-    update()
+    const update = () => {
+      setIsMobile(media.matches)
+      if (media.matches && calendarView === Views.MONTH) {
+        setCalendarView(Views.AGENDA)
+      }
+    }
     if (typeof media.addEventListener === 'function') {
       media.addEventListener('change', update)
       return () => media.removeEventListener('change', update)
     }
     media.addListener(update)
     return () => media.removeListener(update)
-  }, [])
-
-  useEffect(() => {
-    if (isMobile && calendarView === Views.MONTH) {
-      setCalendarView(Views.AGENDA)
-    }
-  }, [isMobile, calendarView])
+  }, [calendarView])
 
   useEffect(() => {
     if (!selectedEvent) return
