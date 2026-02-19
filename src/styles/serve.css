@@ -52,11 +52,17 @@
 }
 
 .serve-card {
-  background: rgba(9, 24, 34, 0.6);
-  border-radius: 20px;
+  background: var(--surface-matted);
+  border-radius: 18px;
   padding: 24px;
-  box-shadow: 0 18px 32px rgba(6, 18, 28, 0.2);
-  border: 1px solid rgba(120, 81, 169, 0.35);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--surface-border);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.serve-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-deep);
 }
 
 .serve-believers-card {
@@ -75,7 +81,7 @@
 .serve-icon-circle {
   width: 56px;
   height: 56px;
-  border-radius: 16px;
+  border-radius: 12px;
   background: rgba(120, 81, 169, 0.2);
   display: inline-flex;
   align-items: center;
@@ -112,8 +118,8 @@
 
 .serve-cohort {
   background: rgba(120, 81, 169, 0.08);
-  border-radius: 16px;
-  padding: 18px;
+  border-radius: 18px;
+  padding: 24px;
   display: grid;
   gap: 12px;
 }
@@ -296,6 +302,8 @@
 .serve-team-card {
   display: grid;
   gap: 16px;
+  border: none;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .serve-team-body h4 {

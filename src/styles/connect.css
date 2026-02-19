@@ -48,10 +48,11 @@
   grid-template-columns: auto minmax(0, 1fr);
   gap: 12px;
   align-items: start;
-  padding: 14px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 10px 20px rgba(6, 18, 28, 0.12);
+  padding: 24px;
+  border-radius: 18px;
+  background: var(--surface-matted);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-soft);
 
 }
 
@@ -102,8 +103,9 @@
 
   border-radius: 18px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 12px 24px rgba(6, 18, 28, 0.16);
+  background: var(--surface-matted);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-soft);
   display: grid;
 
 }
@@ -174,10 +176,11 @@
 
 .connect-panel {
 
-  padding: 20px;
+  padding: 24px;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 12px 24px rgba(6, 18, 28, 0.16);
+  background: var(--surface-matted);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-soft);
 
 }
 

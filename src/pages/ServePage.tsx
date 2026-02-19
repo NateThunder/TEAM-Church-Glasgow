@@ -112,9 +112,6 @@ export default function ServePage() {
           <div className="serve-container">
             <div className="serve-card serve-believers-card">
               <div className="serve-believers-top">
-                <div className="serve-icon-circle" aria-hidden="true">
-                  <span className="serve-icon">BC</span>
-                </div>
                 <div className="serve-believers-copy">
                   <div className="serve-believers-title">
                     <h2>Believers Class</h2>

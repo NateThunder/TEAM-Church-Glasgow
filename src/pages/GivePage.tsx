@@ -35,9 +35,6 @@ export default function GivePage() {
 
       <div className="give-card">
         <div className="give-card-header">
-          <span className="give-heart" aria-hidden="true">
-            ♥
-          </span>
           <h2>Give to Team Church Glasgow</h2>
         </div>
 
