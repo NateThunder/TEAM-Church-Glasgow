@@ -1,9 +1,9 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import AdminLayout from './AdminLayout'
 import AdminButton from './components/AdminButton'
 import AdminModal from './components/AdminModal'
 import AdminTable from './components/AdminTable'
-import { useAdminData } from './AdminDataContext'
+import { useAdminData } from './useAdminData'
 
 type GroupFormState = {
   name: string
@@ -114,7 +114,11 @@ export default function AdminGroupsPage() {
                   <AdminButton variant="ghost" onClick={() => openEdit(group.id)}>
                     Edit
                   </AdminButton>
-                  <AdminButton variant="ghost" onClick={() => openDelete(group.id)}>
+                  <AdminButton
+                    variant="ghost"
+                    className="admin-btn--danger"
+                    onClick={() => openDelete(group.id)}
+                  >
                     Delete
                   </AdminButton>
                 </td>
@@ -188,7 +192,7 @@ export default function AdminGroupsPage() {
             <AdminButton variant="secondary" onClick={() => setIsDeleteOpen(false)}>
               Cancel
             </AdminButton>
-            <AdminButton variant="primary" onClick={handleDelete}>
+            <AdminButton variant="primary" className="admin-btn--danger" onClick={handleDelete}>
               Delete
             </AdminButton>
           </div>
@@ -199,3 +203,4 @@ export default function AdminGroupsPage() {
     </AdminLayout>
   )
 }
+

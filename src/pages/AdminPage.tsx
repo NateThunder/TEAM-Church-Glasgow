@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import type { User } from '@supabase/supabase-js'
 import { isMissingJwtUserError, requiresPasswordChange } from '../admin/authUtils'
 import { supabase } from '../services/supabaseClient'
+import { ADMIN_LOGIN_UNAVAILABLE_ERROR } from '../constants/messages'
 
 export default function AdminPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -11,7 +12,9 @@ export default function AdminPage() {
   const [password, setPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(
+    supabase ? null : ADMIN_LOGIN_UNAVAILABLE_ERROR
+  )
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false)
   const navigate = useNavigate()
@@ -31,7 +34,6 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (!supabase) {
-      setError('Admin login is unavailable. Configure Supabase environment variables.')
       return
     }
     const client = supabase
@@ -69,7 +71,7 @@ export default function AdminPage() {
     setError(null)
 
     if (!supabase) {
-      setError('Admin login is unavailable. Configure Supabase environment variables.')
+      setError(ADMIN_LOGIN_UNAVAILABLE_ERROR)
       setIsSubmitting(false)
       return
     }
@@ -137,9 +139,7 @@ export default function AdminPage() {
         <div className="admin-container admin-auth">
           <div className="admin-card">
             <h1 className="admin-title">Admin Sign In</h1>
-            <p className="admin-subtitle">
-              Admin login is unavailable. Configure Supabase environment variables.
-            </p>
+            <p className="admin-subtitle">{ADMIN_LOGIN_UNAVAILABLE_ERROR}</p>
           </div>
         </div>
       </section>

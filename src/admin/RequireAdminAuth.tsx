@@ -7,12 +7,11 @@ import { requiresPasswordChange } from './authUtils'
 type AuthState = 'loading' | 'authorized' | 'unauthorized' | 'must_change_password'
 
 export default function RequireAdminAuth() {
-  const [authState, setAuthState] = useState<AuthState>('loading')
+  const [authState, setAuthState] = useState<AuthState>(supabase ? 'loading' : 'unauthorized')
   const location = useLocation()
 
   useEffect(() => {
     if (!supabase) {
-      setAuthState('unauthorized')
       return
     }
 

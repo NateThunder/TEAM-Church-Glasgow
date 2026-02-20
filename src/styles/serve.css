@@ -306,6 +306,12 @@
   border: none;
   background: rgba(255, 255, 255, 0.03);
   align-self: start;
+  position: relative;
+  z-index: 1;
+}
+
+.serve-team-card.is-open {
+  z-index: 40;
 }
 
 .serve-team-body h4 {
@@ -322,6 +328,8 @@
   gap: 12px;
   padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  z-index: 41;
 }
 
 .serve-join-panel form {
@@ -364,6 +372,19 @@
   font-weight: 600;
 }
 
+.serve-error {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(220, 38, 38, 0.18);
+  color: #fecaca;
+  font-weight: 600;
+}
+
+.serve-join-panel button[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .app-shell.theme-light .serve-card {
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 16px 28px rgba(16, 24, 40, 0.1);
@@ -398,6 +419,10 @@
 
 .app-shell.theme-light .serve-success {
   color: #111827;
+}
+
+.app-shell.theme-light .serve-error {
+  color: #7f1d1d;
 }
 
 @media (max-width: 1024px) {

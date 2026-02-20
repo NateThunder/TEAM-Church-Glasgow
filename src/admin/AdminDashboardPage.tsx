@@ -19,6 +19,11 @@ const cards = [
     to: '/admin/believers-class',
   },
   {
+    title: 'Serve Signups',
+    description: 'Review and manage Serve form submissions.',
+    to: '/admin/serve-signups',
+  },
+  {
     title: 'Groups',
     description: 'Publish and edit small groups.',
     to: '/admin/groups',

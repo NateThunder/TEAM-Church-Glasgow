@@ -21,6 +21,7 @@ import AdminTeamsPage from './admin/AdminTeamsPage'
 import AdminGroupsPage from './admin/AdminGroupsPage'
 import AdminAnnouncementsPage from './admin/AdminAnnouncementsPage'
 import AdminBelieversClassPage from './admin/AdminBelieversClassPage'
+import AdminServeSignupsPage from './admin/AdminServeSignupsPage'
 import RequireAdminAuth from './admin/RequireAdminAuth'
 
 // Route table for the site. Add or remove pages here.
@@ -57,6 +58,7 @@ export default function App() {
               <Route path="/admin" element={<AdminDashboardPage />} />
               <Route path="/admin/events" element={<AdminEventsPage />} />
               <Route path="/admin/teams" element={<AdminTeamsPage />} />
+              <Route path="/admin/serve-signups" element={<AdminServeSignupsPage />} />
               <Route path="/admin/groups" element={<AdminGroupsPage />} />
               <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
               <Route path="/admin/believers-class" element={<AdminBelieversClassPage />} />

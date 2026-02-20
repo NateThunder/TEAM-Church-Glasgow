@@ -193,7 +193,13 @@ export default function EventsPage() {
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 768px)')
-    const update = () => setIsMobile(media.matches)
+    const update = () => {
+      const isMobileView = media.matches
+      setIsMobile(isMobileView)
+      if (isMobileView) {
+        setCalendarView((currentView) => (currentView === Views.MONTH ? Views.AGENDA : currentView))
+      }
+    }
     update()
     if (typeof media.addEventListener === 'function') {
       media.addEventListener('change', update)
@@ -202,12 +208,6 @@ export default function EventsPage() {
     media.addListener(update)
     return () => media.removeListener(update)
   }, [])
-
-  useEffect(() => {
-    if (isMobile && calendarView === Views.MONTH) {
-      setCalendarView(Views.AGENDA)
-    }
-  }, [isMobile, calendarView])
 
   useEffect(() => {
     if (!selectedEvent) return

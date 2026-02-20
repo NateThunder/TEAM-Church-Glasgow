@@ -3,20 +3,21 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { isMissingJwtUserError } from '../admin/authUtils'
 import { supabase } from '../services/supabaseClient'
+import { PASSWORD_RESET_UNAVAILABLE_ERROR } from '../constants/messages'
 
 export default function AdminResetPasswordPage() {
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [status, setStatus] = useState<'checking' | 'ready' | 'invalid' | 'success'>('checking')
-  const [error, setError] = useState<string | null>(null)
+  const [status, setStatus] = useState<'checking' | 'ready' | 'invalid' | 'success'>(
+    supabase ? 'checking' : 'invalid'
+  )
+  const [error, setError] = useState<string | null>(supabase ? null : PASSWORD_RESET_UNAVAILABLE_ERROR)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
   const supabaseAvailable = Boolean(supabase)
 
   useEffect(() => {
     if (!supabase) {
-      setStatus('invalid')
-      setError('Password reset is unavailable. Configure Supabase environment variables.')
       return
     }
     const client = supabase
@@ -67,7 +68,7 @@ export default function AdminResetPasswordPage() {
     setError(null)
 
     if (!supabase) {
-      setError('Password reset is unavailable. Configure Supabase environment variables.')
+      setError(PASSWORD_RESET_UNAVAILABLE_ERROR)
       return
     }
     const client = supabase
@@ -177,9 +178,7 @@ export default function AdminResetPasswordPage() {
           ) : null}
 
           {!supabaseAvailable ? (
-            <p className="admin-error">
-              Password reset is unavailable. Configure Supabase environment variables.
-            </p>
+            <p className="admin-error">{PASSWORD_RESET_UNAVAILABLE_ERROR}</p>
           ) : null}
         </div>
       </div>

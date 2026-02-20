@@ -1,5 +1,5 @@
-import '../styles/connect.css'
-import { useMemo, useState } from 'react'
+﻿import '../styles/connect.css'
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faLocationDot,
@@ -23,21 +23,22 @@ const buildMapSrc = () => {
 const tabs = ['Plan a Visit', 'Prayer Request', 'Contact Us'] as const
 
 export default function ConnectPage() {
-  const [activeTab, setActiveTab] =
-    useState<(typeof tabs)[number]>('Plan a Visit')
+  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>('Plan a Visit')
   const [submitted, setSubmitted] = useState<string | null>(null)
 
-  const mapSrc = useMemo(buildMapSrc, [])
+  const mapSrc = buildMapSrc()
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const form = event.currentTarget
     const data = new FormData(form)
     const payload = Object.fromEntries(data.entries())
-    // Placeholder for future integration.
-    // eslint-disable-next-line no-console
-    console.log('Connect form submit', payload)
-    setSubmitted(`Thanks! We’ve received your ${activeTab.toLowerCase()}.`)
+
+    if (import.meta.env.DEV) {
+      console.log('Connect form submit', payload)
+    }
+
+    setSubmitted(`Thanks! We've received your ${activeTab.toLowerCase()}.`)
     form.reset()
   }
 
@@ -74,10 +75,7 @@ export default function ConnectPage() {
                 <p>Sundays at 11:00am</p>
               </div>
             </div>
-            <a
-              className="connect-info-item connect-info-link"
-              href="mailto:hello@teamchurchglasgow.org"
-            >
+            <a className="connect-info-item connect-info-link" href="mailto:hello@teamchurchglasgow.org">
               <span className="connect-icon" aria-hidden="true">
                 <FontAwesomeIcon icon={faEnvelope} />
               </span>
@@ -86,10 +84,7 @@ export default function ConnectPage() {
                 <p>hello@teamchurchglasgow.org</p>
               </div>
             </a>
-            <a
-              className="connect-info-item connect-info-link"
-              href="tel:+441234567890"
-            >
+            <a className="connect-info-item connect-info-link" href="tel:+441234567890">
               <span className="connect-icon" aria-hidden="true">
                 <FontAwesomeIcon icon={faPhone} />
               </span>
@@ -113,7 +108,7 @@ export default function ConnectPage() {
               target="_blank"
               rel="noreferrer"
             >
-              Get Directions →
+              Get Directions -&gt;
             </a>
           </div>
         </aside>
@@ -126,9 +121,7 @@ export default function ConnectPage() {
                 type="button"
                 role="tab"
                 aria-selected={activeTab === tab}
-                className={`connect-tab${
-                  activeTab === tab ? ' is-active' : ''
-                }`}
+                className={`connect-tab${activeTab === tab ? ' is-active' : ''}`}
                 onClick={() => setActiveTab(tab)}
               >
                 {tab}
@@ -182,11 +175,7 @@ export default function ConnectPage() {
                   <textarea name="request" rows={4} required />
                 </label>
                 <div className="connect-checkbox">
-                  <input
-                    id="confidential"
-                    name="confidential"
-                    type="checkbox"
-                  />
+                  <input id="confidential" name="confidential" type="checkbox" />
                   <label htmlFor="confidential">Keep this confidential</label>
                 </div>
                 <button className="connect-submit" type="submit">

@@ -1,60 +1,13 @@
-import { createContext, useContext, useMemo, useState } from 'react'
-
-type EventItem = {
-  id: string
-  title: string
-  date: string
-  location: string
-}
-
-type TeamItem = {
-  id: string
-  name: string
-  leader: string
-  description: string
-}
-
-type GroupItem = {
-  id: string
-  name: string
-  meetingTime: string
-  description: string
-}
-
-type AnnouncementItem = {
-  id: string
-  title: string
-  content: string
-  status: 'Draft' | 'Published'
-}
-
-type AdminDataContextValue = {
-  events: EventItem[]
-  teams: TeamItem[]
-  groups: GroupItem[]
-  announcements: AnnouncementItem[]
-  createEvent: (item: Omit<EventItem, 'id'>) => void
-  updateEvent: (id: string, item: Omit<EventItem, 'id'>) => void
-  removeEvent: (id: string) => void
-  createTeam: (item: Omit<TeamItem, 'id'>) => void
-  updateTeam: (id: string, item: Omit<TeamItem, 'id'>) => void
-  removeTeam: (id: string) => void
-  createGroup: (item: Omit<GroupItem, 'id'>) => void
-  updateGroup: (id: string, item: Omit<GroupItem, 'id'>) => void
-  removeGroup: (id: string) => void
-  createAnnouncement: (item: Omit<AnnouncementItem, 'id'>) => void
-  updateAnnouncement: (id: string, item: Omit<AnnouncementItem, 'id'>) => void
-  removeAnnouncement: (id: string) => void
-}
-
-const AdminDataContext = createContext<AdminDataContextValue | undefined>(undefined)
-
-const createId = () => {
-  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
-    return crypto.randomUUID()
-  }
-  return `id-${Date.now()}-${Math.random().toString(16).slice(2)}`
-}
+import { useMemo, useState } from 'react'
+import {
+  adminDataContext,
+  createId,
+  type AdminDataContextValue,
+  type AnnouncementItem,
+  type EventItem,
+  type GroupItem,
+  type TeamItem,
+} from './adminDataStore'
 
 export function AdminDataProvider({ children }: { children: React.ReactNode }) {
   const [events, setEvents] = useState<EventItem[]>([])
@@ -92,15 +45,5 @@ export function AdminDataProvider({ children }: { children: React.ReactNode }) {
     [events, teams, groups, announcements]
   )
 
-  return <AdminDataContext.Provider value={value}>{children}</AdminDataContext.Provider>
+  return <adminDataContext.Provider value={value}>{children}</adminDataContext.Provider>
 }
-
-export function useAdminData() {
-  const context = useContext(AdminDataContext)
-  if (!context) {
-    throw new Error('useAdminData must be used within AdminDataProvider')
-  }
-  return context
-}
-
-export type { EventItem, TeamItem, GroupItem, AnnouncementItem }
