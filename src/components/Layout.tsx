@@ -182,6 +182,10 @@ export default function Layout({ navItems, children }: LayoutProps) {
   }, [])
 
   useEffect(() => {
+    setIsMenuOpen(false)
+  }, [location.pathname, location.search])
+
+  useEffect(() => {
     if (typeof window === 'undefined') return
 
     const media = window.matchMedia('(prefers-color-scheme: light)')
@@ -215,34 +219,10 @@ export default function Layout({ navItems, children }: LayoutProps) {
       }
     }
 
-    const scrollY = window.scrollY || window.pageYOffset
-    const body = document.body
-    const html = document.documentElement
-
-    body.style.position = 'fixed'
-    body.style.top = `-${scrollY}px`
-    body.style.left = '0'
-    body.style.right = '0'
-    body.style.width = '100%'
-    body.style.overflow = 'hidden'
-    html.style.height = '100%'
-    body.style.height = '100%'
-
     window.addEventListener('keydown', onKeyDown)
 
     return () => {
       window.removeEventListener('keydown', onKeyDown)
-      const top = body.style.top
-      body.style.position = ''
-      body.style.top = ''
-      body.style.left = ''
-      body.style.right = ''
-      body.style.width = ''
-      body.style.overflow = ''
-      html.style.height = ''
-      body.style.height = ''
-      const y = top ? -parseInt(top, 10) : 0
-      window.scrollTo(0, y)
     }
   }, [isMenuOpen])
 

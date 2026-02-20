@@ -19,7 +19,6 @@ import AdminDashboardPage from './admin/AdminDashboardPage'
 import AdminEventsPage from './admin/AdminEventsPage'
 import AdminTeamsPage from './admin/AdminTeamsPage'
 import AdminGroupsPage from './admin/AdminGroupsPage'
-import AdminAnnouncementsPage from './admin/AdminAnnouncementsPage'
 import AdminBelieversClassPage from './admin/AdminBelieversClassPage'
 import AdminServeSignupsPage from './admin/AdminServeSignupsPage'
 import RequireAdminAuth from './admin/RequireAdminAuth'
@@ -60,7 +59,6 @@ export default function App() {
               <Route path="/admin/teams" element={<AdminTeamsPage />} />
               <Route path="/admin/serve-signups" element={<AdminServeSignupsPage />} />
               <Route path="/admin/groups" element={<AdminGroupsPage />} />
-              <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
               <Route path="/admin/believers-class" element={<AdminBelieversClassPage />} />
             </Route>
           </Routes>

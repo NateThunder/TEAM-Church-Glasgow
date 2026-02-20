@@ -278,6 +278,11 @@
 
 }
 
+.connect-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .connect-submit:focus-visible {
 
   outline: 2px solid #7851a9;
@@ -289,6 +294,14 @@
 
   margin: 0 0 14px;
   color: #7851a9;
+  font-weight: 600;
+
+}
+
+.connect-error {
+
+  margin: 0 0 14px;
+  color: #dc2626;
   font-weight: 600;
 
 }

@@ -17,7 +17,6 @@ const navItems = [
   { to: '/admin/serve-signups', label: 'Serve Signups' },
   { to: '/admin/believers-class', label: 'Believers Class' },
   { to: '/admin/groups', label: 'Groups' },
-  { to: '/admin/announcements', label: 'Announcements' },
 ]
 
 export default function AdminLayout({ title, description, action, children }: AdminLayoutProps) {
@@ -34,26 +33,10 @@ export default function AdminLayout({ title, description, action, children }: Ad
       }
     }
 
-    const scrollY = window.scrollY || window.pageYOffset
-    const body = document.body
-    body.style.position = 'fixed'
-    body.style.top = `-${scrollY}px`
-    body.style.left = '0'
-    body.style.right = '0'
-    body.style.width = '100%'
-
     window.addEventListener('keydown', onKeyDown)
 
     return () => {
       window.removeEventListener('keydown', onKeyDown)
-      const top = body.style.top
-      body.style.position = ''
-      body.style.top = ''
-      body.style.left = ''
-      body.style.right = ''
-      body.style.width = ''
-      const y = top ? -parseInt(top, 10) : 0
-      window.scrollTo(0, y)
     }
   }, [isDrawerOpen])
 

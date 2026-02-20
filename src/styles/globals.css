@@ -1,7 +1,8 @@
 html,
 body {
-
-  overscroll-behavior: none;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 
 }
 
@@ -31,6 +32,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   background: var(--deep-bg);
   color: #ffffff;
   font-family: "Roboto", system-ui, sans-serif;
@@ -43,6 +45,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -371,6 +374,7 @@ body {
   position: fixed;
   inset: 0;
   pointer-events: none;
+  visibility: hidden;
   z-index: 9999;
 
 }
@@ -412,6 +416,7 @@ body {
 .nav-drawer-open {
 
   pointer-events: auto;
+  visibility: visible;
 
 }
 

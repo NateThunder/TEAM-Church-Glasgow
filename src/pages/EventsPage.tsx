@@ -215,12 +215,8 @@ export default function EventsPage() {
       if (event.key === 'Escape') setSelectedEvent(null)
     }
     document.addEventListener('keydown', onKeyDown)
-    const { body } = document
-    const previousOverflow = body.style.overflow
-    body.style.overflow = 'hidden'
     return () => {
       document.removeEventListener('keydown', onKeyDown)
-      body.style.overflow = previousOverflow
     }
   }, [selectedEvent])
 

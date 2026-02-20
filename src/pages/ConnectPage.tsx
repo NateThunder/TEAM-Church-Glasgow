@@ -1,4 +1,4 @@
-﻿import '../styles/connect.css'
+import '../styles/connect.css'
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -7,6 +7,7 @@ import {
   faEnvelope,
   faPhone,
 } from '@fortawesome/free-solid-svg-icons'
+import { createGetInTouchSubmission } from '../services/getInTouch'
 
 const CHURCH_LAT = 55.8589
 const CHURCH_LNG = -4.2186
@@ -25,10 +26,12 @@ const tabs = ['Plan a Visit', 'Prayer Request', 'Contact Us'] as const
 export default function ConnectPage() {
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>('Plan a Visit')
   const [submitted, setSubmitted] = useState<string | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const mapSrc = buildMapSrc()
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const form = event.currentTarget
     const data = new FormData(form)
@@ -38,8 +41,87 @@ export default function ConnectPage() {
       console.log('Connect form submit', payload)
     }
 
-    setSubmitted(`Thanks! We've received your ${activeTab.toLowerCase()}.`)
-    form.reset()
+    setSubmitted(null)
+    setSubmitError(null)
+    setIsSubmitting(true)
+
+    try {
+      if (activeTab === 'Plan a Visit') {
+        const name = String(data.get('name') ?? '').trim()
+        const email = String(data.get('email') ?? '').trim()
+        const phone = String(data.get('phone') ?? '').trim()
+        const additionalInfo = String(data.get('additionalInfo') ?? '').trim()
+
+        if (!name || !email) {
+          setSubmitError('Please provide your name and email.')
+          return
+        }
+
+        await createGetInTouchSubmission({
+          formType: 'plan_visit',
+          name,
+          email,
+          phoneNumber: phone,
+          additionalInfo,
+        })
+      }
+
+      if (activeTab === 'Prayer Request') {
+        const name = String(data.get('name') ?? '').trim()
+        const email = String(data.get('email') ?? '').trim()
+        const phone = String(data.get('phone') ?? '').trim()
+        const request = String(data.get('request') ?? '').trim()
+        const confidential = data.get('confidential') === 'on'
+
+        if (!request) {
+          setSubmitError('Please enter your prayer request.')
+          return
+        }
+
+        await createGetInTouchSubmission({
+          formType: 'prayer_request',
+          name,
+          email,
+          phoneNumber: phone,
+          prayerRequest: request,
+          confidential,
+        })
+      }
+
+      if (activeTab === 'Contact Us') {
+        const name = String(data.get('name') ?? '').trim()
+        const email = String(data.get('email') ?? '').trim()
+        const phone = String(data.get('phone') ?? '').trim()
+        const subject = String(data.get('subject') ?? '').trim()
+        const message = String(data.get('message') ?? '').trim()
+
+        if (!name || !email || !message) {
+          setSubmitError('Please provide your name, email, and message.')
+          return
+        }
+
+        await createGetInTouchSubmission({
+          formType: 'contact_us',
+          name,
+          email,
+          phoneNumber: phone,
+          subject,
+          message,
+        })
+      }
+
+      setSubmitted(`Thanks! We've received your ${activeTab.toLowerCase()}.`)
+      form.reset()
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Unable to submit right now. Please try again.'
+      setSubmitError(message)
+      if (import.meta.env.DEV) {
+        console.error('Connect form submit failed:', error)
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -122,7 +204,11 @@ export default function ConnectPage() {
                 role="tab"
                 aria-selected={activeTab === tab}
                 className={`connect-tab${activeTab === tab ? ' is-active' : ''}`}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => {
+                  setActiveTab(tab)
+                  setSubmitted(null)
+                  setSubmitError(null)
+                }}
               >
                 {tab}
               </button>
@@ -131,6 +217,7 @@ export default function ConnectPage() {
 
           <div className="connect-panel">
             {submitted ? <p className="connect-success">{submitted}</p> : null}
+            {submitError ? <p className="connect-error">{submitError}</p> : null}
 
             {activeTab === 'Plan a Visit' ? (
               <form className="connect-form" onSubmit={handleSubmit}>
@@ -154,8 +241,8 @@ export default function ConnectPage() {
                     placeholder="Share anything that would help us prepare for your visit."
                   />
                 </label>
-                <button className="connect-submit" type="submit">
-                  Submit
+                <button className="connect-submit" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
                 </button>
               </form>
             ) : null}
@@ -171,6 +258,10 @@ export default function ConnectPage() {
                   <input name="email" type="email" />
                 </label>
                 <label>
+                  Phone Number
+                  <input name="phone" type="tel" />
+                </label>
+                <label>
                   Request *
                   <textarea name="request" rows={4} required />
                 </label>
@@ -178,8 +269,8 @@ export default function ConnectPage() {
                   <input id="confidential" name="confidential" type="checkbox" />
                   <label htmlFor="confidential">Keep this confidential</label>
                 </div>
-                <button className="connect-submit" type="submit">
-                  Submit
+                <button className="connect-submit" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
                 </button>
               </form>
             ) : null}
@@ -195,6 +286,10 @@ export default function ConnectPage() {
                   <input name="email" type="email" required />
                 </label>
                 <label>
+                  Phone Number
+                  <input name="phone" type="tel" />
+                </label>
+                <label>
                   Subject
                   <input name="subject" type="text" />
                 </label>
@@ -202,8 +297,8 @@ export default function ConnectPage() {
                   Message *
                   <textarea name="message" rows={4} required />
                 </label>
-                <button className="connect-submit" type="submit">
-                  Submit
+                <button className="connect-submit" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
                 </button>
               </form>
             ) : null}

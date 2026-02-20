@@ -28,11 +28,6 @@ const cards = [
     description: 'Publish and edit small groups.',
     to: '/admin/groups',
   },
-  {
-    title: 'Announcements',
-    description: 'Post updates for the church.',
-    to: '/admin/announcements',
-  },
 ]
 
 export default function AdminDashboardPage() {

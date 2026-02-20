@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 import AdminLayout from './AdminLayout'
 import AdminButton from './components/AdminButton'
+import AdminDeleteModal from './components/AdminDeleteModal'
 import AdminModal from './components/AdminModal'
+import AdminModalActions from './components/AdminModalActions'
 import AdminTable from './components/AdminTable'
 import { supabase } from '../services/supabaseClient'
 import { SUPABASE_CONFIG_ERROR } from '../constants/messages'
+import { useCrudDialogState } from './useCrudDialogState'
 
 type BelieversClassFormState = {
   startsLabel: string
@@ -90,10 +93,8 @@ export default function AdminBelieversClassPage() {
   const [items, setItems] = useState<BelieversClassItem[]>([])
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>(supabase ? 'loading' : 'error')
   const [error, setError] = useState<string | null>(supabase ? null : SUPABASE_CONFIG_ERROR)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const { isFormOpen, isDeleteOpen, editingId, deleteId, openCreate, openEdit, closeForm, openDelete, closeDelete } =
+    useCrudDialogState()
   const [form, setForm] = useState<BelieversClassFormState>(emptyForm)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -156,29 +157,24 @@ export default function AdminBelieversClassPage() {
     }
   }, [])
 
-  const openCreate = () => {
-    setEditingId(null)
-    setForm(emptyForm)
-    setErrors({})
-    setIsModalOpen(true)
+  const handleCreate = () => {
+    openCreate(() => {
+      setForm(emptyForm)
+      setErrors({})
+    })
   }
 
-  const openEdit = (id: string) => {
+  const handleEdit = (id: string) => {
     const item = items.find((entry) => entry.id === id)
     if (!item) return
-    setEditingId(id)
-    setForm({
-      startsLabel: item.startsLabel,
-      durationLabel: item.durationLabel,
-      isActive: item.isActive,
+    openEdit(id, () => {
+      setForm({
+        startsLabel: item.startsLabel,
+        durationLabel: item.durationLabel,
+        isActive: item.isActive,
+      })
+      setErrors({})
     })
-    setErrors({})
-    setIsModalOpen(true)
-  }
-
-  const openDelete = (id: string) => {
-    setDeleteId(id)
-    setIsDeleteOpen(true)
   }
 
   const validate = () => {
@@ -232,7 +228,7 @@ export default function AdminBelieversClassPage() {
       }
     }
 
-    setIsModalOpen(false)
+    closeForm()
     await loadBelieversClasses()
   }
 
@@ -253,8 +249,7 @@ export default function AdminBelieversClassPage() {
       return
     }
 
-    setIsDeleteOpen(false)
-    setDeleteId(null)
+    closeDelete()
     await loadBelieversClasses()
   }
 
@@ -263,7 +258,7 @@ export default function AdminBelieversClassPage() {
       title="Believers Class"
       description="Manage only start date and duration for the Serve page."
       action={
-        <AdminButton variant="primary" onClick={openCreate}>
+        <AdminButton variant="primary" onClick={handleCreate}>
           + Add new
         </AdminButton>
       }
@@ -299,7 +294,7 @@ export default function AdminBelieversClassPage() {
                 <td>{item.durationLabel}</td>
                 <td>{item.isActive ? 'Active' : 'Inactive'}</td>
                 <td className="admin-actions">
-                  <AdminButton variant="ghost" onClick={() => openEdit(item.id)}>
+                  <AdminButton variant="ghost" onClick={() => handleEdit(item.id)}>
                     Edit
                   </AdminButton>
                   <AdminButton
@@ -317,18 +312,11 @@ export default function AdminBelieversClassPage() {
       </AdminTable>
 
       <AdminModal
-        isOpen={isModalOpen}
+        isOpen={isFormOpen}
         title={editingId ? 'Edit Believers Class' : 'Add Believers Class'}
-        onClose={() => setIsModalOpen(false)}
+        onClose={closeForm}
         footer={
-          <div className="admin-modal-actions">
-            <AdminButton variant="secondary" onClick={() => setIsModalOpen(false)}>
-              Cancel
-            </AdminButton>
-            <AdminButton variant="primary" onClick={handleSave}>
-              Save
-            </AdminButton>
-          </div>
+          <AdminModalActions onCancel={closeForm} onConfirm={handleSave} />
         }
       >
         <div className="admin-form-grid">
@@ -374,23 +362,12 @@ export default function AdminBelieversClassPage() {
         </div>
       </AdminModal>
 
-      <AdminModal
+      <AdminDeleteModal
         isOpen={isDeleteOpen}
         title="Delete Believers Class entry?"
-        onClose={() => setIsDeleteOpen(false)}
-        footer={
-          <div className="admin-modal-actions">
-            <AdminButton variant="secondary" onClick={() => setIsDeleteOpen(false)}>
-              Cancel
-            </AdminButton>
-            <AdminButton variant="primary" className="admin-btn--danger" onClick={handleDelete}>
-              Delete
-            </AdminButton>
-          </div>
-        }
-      >
-        <p className="admin-modal-text">This action cannot be undone.</p>
-      </AdminModal>
+        onCancel={closeDelete}
+        onConfirm={handleDelete}
+      />
     </AdminLayout>
   )
 }

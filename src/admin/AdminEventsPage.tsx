@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import AdminLayout from './AdminLayout'
 import AdminButton from './components/AdminButton'
+import AdminDeleteModal from './components/AdminDeleteModal'
 import AdminModal from './components/AdminModal'
+import AdminModalActions from './components/AdminModalActions'
 import AdminTable from './components/AdminTable'
 import { supabase } from '../services/supabaseClient'
 import { SUPABASE_CONFIG_ERROR } from '../constants/messages'
 import type { EventCategory } from '../services/events'
+import { useCrudDialogState } from './useCrudDialogState'
 
 type EventFormState = {
   title: string
@@ -74,10 +77,8 @@ export default function AdminEventsPage() {
   const [events, setEvents] = useState<EventItem[]>([])
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>(supabase ? 'loading' : 'error')
   const [error, setError] = useState<string | null>(supabase ? null : SUPABASE_CONFIG_ERROR)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const { isFormOpen, isDeleteOpen, editingId, deleteId, openCreate, openEdit, closeForm, openDelete, closeDelete } =
+    useCrudDialogState()
   const [form, setForm] = useState<EventFormState>(emptyForm)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -148,33 +149,28 @@ export default function AdminEventsPage() {
     }
   }, [])
 
-  const openCreate = () => {
-    setEditingId(null)
-    setForm(emptyForm)
-    setErrors({})
-    setIsModalOpen(true)
+  const handleCreate = () => {
+    openCreate(() => {
+      setForm(emptyForm)
+      setErrors({})
+    })
   }
 
-  const openEdit = (id: string) => {
+  const handleEdit = (id: string) => {
     const event = events.find((item) => item.id === id)
     if (!event) return
-    setEditingId(id)
-    setForm({
-      title: event.title,
-      description: event.description ?? '',
-      category: event.category,
-      location: event.location ?? '',
-      start: toInputValue(event.start),
-      end: toInputValue(event.end),
-      imageUrl: event.imageUrl ?? '',
+    openEdit(id, () => {
+      setForm({
+        title: event.title,
+        description: event.description ?? '',
+        category: event.category,
+        location: event.location ?? '',
+        start: toInputValue(event.start),
+        end: toInputValue(event.end),
+        imageUrl: event.imageUrl ?? '',
+      })
+      setErrors({})
     })
-    setErrors({})
-    setIsModalOpen(true)
-  }
-
-  const openDelete = (id: string) => {
-    setDeleteId(id)
-    setIsDeleteOpen(true)
   }
 
   const validate = () => {
@@ -220,7 +216,7 @@ export default function AdminEventsPage() {
       }
     }
 
-    setIsModalOpen(false)
+    closeForm()
     await loadEvents()
   }
 
@@ -235,8 +231,7 @@ export default function AdminEventsPage() {
       setError(deleteError.message)
       return
     }
-    setIsDeleteOpen(false)
-    setDeleteId(null)
+    closeDelete()
     await loadEvents()
   }
 
@@ -254,7 +249,7 @@ export default function AdminEventsPage() {
       title="Events"
       description="Add and update upcoming events for the church."
       action={
-        <AdminButton variant="primary" onClick={openCreate}>
+        <AdminButton variant="primary" onClick={handleCreate}>
           + Add new
         </AdminButton>
       }
@@ -291,7 +286,7 @@ export default function AdminEventsPage() {
                 <td>{event.category}</td>
                 <td>{event.location}</td>
                 <td className="admin-actions">
-                  <AdminButton variant="ghost" onClick={() => openEdit(event.id)}>
+                  <AdminButton variant="ghost" onClick={() => handleEdit(event.id)}>
                     Edit
                   </AdminButton>
                   <AdminButton
@@ -309,18 +304,11 @@ export default function AdminEventsPage() {
       </AdminTable>
 
       <AdminModal
-        isOpen={isModalOpen}
+        isOpen={isFormOpen}
         title={editingId ? 'Edit event' : 'Add event'}
-        onClose={() => setIsModalOpen(false)}
+        onClose={closeForm}
         footer={
-          <div className="admin-modal-actions">
-            <AdminButton variant="secondary" onClick={() => setIsModalOpen(false)}>
-              Cancel
-            </AdminButton>
-            <AdminButton variant="primary" onClick={handleSave}>
-              Save
-            </AdminButton>
-          </div>
+          <AdminModalActions onCancel={closeForm} onConfirm={handleSave} />
         }
       >
         <div className="admin-form-grid">
@@ -400,23 +388,12 @@ export default function AdminEventsPage() {
         </div>
       </AdminModal>
 
-      <AdminModal
+      <AdminDeleteModal
         isOpen={isDeleteOpen}
         title="Delete event?"
-        onClose={() => setIsDeleteOpen(false)}
-        footer={
-          <div className="admin-modal-actions">
-            <AdminButton variant="secondary" onClick={() => setIsDeleteOpen(false)}>
-              Cancel
-            </AdminButton>
-            <AdminButton variant="primary" className="admin-btn--danger" onClick={handleDelete}>
-              Delete
-            </AdminButton>
-          </div>
-        }
-      >
-        <p className="admin-modal-text">This action cannot be undone.</p>
-      </AdminModal>
+        onCancel={closeDelete}
+        onConfirm={handleDelete}
+      />
     </AdminLayout>
   )
 }
