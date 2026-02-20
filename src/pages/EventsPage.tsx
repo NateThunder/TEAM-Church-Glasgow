@@ -3,6 +3,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { useEffect, useMemo, useState } from 'react'
 import {
   Calendar,
+  Navigate,
   Views,
   dateFnsLocalizer,
 } from 'react-big-calendar'
@@ -153,13 +154,13 @@ function EventsToolbar({
   return (
     <div className="events-toolbar">
       <div className="events-toolbar-group">
-        <button type="button" className="events-pill-btn" onClick={() => onNavigate('TODAY')}>
+        <button type="button" className="events-pill-btn" onClick={() => onNavigate(Navigate.TODAY)}>
           Today
         </button>
-        <button type="button" className="events-pill-btn" onClick={() => onNavigate('PREV')}>
+        <button type="button" className="events-pill-btn" onClick={() => onNavigate(Navigate.PREVIOUS)}>
           Back
         </button>
-        <button type="button" className="events-pill-btn" onClick={() => onNavigate('NEXT')}>
+        <button type="button" className="events-pill-btn" onClick={() => onNavigate(Navigate.NEXT)}>
           Next
         </button>
       </div>
@@ -185,6 +186,7 @@ export default function EventsPage() {
   const { status, events, error } = useEvents()
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list')
   const [calendarView, setCalendarView] = useState<string>(Views.MONTH)
+  const [calendarDate, setCalendarDate] = useState<Date>(new Date())
   const [activeCategory, setActiveCategory] = useState<EventCategory>('All')
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null)
   const [isMobile, setIsMobile] = useState(false)
@@ -314,87 +316,91 @@ export default function EventsPage() {
             </label>
           </div>
 
-          {status === 'loading' ? (
-            <div className="events-state-card">
-              <p>Loading events...</p>
-            </div>
-          ) : null}
-          {status === 'error' ? (
-            <div className="events-state-card events-state-card--error">
-              <p>We couldn't load events right now.</p>
-              <span>{error}</span>
-            </div>
-          ) : null}
+          <div className="events-content-shell">
+            {status === 'loading' ? (
+              <div className="events-state-card">
+                <p>Loading events...</p>
+              </div>
+            ) : null}
+            {status === 'error' ? (
+              <div className="events-state-card events-state-card--error">
+                <p>We couldn't load events right now.</p>
+                <span>{error}</span>
+              </div>
+            ) : null}
 
-          {status === 'success' && viewMode === 'list' ? (
-            <div className="events-list">
-              {listGroups.length === 0 ? (
-                <div className="events-state-card">
-                  <p>No events to show for this category.</p>
-                </div>
-              ) : (
-                listGroups.map((group) => (
-                  <div key={group.label} className="events-month">
-                    <h2 className="events-month-title">{group.label}</h2>
-                    <div className="events-cards">
-                      {group.items.map((event) => {
-                        const meta = formatEventMeta(event)
-                        const date = toDate(event.start)
-                        const categoryClass = categoryClassName(event.category)
-                        return (
-                          <button
-                            key={event.id}
-                            type="button"
-                            className={`events-card events-card--${categoryClass}`}
-                            onClick={() => setSelectedEvent(event)}
-                          >
-                            <div className="events-card-body">
-                              <span className={`events-pill events-pill--${categoryClass}`}>
-                                {event.category}
-                              </span>
-                              <h3>{event.title}</h3>
-                              {event.description ? <p>{event.description}</p> : null}
-                              <div className="events-meta">
-                                <span>{meta.date}</span>
-                                {meta.time ? <span>{meta.time}</span> : null}
-                                {event.location ? <span>{event.location}</span> : null}
-                              </div>
-                            </div>
-                            <div className="events-card-date">
-                              <div className="events-card-day">
-                                {date ? format(date, 'dd') : '--'}
-                              </div>
-                              <div className="events-card-weekday">
-                                {date ? format(date, 'EEE') : ''}
-                              </div>
-                            </div>
-                          </button>
-                        )
-                      })}
-                    </div>
+            {status === 'success' && viewMode === 'list' ? (
+              <div className="events-list">
+                {listGroups.length === 0 ? (
+                  <div className="events-state-card">
+                    <p>No events to show for this category.</p>
                   </div>
-                ))
-              )}
-            </div>
-          ) : null}
+                ) : (
+                  listGroups.map((group) => (
+                    <div key={group.label} className="events-month">
+                      <h2 className="events-month-title">{group.label}</h2>
+                      <div className="events-cards">
+                        {group.items.map((event) => {
+                          const meta = formatEventMeta(event)
+                          const date = toDate(event.start)
+                          const categoryClass = categoryClassName(event.category)
+                          return (
+                            <button
+                              key={event.id}
+                              type="button"
+                              className={`events-card events-card--${categoryClass}`}
+                              onClick={() => setSelectedEvent(event)}
+                            >
+                              <div className="events-card-body">
+                                <span className={`events-pill events-pill--${categoryClass}`}>
+                                  {event.category}
+                                </span>
+                                <h3>{event.title}</h3>
+                                {event.description ? <p>{event.description}</p> : null}
+                                <div className="events-meta">
+                                  <span>{meta.date}</span>
+                                  {meta.time ? <span>{meta.time}</span> : null}
+                                  {event.location ? <span>{event.location}</span> : null}
+                                </div>
+                              </div>
+                              <div className="events-card-date">
+                                <div className="events-card-day">
+                                  {date ? format(date, 'dd') : '--'}
+                                </div>
+                                <div className="events-card-weekday">
+                                  {date ? format(date, 'EEE') : ''}
+                                </div>
+                              </div>
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            ) : null}
 
-          {status === 'success' && viewMode === 'calendar' ? (
-            <div className="events-calendar">
-              <Calendar<CalendarEvent, object>
-                localizer={localizer}
-                events={calendarEvents}
-                view={calendarView}
-                onView={setCalendarView}
-                startAccessor="start"
-                endAccessor="end"
-                eventPropGetter={calendarEventProps}
-                style={{ height: isMobile ? 520 : 720 }}
-                popup
-                onSelectEvent={(event: CalendarEvent) => setSelectedEvent(event.resource)}
-                components={{ toolbar: EventsToolbar, agenda: { event: AgendaEvent } }}
-              />
-            </div>
-          ) : null}
+            {status === 'success' && viewMode === 'calendar' ? (
+              <div className="events-calendar">
+                <Calendar<CalendarEvent, object>
+                  localizer={localizer}
+                  events={calendarEvents}
+                  date={calendarDate}
+                  view={calendarView}
+                  onView={setCalendarView}
+                  onNavigate={(nextDate: Date) => setCalendarDate(nextDate)}
+                  startAccessor="start"
+                  endAccessor="end"
+                  eventPropGetter={calendarEventProps}
+                  style={{ height: isMobile ? 520 : 720 }}
+                  popup
+                  onSelectEvent={(event: CalendarEvent) => setSelectedEvent(event.resource)}
+                  components={{ toolbar: EventsToolbar, agenda: { event: AgendaEvent } }}
+                />
+              </div>
+            ) : null}
+          </div>
         </div>
       </section>
 

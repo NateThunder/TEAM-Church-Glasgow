@@ -20,6 +20,7 @@ export default function ServePage() {
   const believersClass = believersClassItem ?? DEFAULT_BELIEVERS_CLASS
   const teamsHeaderRef = useRef<HTMLDivElement | null>(null)
   const believersBottomRef = useRef<HTMLDivElement | null>(null)
+  const teamsContainerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (!eligibility) {
@@ -49,6 +50,95 @@ export default function ServePage() {
 
     return () => cancelAnimationFrame(raf)
   }, [eligibility])
+
+  useEffect(() => {
+    if (!openTeamId) {
+      return
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const teamsContainer = teamsContainerRef.current
+      if (!teamsContainer) {
+        return
+      }
+
+      const target = event.target as Node | null
+      if (!target) {
+        return
+      }
+
+      const clickedInsideTeamCard =
+        target instanceof Element && Boolean(target.closest('.serve-team-card'))
+
+      if (!clickedInsideTeamCard) {
+        setOpenTeamId(null)
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+    }
+  }, [openTeamId])
+
+  useEffect(() => {
+    if (!openTeamId) {
+      return
+    }
+
+    const raf = requestAnimationFrame(() => {
+      const teamsContainer = teamsContainerRef.current
+      if (!teamsContainer) {
+        return
+      }
+
+      const cards = Array.from(
+        teamsContainer.querySelectorAll<HTMLElement>('.serve-team-card[data-team-id]')
+      )
+      const openCard = cards.find((card) => card.dataset.teamId === openTeamId)
+      if (!openCard) {
+        return
+      }
+
+      const rootStyles = getComputedStyle(document.documentElement)
+      const headerHeight = Number.parseFloat(
+        rootStyles.getPropertyValue('--header-height').trim() || '96'
+      )
+      const topPadding = headerHeight + 16
+      const bottomPadding = 16
+      const rect = openCard.getBoundingClientRect()
+      const availableHeight = window.innerHeight - topPadding - bottomPadding
+
+      if (rect.height > availableHeight) {
+        const nextTop = window.scrollY + rect.top - topPadding
+        window.scrollTo({
+          top: nextTop,
+          behavior: 'smooth',
+        })
+        return
+      }
+
+      if (rect.top < topPadding) {
+        const nextTop = window.scrollY + rect.top - topPadding
+        window.scrollTo({
+          top: nextTop,
+          behavior: 'smooth',
+        })
+        return
+      }
+
+      if (rect.bottom > window.innerHeight - bottomPadding) {
+        const delta = rect.bottom - (window.innerHeight - bottomPadding)
+        window.scrollTo({
+          top: window.scrollY + delta,
+          behavior: 'smooth',
+        })
+      }
+    })
+
+    return () => cancelAnimationFrame(raf)
+  }, [openTeamId])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>, teamId: string) => {
     event.preventDefault()
@@ -151,7 +241,7 @@ export default function ServePage() {
       )}
 
       {eligibility === 'yes' && (
-        <div className="serve-container serve-teams">
+        <div className="serve-container serve-teams" ref={teamsContainerRef}>
           <div className="serve-section-header" ref={teamsHeaderRef}>
             <h2>Serving Teams</h2>
             <p>Find the area where your gifts and passion can make a difference.</p>
@@ -180,7 +270,11 @@ export default function ServePage() {
                       const isOpen = openTeamId === team.id
                       const isSubmitted = submittedTeams[team.id]
                       return (
-                        <div key={team.id} className="serve-card serve-team-card">
+                        <div
+                          key={team.id}
+                          className="serve-card serve-team-card"
+                          data-team-id={team.id}
+                        >
                           <div className="serve-team-body">
                             <h4>{team.name}</h4>
                             <p>{team.description}</p>
@@ -214,6 +308,15 @@ export default function ServePage() {
                                     type="email"
                                     required
                                     placeholder="you@email.com"
+                                  />
+                                </label>
+                                <label>
+                                  Phone number (optional)
+                                  <input
+                                    name="phone"
+                                    type="tel"
+                                    autoComplete="tel"
+                                    placeholder="+44 7123 456789"
                                   />
                                 </label>
                                 <label>
