@@ -1,9 +1,9 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import AdminLayout from './AdminLayout'
 import AdminButton from './components/AdminButton'
 import AdminModal from './components/AdminModal'
 import AdminTable from './components/AdminTable'
-import { useAdminData } from './AdminDataContext'
+import { useAdminData } from './useAdminData'
 
 type AnnouncementFormState = {
   title: string
@@ -120,7 +120,11 @@ export default function AdminAnnouncementsPage() {
                   <AdminButton variant="ghost" onClick={() => openEdit(announcement.id)}>
                     Edit
                   </AdminButton>
-                  <AdminButton variant="ghost" onClick={() => openDelete(announcement.id)}>
+                  <AdminButton
+                    variant="ghost"
+                    className="admin-btn--danger"
+                    onClick={() => openDelete(announcement.id)}
+                  >
                     Delete
                   </AdminButton>
                 </td>
@@ -196,7 +200,7 @@ export default function AdminAnnouncementsPage() {
             <AdminButton variant="secondary" onClick={() => setIsDeleteOpen(false)}>
               Cancel
             </AdminButton>
-            <AdminButton variant="primary" onClick={handleDelete}>
+            <AdminButton variant="primary" className="admin-btn--danger" onClick={handleDelete}>
               Delete
             </AdminButton>
           </div>
@@ -207,3 +211,4 @@ export default function AdminAnnouncementsPage() {
     </AdminLayout>
   )
 }
+

@@ -4,6 +4,7 @@ import AdminButton from './components/AdminButton'
 import AdminModal from './components/AdminModal'
 import AdminTable from './components/AdminTable'
 import { supabase } from '../services/supabaseClient'
+import { SUPABASE_CONFIG_ERROR } from '../constants/messages'
 import type { EventCategory } from '../services/events'
 
 type EventFormState = {
@@ -71,8 +72,8 @@ const toIso = (value: string) => {
 
 export default function AdminEventsPage() {
   const [events, setEvents] = useState<EventItem[]>([])
-  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
-  const [error, setError] = useState<string | null>(null)
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>(supabase ? 'loading' : 'error')
+  const [error, setError] = useState<string | null>(supabase ? null : SUPABASE_CONFIG_ERROR)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -80,26 +81,21 @@ export default function AdminEventsPage() {
   const [form, setForm] = useState<EventFormState>(emptyForm)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const loadEvents = async () => {
+  const fetchEvents = async () => {
     if (!supabase) {
-      setStatus('error')
-      setError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
-      return
+      return { data: [] as EventItem[], error: SUPABASE_CONFIG_ERROR }
     }
-    setStatus('loading')
-    setError(null)
+
     const { data, error: loadError } = await supabase
       .from('events')
       .select('id,title,description,category,location,start,end,image_url')
       .order('start', { ascending: true })
 
     if (loadError) {
-      setStatus('error')
-      setError(loadError.message)
-      return
+      return { data: [] as EventItem[], error: loadError.message }
     }
 
-    const mapped: EventItem[] = (data ?? []).map((row: EventRow) => ({
+    const mapped = (data ?? []).map((row: EventRow) => ({
       id: row.id,
       title: row.title,
       description: row.description ?? undefined,
@@ -109,12 +105,47 @@ export default function AdminEventsPage() {
       end: row.end,
       imageUrl: row.image_url ?? undefined,
     }))
-    setEvents(mapped)
+
+    return { data: mapped, error: null as string | null }
+  }
+
+  const loadEvents = async () => {
+    setStatus('loading')
+    setError(null)
+
+    const result = await fetchEvents()
+    if (result.error) {
+      setStatus('error')
+      setError(result.error)
+      return
+    }
+
+    setEvents(result.data)
     setStatus('idle')
   }
 
   useEffect(() => {
-    loadEvents()
+    let active = true
+
+    const loadInitialEvents = async () => {
+      const result = await fetchEvents()
+      if (!active) return
+
+      if (result.error) {
+        setStatus('error')
+        setError(result.error)
+        return
+      }
+
+      setEvents(result.data)
+      setStatus('idle')
+      setError(null)
+    }
+
+    void loadInitialEvents()
+    return () => {
+      active = false
+    }
   }, [])
 
   const openCreate = () => {
@@ -159,7 +190,7 @@ export default function AdminEventsPage() {
   const handleSave = async () => {
     if (!validate()) return
     if (!supabase) {
-      setError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+      setError(SUPABASE_CONFIG_ERROR)
       return
     }
     const payload = {
@@ -196,7 +227,7 @@ export default function AdminEventsPage() {
   const handleDelete = async () => {
     if (!deleteId) return
     if (!supabase) {
-      setError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+      setError(SUPABASE_CONFIG_ERROR)
       return
     }
     const { error: deleteError } = await supabase.from('events').delete().eq('id', deleteId)
@@ -263,7 +294,11 @@ export default function AdminEventsPage() {
                   <AdminButton variant="ghost" onClick={() => openEdit(event.id)}>
                     Edit
                   </AdminButton>
-                  <AdminButton variant="ghost" onClick={() => openDelete(event.id)}>
+                  <AdminButton
+                    variant="ghost"
+                    className="admin-btn--danger"
+                    onClick={() => openDelete(event.id)}
+                  >
                     Delete
                   </AdminButton>
                 </td>
@@ -374,7 +409,7 @@ export default function AdminEventsPage() {
             <AdminButton variant="secondary" onClick={() => setIsDeleteOpen(false)}>
               Cancel
             </AdminButton>
-            <AdminButton variant="primary" onClick={handleDelete}>
+            <AdminButton variant="primary" className="admin-btn--danger" onClick={handleDelete}>
               Delete
             </AdminButton>
           </div>

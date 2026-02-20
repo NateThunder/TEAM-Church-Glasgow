@@ -4,6 +4,7 @@ import AdminButton from './components/AdminButton'
 import AdminModal from './components/AdminModal'
 import AdminTable from './components/AdminTable'
 import { supabase } from '../services/supabaseClient'
+import { SUPABASE_CONFIG_ERROR } from '../constants/messages'
 
 type TeamFormState = {
   groupName: string
@@ -88,8 +89,8 @@ const isMissingLeaderColumnError = (error: { code?: string; message?: string } |
 export default function AdminTeamsPage() {
   const [teams, setTeams] = useState<TeamItem[]>([])
   const [hasLeaderColumn, setHasLeaderColumn] = useState(true)
-  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
-  const [error, setError] = useState<string | null>(null)
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>(supabase ? 'loading' : 'error')
+  const [error, setError] = useState<string | null>(supabase ? null : SUPABASE_CONFIG_ERROR)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -97,15 +98,14 @@ export default function AdminTeamsPage() {
   const [form, setForm] = useState<TeamFormState>(emptyForm)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const loadTeams = async () => {
+  const fetchTeams = async () => {
     if (!supabase) {
-      setStatus('error')
-      setError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
-      return
+      return {
+        data: [] as TeamItem[],
+        hasLeaderColumn: true,
+        error: SUPABASE_CONFIG_ERROR,
+      }
     }
-
-    setStatus('loading')
-    setError(null)
 
     const { data, error: loadError } = await supabase
       .from('serving_teams')
@@ -117,8 +117,6 @@ export default function AdminTeamsPage() {
 
     if (loadError) {
       if (isMissingLeaderColumnError(loadError)) {
-        setHasLeaderColumn(false)
-
         const { data: fallbackData, error: fallbackError } = await supabase
           .from('serving_teams')
           .select('id,team_key,group_name,group_sort,team_sort,name,description,is_active')
@@ -128,27 +126,75 @@ export default function AdminTeamsPage() {
           .order('name', { ascending: true })
 
         if (fallbackError) {
-          setStatus('error')
-          setError(fallbackError.message)
-          return
+          return {
+            data: [] as TeamItem[],
+            hasLeaderColumn: false,
+            error: fallbackError.message,
+          }
         }
 
-        setTeams(mapTeamRows((fallbackData ?? []) as TeamRowWithoutLeader[]))
-        setStatus('idle')
-        return
+        return {
+          data: mapTeamRows((fallbackData ?? []) as TeamRowWithoutLeader[]),
+          hasLeaderColumn: false,
+          error: null as string | null,
+        }
       }
 
+      return {
+        data: [] as TeamItem[],
+        hasLeaderColumn: true,
+        error: loadError.message,
+      }
+    }
+
+    return {
+      data: mapTeamRows((data ?? []) as TeamRow[]),
+      hasLeaderColumn: true,
+      error: null as string | null,
+    }
+  }
+
+  const loadTeams = async () => {
+    setStatus('loading')
+    setError(null)
+
+    const result = await fetchTeams()
+    if (result.error) {
+      setHasLeaderColumn(result.hasLeaderColumn)
       setStatus('error')
-      setError(loadError.message)
+      setError(result.error)
       return
     }
-    setHasLeaderColumn(true)
-    setTeams(mapTeamRows((data ?? []) as TeamRow[]))
+
+    setHasLeaderColumn(result.hasLeaderColumn)
+    setTeams(result.data)
     setStatus('idle')
   }
 
   useEffect(() => {
-    loadTeams()
+    let active = true
+
+    const loadInitialTeams = async () => {
+      const result = await fetchTeams()
+      if (!active) return
+
+      if (result.error) {
+        setHasLeaderColumn(result.hasLeaderColumn)
+        setStatus('error')
+        setError(result.error)
+        return
+      }
+
+      setHasLeaderColumn(result.hasLeaderColumn)
+      setTeams(result.data)
+      setStatus('idle')
+      setError(null)
+    }
+
+    void loadInitialTeams()
+    return () => {
+      active = false
+    }
   }, [])
 
   const groupOptions = useMemo(() => {
@@ -199,7 +245,7 @@ export default function AdminTeamsPage() {
   const handleSave = async () => {
     if (!validate()) return
     if (!supabase) {
-      setError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+      setError(SUPABASE_CONFIG_ERROR)
       return
     }
 
@@ -250,7 +296,7 @@ export default function AdminTeamsPage() {
   const handleDelete = async () => {
     if (!deleteId) return
     if (!supabase) {
-      setError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+      setError(SUPABASE_CONFIG_ERROR)
       return
     }
 
@@ -321,7 +367,11 @@ export default function AdminTeamsPage() {
                   <AdminButton variant="ghost" onClick={() => openEdit(team.id)}>
                     Edit
                   </AdminButton>
-                  <AdminButton variant="ghost" onClick={() => openDelete(team.id)}>
+                  <AdminButton
+                    variant="ghost"
+                    className="admin-btn--danger"
+                    onClick={() => openDelete(team.id)}
+                  >
                     Delete
                   </AdminButton>
                 </td>
@@ -411,7 +461,7 @@ export default function AdminTeamsPage() {
             <AdminButton variant="secondary" onClick={() => setIsDeleteOpen(false)}>
               Cancel
             </AdminButton>
-            <AdminButton variant="primary" onClick={handleDelete}>
+            <AdminButton variant="primary" className="admin-btn--danger" onClick={handleDelete}>
               Delete
             </AdminButton>
           </div>

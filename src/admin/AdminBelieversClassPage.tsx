@@ -4,6 +4,7 @@ import AdminButton from './components/AdminButton'
 import AdminModal from './components/AdminModal'
 import AdminTable from './components/AdminTable'
 import { supabase } from '../services/supabaseClient'
+import { SUPABASE_CONFIG_ERROR } from '../constants/messages'
 
 type BelieversClassFormState = {
   startsLabel: string
@@ -87,8 +88,8 @@ const toItem = (row: BelieversClassRow): BelieversClassItem => ({
 
 export default function AdminBelieversClassPage() {
   const [items, setItems] = useState<BelieversClassItem[]>([])
-  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
-  const [error, setError] = useState<string | null>(null)
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>(supabase ? 'loading' : 'error')
+  const [error, setError] = useState<string | null>(supabase ? null : SUPABASE_CONFIG_ERROR)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -96,15 +97,10 @@ export default function AdminBelieversClassPage() {
   const [form, setForm] = useState<BelieversClassFormState>(emptyForm)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const loadBelieversClasses = async () => {
+  const fetchBelieversClasses = async () => {
     if (!supabase) {
-      setStatus('error')
-      setError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
-      return
+      return { data: [] as BelieversClassItem[], error: SUPABASE_CONFIG_ERROR }
     }
-
-    setStatus('loading')
-    setError(null)
 
     const { data, error: loadError } = await supabase
       .from('believers_classes')
@@ -112,17 +108,52 @@ export default function AdminBelieversClassPage() {
       .order('updated_at', { ascending: false })
 
     if (loadError) {
+      return { data: [] as BelieversClassItem[], error: loadError.message }
+    }
+
+    return {
+      data: ((data ?? []) as BelieversClassRow[]).map(toItem),
+      error: null as string | null,
+    }
+  }
+
+  const loadBelieversClasses = async () => {
+    setStatus('loading')
+    setError(null)
+
+    const result = await fetchBelieversClasses()
+    if (result.error) {
       setStatus('error')
-      setError(loadError.message)
+      setError(result.error)
       return
     }
 
-    setItems(((data ?? []) as BelieversClassRow[]).map(toItem))
+    setItems(result.data)
     setStatus('idle')
   }
 
   useEffect(() => {
-    loadBelieversClasses()
+    let active = true
+
+    const loadInitialBelieversClasses = async () => {
+      const result = await fetchBelieversClasses()
+      if (!active) return
+
+      if (result.error) {
+        setStatus('error')
+        setError(result.error)
+        return
+      }
+
+      setItems(result.data)
+      setStatus('idle')
+      setError(null)
+    }
+
+    void loadInitialBelieversClasses()
+    return () => {
+      active = false
+    }
   }, [])
 
   const openCreate = () => {
@@ -161,7 +192,7 @@ export default function AdminBelieversClassPage() {
   const handleSave = async () => {
     if (!validate()) return
     if (!supabase) {
-      setError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+      setError(SUPABASE_CONFIG_ERROR)
       return
     }
 
@@ -208,7 +239,7 @@ export default function AdminBelieversClassPage() {
   const handleDelete = async () => {
     if (!deleteId) return
     if (!supabase) {
-      setError('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+      setError(SUPABASE_CONFIG_ERROR)
       return
     }
 
@@ -271,7 +302,11 @@ export default function AdminBelieversClassPage() {
                   <AdminButton variant="ghost" onClick={() => openEdit(item.id)}>
                     Edit
                   </AdminButton>
-                  <AdminButton variant="ghost" onClick={() => openDelete(item.id)}>
+                  <AdminButton
+                    variant="ghost"
+                    className="admin-btn--danger"
+                    onClick={() => openDelete(item.id)}
+                  >
                     Delete
                   </AdminButton>
                 </td>
@@ -348,7 +383,7 @@ export default function AdminBelieversClassPage() {
             <AdminButton variant="secondary" onClick={() => setIsDeleteOpen(false)}>
               Cancel
             </AdminButton>
-            <AdminButton variant="primary" onClick={handleDelete}>
+            <AdminButton variant="primary" className="admin-btn--danger" onClick={handleDelete}>
               Delete
             </AdminButton>
           </div>

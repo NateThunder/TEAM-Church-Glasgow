@@ -7,8 +7,9 @@ export default function NavigationTracker() {
   useEffect(() => {
     // Hook analytics or page view tracking here.
     // Example: analytics.page(location.pathname)
-    // eslint-disable-next-line no-console
-    console.log('Route change:', location.pathname)
+    if (import.meta.env.DEV) {
+      console.log('Route change:', location.pathname)
+    }
   }, [location.pathname])
 
   return null

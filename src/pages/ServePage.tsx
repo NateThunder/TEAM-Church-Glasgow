@@ -1,8 +1,11 @@
 import '../styles/serve.css'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { ServeTeamGroup } from '../components/serve/ServeTeamGroup'
+import { useServeTeamExpansion } from '../hooks/useServeTeamExpansion'
 import { useBelieversClass } from '../services/believersClass'
 import { useServingTeams } from '../services/servingTeams'
+import { createServeSignup } from '../services/serveSignups'
 
 type Eligibility = 'yes' | 'no' | null
 
@@ -13,14 +16,14 @@ const DEFAULT_BELIEVERS_CLASS = {
 
 export default function ServePage() {
   const [eligibility, setEligibility] = useState<Eligibility>(null)
-  const [openTeamId, setOpenTeamId] = useState<string | null>(null)
   const [submittedTeams, setSubmittedTeams] = useState<Record<string, boolean>>({})
+  const [submittingTeams, setSubmittingTeams] = useState<Record<string, boolean>>({})
+  const [submitErrors, setSubmitErrors] = useState<Record<string, string | null>>({})
   const { status: believersClassStatus, item: believersClassItem } = useBelieversClass()
   const { status: teamsStatus, groups: teams, error: teamsError } = useServingTeams()
+  const { openTeamId, teamsContainerRef, toggleTeam } = useServeTeamExpansion()
   const believersClass = believersClassItem ?? DEFAULT_BELIEVERS_CLASS
   const teamsHeaderRef = useRef<HTMLDivElement | null>(null)
-  const believersBottomRef = useRef<HTMLDivElement | null>(null)
-  const teamsContainerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (!eligibility) {
@@ -51,104 +54,51 @@ export default function ServePage() {
     return () => cancelAnimationFrame(raf)
   }, [eligibility])
 
-  useEffect(() => {
-    if (!openTeamId) {
-      return
-    }
-
-    const handlePointerDown = (event: PointerEvent) => {
-      const teamsContainer = teamsContainerRef.current
-      if (!teamsContainer) {
-        return
-      }
-
-      const target = event.target as Node | null
-      if (!target) {
-        return
-      }
-
-      const clickedInsideTeamCard =
-        target instanceof Element && Boolean(target.closest('.serve-team-card'))
-
-      if (!clickedInsideTeamCard) {
-        setOpenTeamId(null)
-      }
-    }
-
-    document.addEventListener('pointerdown', handlePointerDown)
-
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown)
-    }
-  }, [openTeamId])
-
-  useEffect(() => {
-    if (!openTeamId) {
-      return
-    }
-
-    const raf = requestAnimationFrame(() => {
-      const teamsContainer = teamsContainerRef.current
-      if (!teamsContainer) {
-        return
-      }
-
-      const cards = Array.from(
-        teamsContainer.querySelectorAll<HTMLElement>('.serve-team-card[data-team-id]')
-      )
-      const openCard = cards.find((card) => card.dataset.teamId === openTeamId)
-      if (!openCard) {
-        return
-      }
-
-      const rootStyles = getComputedStyle(document.documentElement)
-      const headerHeight = Number.parseFloat(
-        rootStyles.getPropertyValue('--header-height').trim() || '96'
-      )
-      const topPadding = headerHeight + 16
-      const bottomPadding = 16
-      const rect = openCard.getBoundingClientRect()
-      const availableHeight = window.innerHeight - topPadding - bottomPadding
-
-      if (rect.height > availableHeight) {
-        const nextTop = window.scrollY + rect.top - topPadding
-        window.scrollTo({
-          top: nextTop,
-          behavior: 'smooth',
-        })
-        return
-      }
-
-      if (rect.top < topPadding) {
-        const nextTop = window.scrollY + rect.top - topPadding
-        window.scrollTo({
-          top: nextTop,
-          behavior: 'smooth',
-        })
-        return
-      }
-
-      if (rect.bottom > window.innerHeight - bottomPadding) {
-        const delta = rect.bottom - (window.innerHeight - bottomPadding)
-        window.scrollTo({
-          top: window.scrollY + delta,
-          behavior: 'smooth',
-        })
-      }
-    })
-
-    return () => cancelAnimationFrame(raf)
-  }, [openTeamId])
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>, teamId: string) => {
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>,
+    team: { id: string; name: string },
+  ) => {
     event.preventDefault()
     const form = event.currentTarget
     const data = new FormData(form)
-    const payload = Object.fromEntries(data.entries())
-    // eslint-disable-next-line no-console
-    console.log('Serve team interest:', teamId, payload)
-    setSubmittedTeams((prev) => ({ ...prev, [teamId]: true }))
-    form.reset()
+    const name = String(data.get('name') ?? '').trim()
+    const email = String(data.get('email') ?? '').trim()
+    const phone = String(data.get('phone') ?? '').trim()
+    const message = String(data.get('message') ?? '').trim()
+
+    if (!name || !email) {
+      setSubmitErrors((prev) => ({
+        ...prev,
+        [team.id]: 'Please provide your name and email.',
+      }))
+      return
+    }
+
+    setSubmittingTeams((prev) => ({ ...prev, [team.id]: true }))
+    setSubmitErrors((prev) => ({ ...prev, [team.id]: null }))
+
+    try {
+      await createServeSignup({
+        teamKey: team.id,
+        teamName: team.name,
+        applicantName: name,
+        email,
+        phoneNumber: phone,
+        message,
+      })
+      setSubmittedTeams((prev) => ({ ...prev, [team.id]: true }))
+      form.reset()
+    } catch (error) {
+      setSubmitErrors((prev) => ({
+        ...prev,
+        [team.id]: 'Unable to submit right now. Please try again.',
+      }))
+      if (import.meta.env.DEV) {
+        console.error('Serve team signup failed:', error)
+      }
+    } finally {
+      setSubmittingTeams((prev) => ({ ...prev, [team.id]: false }))
+    }
   }
 
   return (
@@ -233,7 +183,6 @@ export default function ServePage() {
               {believersClassStatus === 'loading' ? (
                 <p className="serve-step-micro">Loading class details...</p>
               ) : null}
-              <div ref={believersBottomRef} />
             </div>
           </div>
 
@@ -263,81 +212,16 @@ export default function ServePage() {
 
           {teamsStatus === 'success'
             ? teams.map((group) => (
-                <div key={group.title} className="serve-team-group">
-                  <h3>{group.title}</h3>
-                  <div className="serve-team-grid">
-                    {group.teams.map((team) => {
-                      const isOpen = openTeamId === team.id
-                      const isSubmitted = submittedTeams[team.id]
-                      return (
-                        <div
-                          key={team.id}
-                          className="serve-card serve-team-card"
-                          data-team-id={team.id}
-                        >
-                          <div className="serve-team-body">
-                            <h4>{team.name}</h4>
-                            <p>{team.description}</p>
-                          </div>
-                          <button
-                            type="button"
-                            className="serve-secondary-button"
-                            onClick={() => setOpenTeamId(isOpen ? null : team.id)}
-                            aria-expanded={isOpen}
-                            aria-controls={`${team.id}-form`}
-                          >
-                            Join this team
-                          </button>
-
-                          {isOpen && (
-                            <div className="serve-join-panel" id={`${team.id}-form`}>
-                              {isSubmitted && (
-                                <div className="serve-success">
-                                  Thanks! We'll be in touch soon.
-                                </div>
-                              )}
-                              <form onSubmit={(event) => handleSubmit(event, team.id)}>
-                                <label>
-                                  Name
-                                  <input name="name" type="text" required placeholder="Your name" />
-                                </label>
-                                <label>
-                                  Email
-                                  <input
-                                    name="email"
-                                    type="email"
-                                    required
-                                    placeholder="you@email.com"
-                                  />
-                                </label>
-                                <label>
-                                  Phone number (optional)
-                                  <input
-                                    name="phone"
-                                    type="tel"
-                                    autoComplete="tel"
-                                    placeholder="+44 7123 456789"
-                                  />
-                                </label>
-                                <label>
-                                  Message (optional)
-                                  <textarea
-                                    name="message"
-                                    rows={3}
-                                    placeholder="Tell us a little about yourself."
-                                  />
-                                </label>
-                                <button type="submit" className="serve-primary-button">
-                                  Submit interest
-                                </button>
-                              </form>
-                            </div>
-                          )}
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
+                <ServeTeamGroup
+                  key={group.title}
+                  group={group}
+                  openTeamId={openTeamId}
+                  submittedTeams={submittedTeams}
+                  submittingTeams={submittingTeams}
+                  submitErrors={submitErrors}
+                  onToggleTeam={toggleTeam}
+                  onSubmitTeam={handleSubmit}
+                />
               ))
             : null}
         </div>
