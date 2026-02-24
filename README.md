@@ -1,8 +1,5 @@
 # TEAM Church Glasgow Website
 
-<p align="center">
-  <img src="public/logo.png" alt="TEAM Church Glasgow Logo" width="180" />
-</p>
 
 <p align="center">
   <strong>Official website for TEAM Church Glasgow</strong><br/>
@@ -46,5 +43,5 @@ The goal of the project is to provide a clean, responsive, and accessible web pr
 ## 📸 Website Preview
 
 <p align="center">
-  <img src="screenshots.png" alt="TEAM Church Glasgow Website Preview" width="800"/>
+  <img src="screenshot.png" alt="TEAM Church Glasgow Website Preview" width="800"/>
 </p>
