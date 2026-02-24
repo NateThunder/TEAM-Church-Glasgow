@@ -43,10 +43,8 @@ The goal of the project is to provide a clean, responsive, and accessible web pr
 
 ---
 
-## 🚀 Getting Started
+## 📸 Website Preview
 
-### 1️⃣ Clone the repository
-
-```bash
-git clone https://github.com/NateThunder/TEAM-Church-Glasgow.git
-cd TEAM-Church-Glasgow
+<p align="center">
+  <img src="screenshots.png" alt="TEAM Church Glasgow Website Preview" width="800"/>
+</p>
