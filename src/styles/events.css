@@ -553,6 +553,15 @@
   gap: 12px;
 }
 
+.app-shell.theme-dark .events-card {
+  transition: none;
+}
+
+.app-shell.theme-dark .events-card:hover {
+  transform: none;
+  box-shadow: var(--shadow-soft);
+}
+
 .app-shell.theme-light .events-subtitle,
 .app-shell.theme-light .events-card-body p,
 .app-shell.theme-light .events-meta,
@@ -588,20 +597,23 @@
 .app-shell.theme-light .events-state-card,
 .app-shell.theme-light .events-calendar,
 .app-shell.theme-light .events-modal-panel {
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(247, 248, 250, 0.96);
   border-color: rgba(15, 23, 42, 0.08);
   color: #111827;
 }
 
 .app-shell.theme-light .events-card {
-  background: linear-gradient(110deg, var(--event-soft) 0%, rgba(255, 255, 255, 0) 44%),
-    rgba(255, 255, 255, 0.96);
+  background: rgba(247, 248, 250, 0.96);
   border-color: rgba(15, 23, 42, 0.08);
   color: #111827;
+  box-shadow: none;
+  transition: none;
 }
 
 .app-shell.theme-light .events-card:hover {
   border-color: var(--event-border);
+  transform: none;
+  box-shadow: none;
 }
 
 .app-shell.theme-light .events-card-date,

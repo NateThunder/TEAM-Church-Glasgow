@@ -119,7 +119,7 @@ export default function ServePage() {
               This helps us show the right serving opportunities.
             </p>
             <div
-              className="serve-step-actions"
+              className={`serve-step-actions${eligibility ? ' has-selection' : ''}`}
               role="group"
               aria-label="Believers Class eligibility"
             >
@@ -142,7 +142,6 @@ export default function ServePage() {
                 Not yet
               </button>
             </div>
-            <p className="serve-step-micro">You can update this later.</p>
           </div>
         </div>
       </section>

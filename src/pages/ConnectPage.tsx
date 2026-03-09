@@ -190,7 +190,7 @@ export default function ConnectPage() {
               target="_blank"
               rel="noreferrer"
             >
-              Get Directions -&gt;
+              Get Directions
             </a>
           </div>
         </aside>

@@ -326,8 +326,9 @@
 .app-shell.theme-light .connect-map-card,
 .app-shell.theme-light .connect-panel {
 
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 12px 24px rgba(16, 24, 40, 0.1);
+  background: rgba(247, 248, 250, 0.96);
+  box-shadow: none;
+  transition: none;
 
 }
 
@@ -342,7 +343,7 @@
 
 .app-shell.theme-light .connect-info-box {
 
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(247, 248, 250, 0.96);
   border: 1px solid rgba(17, 24, 39, 0.12);
   color: rgba(17, 24, 39, 0.7);
 

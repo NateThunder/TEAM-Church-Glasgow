@@ -166,7 +166,6 @@
   text-decoration: none;
   border: none;
   cursor: pointer;
-  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
 }
 
 .serve-primary-button {
@@ -174,11 +173,6 @@
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: none;
-}
-
-.serve-primary-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 24px rgba(16, 8, 26, 0.3);
 }
 
 .serve-secondary-button {
@@ -194,9 +188,19 @@
   box-shadow: 0 10px 20px rgba(16, 8, 26, 0.25);
 }
 
-.serve-secondary-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(6, 18, 28, 0.2);
+.serve-step-actions .is-active:hover {
+  transform: none;
+  box-shadow: 0 10px 20px rgba(16, 8, 26, 0.25);
+}
+
+.serve-step-actions.has-selection .serve-primary-button:hover,
+.serve-step-actions.has-selection .serve-secondary-button:hover {
+  transform: none;
+}
+
+.serve-step-actions.has-selection .serve-primary-button:not(.is-active):hover,
+.serve-step-actions.has-selection .serve-secondary-button:not(.is-active):hover {
+  box-shadow: none;
 }
 
 .serve-details {
@@ -385,15 +389,35 @@
   cursor: not-allowed;
 }
 
+.app-shell.theme-dark .serve-card {
+  transition: none;
+}
+
+.app-shell.theme-dark .serve-card:hover {
+  transform: none;
+  box-shadow: var(--shadow-soft);
+}
+
 .app-shell.theme-light .serve-card {
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 16px 28px rgba(16, 24, 40, 0.1);
+  background: rgba(247, 248, 250, 0.96);
+  box-shadow: none;
+  transition: none;
   border: 1px solid rgba(120, 81, 169, 0.3);
   color: #111827;
 }
 
+.app-shell.theme-light .serve-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .app-shell.theme-light .serve-page h1 {
   color: #111827;
+}
+
+.app-shell.theme-light .serve-kicker,
+.app-shell.theme-light .serve-step-card > h2 {
+  color: #7851a9 !important;
 }
 
 .app-shell.theme-light .serve-cohort {
@@ -404,7 +428,8 @@
   color: rgba(17, 24, 39, 0.6);
 }
 
-.app-shell.theme-light .serve-secondary-button {
+.app-shell.theme-light .serve-step-actions .serve-primary-button,
+.app-shell.theme-light .serve-step-actions .serve-secondary-button {
   background: rgba(17, 24, 39, 0.05);
   color: #111827;
   border: 1px solid rgba(17, 24, 39, 0.12);

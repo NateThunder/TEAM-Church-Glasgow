@@ -97,9 +97,14 @@ export default function Layout({ navItems, children }: LayoutProps) {
   const isHome = location.pathname === '/'
   const isWatch = location.pathname === '/watch'
   const isGroups = location.pathname === '/groups'
+  const isServe = location.pathname === '/serve'
+  const isAbout = location.pathname === '/about'
   const headerRef = useRef<HTMLElement | null>(null)
+  const serviceBannerRef = useRef<HTMLDivElement | null>(null)
+  const hasPassedServiceBannerRef = useRef(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isPortraitMobile, setIsPortraitMobile] = useState(false)
+  const [hasPassedServiceBanner, setHasPassedServiceBanner] = useState(false)
   const [theme, setTheme] = useState<'light' | 'dark'>('dark')
   const [searchParams, setSearchParams] = useSearchParams()
   const query = searchParams.get('q') ?? ''
@@ -132,6 +137,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
 
     let frameId = 0
     const fadeRange = 120
+    let lastHasPassedServiceBanner = hasPassedServiceBannerRef.current
 
     const updateFrost = () => {
       frameId = 0
@@ -150,6 +156,28 @@ export default function Layout({ navItems, children }: LayoutProps) {
         '--header-height',
         `${header.offsetHeight}px`
       )
+
+      if (!isHome) {
+        if (lastHasPassedServiceBanner) {
+          lastHasPassedServiceBanner = false
+          hasPassedServiceBannerRef.current = false
+          setHasPassedServiceBanner(false)
+        }
+        return
+      }
+
+      const serviceBanner = serviceBannerRef.current
+      if (!serviceBanner) return
+
+      const headerBottom = header.getBoundingClientRect().bottom
+      const bannerBottom = serviceBanner.getBoundingClientRect().bottom
+      const hasPassed = headerBottom >= bannerBottom
+
+      if (hasPassed !== lastHasPassedServiceBanner) {
+        lastHasPassedServiceBanner = hasPassed
+        hasPassedServiceBannerRef.current = hasPassed
+        setHasPassedServiceBanner(hasPassed)
+      }
     }
 
     const onScroll = () => {
@@ -164,7 +192,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
       window.removeEventListener('scroll', onScroll)
       if (frameId) window.cancelAnimationFrame(frameId)
     }
-  }, [])
+  }, [isHome])
 
   useEffect(() => {
     const update = () => {
@@ -245,14 +273,14 @@ export default function Layout({ navItems, children }: LayoutProps) {
     <div
       className={`app-shell theme-${theme} ${isHome ? 'is-home' : ''} ${
         isWatch ? 'is-watch' : ''
-      } ${isGroups ? 'is-groups' : ''} ${isPortraitMobile ? 'is-portrait' : ''}`}
+      } ${isGroups ? 'is-groups' : ''} ${isServe ? 'is-serve' : ''} ${isAbout ? 'is-about' : ''} ${
+        isPortraitMobile ? 'is-portrait' : ''
+      } ${hasPassedServiceBanner && theme === 'light' ? 'home-nav-text-dark' : ''}`}
     >
       {isHome ? (
         <div className="video-hero" aria-hidden="true">
           <video
             className="hero-video"
-            autoPlay
-            loop
             muted
             playsInline
             poster="/Video/TEAM%20Church%20Banner.png"
@@ -260,7 +288,11 @@ export default function Layout({ navItems, children }: LayoutProps) {
             <source src="/Video/TEAM%20Church%20Banner.mp4" type="video/mp4" />
             </video>
             <div className="video-overlay" />
-            <div className="hero-service-banner" aria-live="polite">
+            <div
+              className="hero-service-banner"
+              aria-live="polite"
+              ref={serviceBannerRef}
+            >
               <div className="hero-service-banner-inner">
                 <div className="hero-service-info">
                   <span className="hero-service-icon" aria-hidden="true">
