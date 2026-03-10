@@ -649,8 +649,17 @@
   display: flex;
   flex-direction: column;
   gap: 48px;
-  padding-top: 80px;
-  padding-bottom: 100px;
+  padding-top: 0;
+  padding-bottom: 0;
+
+}
+
+@media (min-width: 1024px) {
+
+  .next-steps {
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
 
 }
 
@@ -707,7 +716,7 @@
   background: var(--surface-matted);
   border: 1px solid var(--surface-border);
   box-shadow: var(--shadow-soft);
-  transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+  transition: none;
   text-decoration: none;
   color: inherit;
 
@@ -715,8 +724,8 @@
 
 .next-steps-card:hover {
 
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-deep);
+  transform: none;
+  box-shadow: var(--shadow-soft);
 
 }
 
@@ -788,6 +797,10 @@
   .next-separator {
     margin: 8px 0 28px;
     height: 10px;
+  }
+
+  .next-steps {
+    padding-bottom: 0;
   }
 
   .next-steps-grid {

@@ -28,7 +28,7 @@ export function ServeTeamCard({
       </div>
       <button
         type="button"
-        className="serve-secondary-button"
+        className="serve-secondary-button serve-join-button"
         onClick={onToggle}
         aria-expanded={isOpen}
         aria-controls={`${team.id}-form`}
@@ -71,7 +71,11 @@ export function ServeTeamCard({
               />
             </label>
             {errorMessage ? <div className="serve-error">{errorMessage}</div> : null}
-            <button type="submit" className="serve-primary-button" disabled={isSubmitting}>
+            <button
+              type="submit"
+              className="serve-primary-button serve-submit-interest-button"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? 'Submitting...' : 'Submit interest'}
             </button>
           </form>

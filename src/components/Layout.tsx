@@ -281,12 +281,16 @@ export default function Layout({ navItems, children }: LayoutProps) {
         <div className="video-hero" aria-hidden="true">
           <video
             className="hero-video"
+            autoPlay
+            loop
             muted
             playsInline
+            preload="metadata"
             poster="/Video/TEAM%20Church%20Banner.png"
           >
+            <source src="/Video/team-church-banner-compressed.mp4" type="video/mp4" />
             <source src="/Video/TEAM%20Church%20Banner.mp4" type="video/mp4" />
-            </video>
+          </video>
             <div className="video-overlay" />
             <div
               className="hero-service-banner"
@@ -299,7 +303,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
                     <FontAwesomeIcon icon={faClock} />
                   </span>
                   <span className="hero-service-text">
-                    Every Sunday at 11:00 AM {'\u00B7'} 12 Whitehill Street, Glasgow G31 2LH
+                    Every Sunday at 11:00 AM{' \u00A0|\u00A0'}12 Whitehill Street, Glasgow G31 2LH
                   </span>
                 </div>
                 <NavLink to="/watch?mode=live" className="hero-service-button">

@@ -13,7 +13,7 @@
 .serve-page h2,
 .serve-page h3,
 .serve-page h4 {
-  color: #7851a9;
+  color: #ffffff;
 }
 
 .serve-container {
@@ -154,6 +154,17 @@
   flex-wrap: wrap;
 }
 
+.serve-believers-actions .serve-believers-form {
+  width: 100%;
+  max-width: 100%;
+  border-top: none;
+  padding-top: 0;
+}
+
+.serve-believers-form .serve-primary-button {
+  width: 100%;
+}
+
 .serve-primary-button,
 .serve-secondary-button {
   display: inline-flex;
@@ -175,10 +186,20 @@
   box-shadow: none;
 }
 
+.serve-submit-interest-button {
+  border-color: #000000;
+}
+
 .serve-secondary-button {
   background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.serve-join-button {
+  background: #7851a9;
+  color: #ffffff;
+  border-color: transparent;
 }
 
 .serve-step-actions .is-active {
@@ -435,6 +456,18 @@
   border: 1px solid rgba(17, 24, 39, 0.12);
 }
 
+.app-shell.theme-light .serve-step-actions .is-active {
+  background: rgba(120, 81, 169, 0.18);
+  color: #111827;
+  border-color: rgba(120, 81, 169, 0.45);
+  box-shadow: none;
+}
+
+.app-shell.theme-light .serve-step-actions .is-active:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .app-shell.theme-light .serve-join-panel input,
 .app-shell.theme-light .serve-join-panel textarea {
   background: rgba(255, 255, 255, 0.95);
@@ -448,6 +481,31 @@
 
 .app-shell.theme-light .serve-error {
   color: #7f1d1d;
+}
+
+@media (min-width: 1025px) {
+  .serve-believers-card {
+    width: 100%;
+    max-width: 420px;
+    margin-inline: auto;
+  }
+
+  .serve-believers-card .serve-cohort {
+    width: 100%;
+    max-width: 420px;
+    justify-self: start;
+  }
+
+  .serve-believers-actions {
+    width: 100%;
+    max-width: 420px;
+    justify-self: start;
+  }
+
+  .serve-believers-actions .serve-believers-form {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 1024px) {

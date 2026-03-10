@@ -491,7 +491,7 @@
   transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
   background: var(--royal-purple);
   color: #ffffff;
-  box-shadow: 0 14px 24px rgba(120, 81, 169, 0.25);
+  box-shadow: none;
 
 }
 
@@ -603,6 +603,10 @@
 }
 
 @media (max-width: 768px) {
+  .watch-page-wrapper {
+    padding-top: 24px;
+  }
+
   .watch-container {
     padding: 0 16px;
   }
@@ -777,7 +781,7 @@
 
   background: var(--royal-purple);
   color: #ffffff;
-  box-shadow: 0 14px 24px rgba(120, 81, 169, 0.25);
+  box-shadow: none;
 
 }
 

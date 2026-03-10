@@ -1,6 +1,5 @@
 import '../styles/serve.css'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
 import { ServeTeamGroup } from '../components/serve/ServeTeamGroup'
 import { useServeTeamExpansion } from '../hooks/useServeTeamExpansion'
 import { useBelieversClass } from '../services/believersClass'
@@ -16,6 +15,9 @@ const DEFAULT_BELIEVERS_CLASS = {
 
 export default function ServePage() {
   const [eligibility, setEligibility] = useState<Eligibility>(null)
+  const [believersSubmitting, setBelieversSubmitting] = useState(false)
+  const [believersSubmitted, setBelieversSubmitted] = useState(false)
+  const [believersError, setBelieversError] = useState<string | null>(null)
   const [submittedTeams, setSubmittedTeams] = useState<Record<string, boolean>>({})
   const [submittingTeams, setSubmittingTeams] = useState<Record<string, boolean>>({})
   const [submitErrors, setSubmitErrors] = useState<Record<string, string | null>>({})
@@ -24,6 +26,7 @@ export default function ServePage() {
   const { openTeamId, teamsContainerRef, toggleTeam } = useServeTeamExpansion()
   const believersClass = believersClassItem ?? DEFAULT_BELIEVERS_CLASS
   const teamsHeaderRef = useRef<HTMLDivElement | null>(null)
+  const believersSectionRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (!eligibility) {
@@ -43,10 +46,16 @@ export default function ServePage() {
         return
       }
 
-      const scrollTarget =
-        document.documentElement?.scrollHeight ?? document.body.scrollHeight
+      const target = believersSectionRef.current
+      if (!target) {
+        return
+      }
+
+      const rootStyles = getComputedStyle(document.documentElement)
+      const headerHeight = Number.parseFloat(rootStyles.getPropertyValue('--header-height')) || 96
+      const targetTop = target.getBoundingClientRect().top + window.scrollY
       window.scrollTo({
-        top: scrollTarget,
+        top: Math.max(0, targetTop - headerHeight - 12),
         behavior: 'smooth',
       })
     })
@@ -101,6 +110,44 @@ export default function ServePage() {
     }
   }
 
+  const handleBelieversSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const form = event.currentTarget
+    const data = new FormData(form)
+    const name = String(data.get('name') ?? '').trim()
+    const email = String(data.get('email') ?? '').trim()
+    const phone = String(data.get('phone') ?? '').trim()
+    const extraInformation = String(data.get('extraInformation') ?? '').trim()
+
+    if (!name || !email) {
+      setBelieversError('Please provide your name and email.')
+      return
+    }
+
+    setBelieversSubmitting(true)
+    setBelieversError(null)
+
+    try {
+      await createServeSignup({
+        teamKey: 'believers-class',
+        teamName: 'Believers Class',
+        applicantName: name,
+        email,
+        phoneNumber: phone,
+        message: extraInformation || 'Believers Class registration request from Serve page.',
+      })
+      setBelieversSubmitted(true)
+      form.reset()
+    } catch (error) {
+      setBelieversError('Unable to submit right now. Please try again.')
+      if (import.meta.env.DEV) {
+        console.error('Believers Class signup failed:', error)
+      }
+    } finally {
+      setBelieversSubmitting(false)
+    }
+  }
+
   return (
     <section className="serve-page">
       <div className="serve-container serve-header">
@@ -148,7 +195,7 @@ export default function ServePage() {
 
       {eligibility === 'no' && (
         <>
-          <div className="serve-container">
+          <div className="serve-container" ref={believersSectionRef}>
             <div className="serve-card serve-believers-card">
               <div className="serve-believers-top">
                 <div className="serve-believers-copy">
@@ -161,7 +208,6 @@ export default function ServePage() {
               </div>
 
               <div className="serve-cohort">
-                <h3>Next cohort</h3>
                 <div className="serve-cohort-grid">
                   <div>
                     <span className="serve-cohort-label">Starts</span>
@@ -173,11 +219,47 @@ export default function ServePage() {
                   </div>
                 </div>
               </div>
-
               <div className="serve-believers-actions">
-                <Link to="/connect" className="serve-primary-button">
-                  Register for Believers Class
-                </Link>
+                <div className="serve-join-panel serve-believers-form">
+                  {believersSubmitted ? (
+                    <div className="serve-success">Thanks! We&apos;ll be in touch soon.</div>
+                  ) : null}
+                  <form onSubmit={(event) => void handleBelieversSubmit(event)}>
+                    <label>
+                      Name
+                      <input name="name" type="text" required placeholder="Your name" />
+                    </label>
+                    <label>
+                      Email
+                      <input name="email" type="email" required placeholder="you@email.com" />
+                    </label>
+                    <label>
+                      Phone number (optional)
+                      <input
+                        name="phone"
+                        type="tel"
+                        autoComplete="tel"
+                        placeholder="+44 7123 456789"
+                      />
+                    </label>
+                    <label>
+                      Extra information (optional)
+                      <textarea
+                        name="extraInformation"
+                        rows={3}
+                        placeholder="Anything else you want us to know."
+                      />
+                    </label>
+                    {believersError ? <div className="serve-error">{believersError}</div> : null}
+                    <button
+                      type="submit"
+                      className="serve-primary-button serve-join-button"
+                      disabled={believersSubmitting}
+                    >
+                      {believersSubmitting ? 'Submitting...' : 'Register for Believers Class'}
+                    </button>
+                  </form>
+                </div>
               </div>
               {believersClassStatus === 'loading' ? (
                 <p className="serve-step-micro">Loading class details...</p>

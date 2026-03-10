@@ -356,3 +356,11 @@
   color: #111827;
 
 }
+
+.app-shell.theme-light .connect-tab.is-active {
+
+  background: rgba(120, 81, 169, 0.18);
+  color: #111827;
+  border-color: rgba(120, 81, 169, 0.45);
+
+}

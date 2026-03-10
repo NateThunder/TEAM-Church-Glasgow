@@ -93,7 +93,7 @@ export default function HomePage() {
           <div className="welcome-body">
             <p>
               We’re a diverse community of Christ-followers in the heart of
-              Denistone. Whether you’re exploring faith for the first time or
+              Dennistoun. Whether you’re exploring faith for the first time or
               have followed Jesus for years, there’s a place for you here.
             </p>
             <p>

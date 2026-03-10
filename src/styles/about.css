@@ -288,6 +288,22 @@
 
 }
 
+@media (min-width: 769px) {
+
+  .about-mission-inner > .about-kicker.light {
+    display: none;
+  }
+
+  .about-visit > .tone-inner {
+    padding-top: 0;
+  }
+
+  .about-visit-inner {
+    padding-top: 44px;
+  }
+
+}
+
 .app-shell.theme-light .about-value-card {
 
   background: rgba(255, 255, 255, 0.9);
