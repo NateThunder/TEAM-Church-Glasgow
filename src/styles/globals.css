@@ -1,7 +1,8 @@
 html,
 body {
-
-  overscroll-behavior: none;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 
 }
 
@@ -22,8 +23,10 @@ body {
 }
 
 .app-shell.theme-light {
-  --surface-matted: rgba(255, 255, 255, 0.88);
+  --surface-matted: rgba(247, 248, 250, 0.96);
   --surface-border: rgba(17, 24, 39, 0.08);
+  --shadow-soft: 0 10px 20px rgba(16, 24, 40, 0.08);
+  --shadow-deep: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 .app-shell {
@@ -31,6 +34,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   background: var(--deep-bg);
   color: #ffffff;
   font-family: "Roboto", system-ui, sans-serif;
@@ -43,6 +47,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -197,13 +202,14 @@ body {
   background: #ffffff;
   color: #1e1528;
   padding: 10px 20px;
-  box-shadow: 0 10px 15px -3px rgba(16, 8, 26, 0.15), 0 4px 6px -4px rgba(16, 8, 26, 0.1);
+  border: 1px solid rgba(30, 21, 40, 0.16);
+  box-shadow: none;
 
 }
 
 .action-watch:hover {
 
-  box-shadow: 0 20px 25px -5px rgba(16, 8, 26, 0.2), 0 8px 10px -6px rgba(16, 8, 26, 0.1);
+  box-shadow: none;
 
 }
 
@@ -223,6 +229,14 @@ body {
 .action-give {
 
   background: #7851a9;
+
+}
+
+.app-shell.theme-dark.is-groups .action-give:hover,
+.app-shell.theme-dark.is-serve .action-give:hover {
+
+  transform: none;
+  box-shadow: none;
 
 }
 
@@ -252,7 +266,7 @@ body {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: var(--shadow-deep);
+  box-shadow: none;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   flex: 1 1 auto;
@@ -371,6 +385,7 @@ body {
   position: fixed;
   inset: 0;
   pointer-events: none;
+  visibility: hidden;
   z-index: 9999;
 
 }
@@ -412,6 +427,7 @@ body {
 .nav-drawer-open {
 
   pointer-events: auto;
+  visibility: visible;
 
 }
 
@@ -466,6 +482,12 @@ body {
 
 }
 
+.app-shell.is-about .page-content {
+
+  padding-bottom: 0;
+
+}
+
 .page {
 
   max-width: 900px;
@@ -505,6 +527,12 @@ body {
 .app-shell.is-portrait .page-content {
 
   padding: 40px 20px 32px;
+
+}
+
+.app-shell.is-about.is-portrait .page-content {
+
+  padding-bottom: 0;
 
 }
 
@@ -706,7 +734,7 @@ body {
 
   max-width: 900px;
   margin: 0 auto;
-  padding: 120px 32px;
+  padding: 20px 12px;
 
 }
 
@@ -825,6 +853,12 @@ body {
 
 }
 
+.app-shell.theme-light .action-give .action-icon {
+
+  color: #ffffff;
+
+}
+
 .app-shell.theme-light .page {
 
   color: #111827;
@@ -842,7 +876,7 @@ body {
 
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(17, 24, 39, 0.12);
-  box-shadow: 0 10px 20px rgba(16, 24, 40, 0.12);
+  box-shadow: none;
 
 }
 
@@ -866,11 +900,124 @@ body {
 
 }
 
+.app-shell.theme-light .nav-drawer-panel .nav-mobile-link,
+.app-shell.theme-light .nav-drawer-panel .nav-link-active,
+.app-shell.theme-light .nav-drawer-panel .nav-link-label,
+.app-shell.theme-light .nav-drawer-panel .nav-link-icon {
+
+  color: #000000;
+
+}
+
+.app-shell.theme-light.is-home.home-nav-text-dark .nav-link,
+.app-shell.theme-light.is-home.home-nav-text-dark .nav-link-active {
+
+  color: #000000;
+
+}
+
+.app-shell.theme-light.is-home.home-nav-text-dark .logo-dark {
+
+  display: none;
+
+}
+
+.app-shell.theme-light.is-home.home-nav-text-dark .logo-light {
+
+  display: block;
+
+}
+
+.app-shell.theme-light:not(.is-home) :is(
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  a,
+  li,
+  label,
+  small,
+  strong,
+  em,
+  time,
+  figcaption,
+  blockquote,
+  dt,
+  dd,
+  th,
+  td,
+  legend,
+  input,
+  textarea,
+  select,
+  button
+) {
+  color: #000000 !important;
+}
+
+.app-shell.theme-light:not(.is-home) span.about-kicker,
+.app-shell.theme-light:not(.is-home) span.about-kicker.light,
+.app-shell.theme-light:not(.is-home) p.serve-kicker,
+.app-shell.theme-light:not(.is-home) p.events-kicker,
+.app-shell.theme-light:not(.is-home) p.give-kicker {
+  color: var(--royal-purple) !important;
+}
+
+.app-shell.theme-light:not(.is-home) .watch-toggle-button {
+  color: #000000 !important;
+}
+
+.app-shell.theme-light:not(.is-home) .watch-toggle-button.is-active {
+  color: #ffffff !important;
+}
+
+.app-shell.theme-light:not(.is-home) :is(
+  .action-give,
+  .connect-submit,
+  .events-toggle-button.is-active,
+  .events-pill-btn.is-active,
+  .events-pill-btn.is-primary,
+  .events-pill--all,
+  .events-agenda-label--all,
+  .groups-cta,
+  .serve-join-button,
+  .about-visit-cta,
+  .give-primary,
+  .watch-load-more-button,
+  .admin-btn--primary
+) {
+  color: #ffffff !important;
+}
+
+.app-shell.theme-light:not(.is-home) :is(
+  .action-give,
+  .connect-submit,
+  .events-toggle-button.is-active,
+  .events-pill-btn.is-active,
+  .events-pill-btn.is-primary,
+  .events-pill--all,
+  .events-agenda-label--all,
+  .groups-cta,
+  .serve-join-button,
+  .about-visit-cta,
+  .give-primary,
+  .watch-load-more-button,
+  .admin-btn--primary
+) :is(span, svg) {
+  color: #ffffff !important;
+}
+
 @media (prefers-color-scheme: light) {
 
   .app-shell {
     background: #ffffff;
     color: #111827;
+    --shadow-soft: 0 10px 20px rgba(16, 24, 40, 0.08);
+    --shadow-deep: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   }
 
   .app-shell .logo-dark {
@@ -935,6 +1082,10 @@ body {
     color: #ffffff;
   }
 
+  .app-shell .action-give .action-icon {
+    color: #ffffff;
+  }
+
   .app-shell .page {
     color: #111827;
   }
@@ -957,7 +1108,7 @@ body {
   .app-shell .nav-utility {
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(17, 24, 39, 0.12);
-    box-shadow: 0 10px 20px rgba(16, 24, 40, 0.12);
+    box-shadow: none;
   }
 
   .app-shell .watch-search {
@@ -973,16 +1124,20 @@ body {
   .app-shell .watch-toggle {
     background: rgba(17, 24, 39, 0.06);
     border: 1px solid rgba(17, 24, 39, 0.12);
-    box-shadow: 0 10px 20px rgba(16, 24, 40, 0.12);
+    box-shadow: none;
   }
 
   .app-shell .watch-toggle-button {
-    color: #475569;
+    color: #ffffff;
   }
 
   .app-shell .watch-toggle-button.is-active {
     background: #111827;
     color: #ffffff;
+  }
+
+  .app-shell.is-home .watch-toggle-button.is-active {
+    color: #ffffff !important;
   }
 
   .app-shell .watch-state {
@@ -993,7 +1148,7 @@ body {
 
   .app-shell .watch-card {
     background: #ffffff;
-    box-shadow: 0 10px 20px rgba(16, 24, 40, 0.08);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
 
   .app-shell .watch-card-body span {
@@ -1005,7 +1160,7 @@ body {
   }
 
   .app-shell .watch-player iframe {
-    box-shadow: 0 16px 28px rgba(16, 24, 40, 0.16);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   }
 
   .app-shell .watch-player-meta span {
@@ -1015,39 +1170,39 @@ body {
   .app-shell .watch-load-more-button {
     background: #7851a9;
     color: #ffffff;
-    box-shadow: 0 12px 24px rgba(120, 81, 169, 0.32);
+    box-shadow: 0 12px 24px rgba(74, 44, 138, 0.3);
   }
 
   .app-shell .watch-back-top-button {
     background: rgba(120, 81, 169, 0.12);
     color: #2d1b3d;
     border: 1px solid rgba(120, 81, 169, 0.35);
-    box-shadow: 0 10px 18px rgba(120, 81, 169, 0.22);
+    box-shadow: 0 10px 18px rgba(65, 38, 112, 0.18);
   }
 
   .app-shell .hero-cta {
-    color: #111827;
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid rgba(17, 24, 39, 0.12);
-    box-shadow: 0 10px 24px rgba(17, 24, 39, 0.16);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow: 0 10px 24px rgba(6, 18, 28, 0.35);
   }
 
   .app-shell .hero-cta:hover {
-    box-shadow: 0 12px 26px rgba(17, 24, 39, 0.2);
+    box-shadow: 0 12px 26px rgba(6, 18, 28, 0.45);
   }
 
   .app-shell .hero-banner {
     background: rgba(255, 255, 255, 0.7);
     color: #111827;
     border: 1px solid rgba(17, 24, 39, 0.12);
-    box-shadow: 0 10px 24px rgba(17, 24, 39, 0.12);
+    box-shadow: var(--shadow-soft);
   }
 
   .app-shell.is-home .hero-banner {
     background: rgba(255, 255, 255, 0.14);
     color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.22);
-    box-shadow: 0 10px 24px rgba(6, 18, 28, 0.28);
+    box-shadow: var(--shadow-soft);
   }
 
   .app-shell.is-home .site-header {
@@ -1062,6 +1217,26 @@ body {
 
   .app-shell.is-home .nav-link-active {
     background: rgba(255, 255, 255, 0.18);
+  }
+
+  .app-shell .nav-drawer-panel .nav-mobile-link,
+  .app-shell .nav-drawer-panel .nav-link-active,
+  .app-shell .nav-drawer-panel .nav-link-label,
+  .app-shell .nav-drawer-panel .nav-link-icon {
+    color: #000000;
+  }
+
+  .app-shell.theme-light.is-home.home-nav-text-dark .nav-link,
+  .app-shell.theme-light.is-home.home-nav-text-dark .nav-link-active {
+    color: #000000;
+  }
+
+  .app-shell.is-home.home-nav-text-dark .logo-dark {
+    display: none;
+  }
+
+  .app-shell.is-home.home-nav-text-dark .logo-light {
+    display: block;
   }
 
 }

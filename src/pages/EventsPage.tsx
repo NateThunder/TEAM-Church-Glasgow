@@ -8,12 +8,21 @@ import {
   dateFnsLocalizer,
 } from 'react-big-calendar'
 import {
+  addMonths,
+  eachDayOfInterval,
+  endOfMonth,
+  endOfWeek,
   format,
   getDay,
   isSameDay,
+  isSameMonth,
+  isToday,
   isValid,
   parse,
+  startOfDay,
+  startOfMonth,
   startOfWeek,
+  subDays,
 } from 'date-fns'
 import { enGB } from 'date-fns/locale'
 import { useEvents, type EventCategory, type EventItem } from '../services/events'
@@ -35,6 +44,7 @@ const localizer = dateFnsLocalizer({
 })
 
 const categories: EventCategory[] = ['All', 'Worship', 'Community', 'Youth', 'Kids']
+const monthWeekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 const toDate = (value: string) => {
   const date = new Date(value)
@@ -59,45 +69,6 @@ const buildGoogleCalendarUrl = (event: EventItem) => {
     dates: `${formatUtc(start)}/${formatUtc(end)}`,
   })
   return `https://calendar.google.com/calendar/render?${params.toString()}`
-}
-
-const buildIcsContent = (event: EventItem) => {
-  const start = toDate(event.start)
-  const end = toDate(event.end)
-  if (!start || !end) return null
-  const formatUtc = (date: Date) =>
-    date
-      .toISOString()
-      .replace(/[-:]/g, '')
-      .replace(/\.[0-9]{3}Z$/, 'Z')
-  const lines = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Team Church Glasgow//Events//EN',
-    'BEGIN:VEVENT',
-    `UID:${event.id}`,
-    `DTSTAMP:${formatUtc(new Date())}`,
-    `DTSTART:${formatUtc(start)}`,
-    `DTEND:${formatUtc(end)}`,
-    `SUMMARY:${event.title}`,
-    event.description ? `DESCRIPTION:${event.description}` : null,
-    event.location ? `LOCATION:${event.location}` : null,
-    'END:VEVENT',
-    'END:VCALENDAR',
-  ].filter(Boolean)
-  return lines.join('\r\n')
-}
-
-const downloadIcs = (event: EventItem) => {
-  const content = buildIcsContent(event)
-  if (!content) return
-  const blob = new Blob([content], { type: 'text/calendar;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = `${event.title.replace(/\s+/g, '-').toLowerCase()}.ics`
-  link.click()
-  URL.revokeObjectURL(url)
 }
 
 const formatEventRange = (event: EventItem) => {
@@ -128,6 +99,44 @@ const formatEventMeta = (event: EventItem) => {
 
 const categoryClassName = (category: EventCategory) =>
   category.toLowerCase().replace(/\s+/g, '-')
+
+const dayKey = (date: Date) => format(date, 'yyyy-MM-dd')
+
+const isStartOfDay = (date: Date) =>
+  date.getHours() === 0 &&
+  date.getMinutes() === 0 &&
+  date.getSeconds() === 0 &&
+  date.getMilliseconds() === 0
+
+const mapEventsToDays = (events: CalendarEvent[]) => {
+  const grouped = new Map<string, CalendarEvent[]>()
+
+  events.forEach((event) => {
+    const firstDay = startOfDay(event.start)
+    const endDay = startOfDay(event.end)
+    const lastDay =
+      isStartOfDay(event.end) && event.end.getTime() > event.start.getTime()
+        ? subDays(endDay, 1)
+        : endDay
+    const visibleEnd = lastDay.getTime() < firstDay.getTime() ? firstDay : lastDay
+
+    eachDayOfInterval({ start: firstDay, end: visibleEnd }).forEach((day) => {
+      const key = dayKey(day)
+      const dayEvents = grouped.get(key)
+      if (dayEvents) {
+        dayEvents.push(event)
+      } else {
+        grouped.set(key, [event])
+      }
+    })
+  })
+
+  grouped.forEach((dayEvents) => {
+    dayEvents.sort((a, b) => a.start.getTime() - b.start.getTime())
+  })
+
+  return grouped
+}
 
 function AgendaEvent({
   event,
@@ -182,6 +191,91 @@ function EventsToolbar({
   )
 }
 
+function MonthCalendarGrid({
+  date,
+  events,
+  onNavigate,
+  onView,
+  onSelectEvent,
+}: {
+  date: Date
+  events: CalendarEvent[]
+  onNavigate: (action: string) => void
+  onView: (nextView: string) => void
+  onSelectEvent: (event: EventItem) => void
+}) {
+  const monthDays = useMemo(() => {
+    const monthStart = startOfMonth(date)
+    const monthEnd = endOfMonth(date)
+    const gridStart = startOfWeek(monthStart, { weekStartsOn: 1 })
+    const gridEnd = endOfWeek(monthEnd, { weekStartsOn: 1 })
+    return eachDayOfInterval({ start: gridStart, end: gridEnd })
+  }, [date])
+
+  const eventsByDay = useMemo(() => mapEventsToDays(events), [events])
+
+  return (
+    <div className="events-calendar events-calendar-month">
+      <EventsToolbar
+        label={format(date, 'MMMM yyyy')}
+        onNavigate={onNavigate}
+        onView={onView}
+        view={Views.MONTH}
+      />
+
+      <div className="events-month-grid" role="grid" aria-label={format(date, 'MMMM yyyy')}>
+        <div className="events-month-weekdays" role="row">
+          {monthWeekdayLabels.map((weekday) => (
+            <div key={weekday} className="events-month-weekday" role="columnheader">
+              {weekday}
+            </div>
+          ))}
+        </div>
+
+        <div className="events-month-days">
+          {monthDays.map((day) => {
+            const key = dayKey(day)
+            const dayEvents = eventsByDay.get(key) ?? []
+            const outsideMonth = !isSameMonth(day, date)
+            const today = isToday(day)
+            return (
+              <div
+                key={key}
+                className={`events-month-day${outsideMonth ? ' is-outside' : ''}${
+                  today ? ' is-today' : ''
+                }`}
+                role="gridcell"
+                aria-label={format(day, 'EEEE d MMMM yyyy')}
+              >
+                <span className="events-month-date">{format(day, 'dd')}</span>
+                <div
+                  className="events-month-events"
+                  style={{ gridTemplateRows: `repeat(${Math.max(dayEvents.length, 1)}, minmax(0, 1fr))` }}
+                >
+                  {dayEvents.map((event) => {
+                    const categoryClass = categoryClassName(event.resource.category)
+                    return (
+                      <button
+                        key={`${key}-${event.id}`}
+                        type="button"
+                        className={`events-month-event events-calendar-event--${categoryClass}`}
+                        onClick={() => onSelectEvent(event.resource)}
+                        title={event.title}
+                      >
+                        {event.title}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function EventsPage() {
   const { status, events, error } = useEvents()
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list')
@@ -215,12 +309,8 @@ export default function EventsPage() {
       if (event.key === 'Escape') setSelectedEvent(null)
     }
     document.addEventListener('keydown', onKeyDown)
-    const { body } = document
-    const previousOverflow = body.style.overflow
-    body.style.overflow = 'hidden'
     return () => {
       document.removeEventListener('keydown', onKeyDown)
-      body.style.overflow = previousOverflow
     }
   }, [selectedEvent])
 
@@ -261,6 +351,22 @@ export default function EventsPage() {
   const calendarEventProps = (event: CalendarEvent) => ({
     className: `events-calendar-event events-calendar-event--${categoryClassName(event.resource.category)}`,
   })
+
+  const onMonthNavigate = (action: string) => {
+    if (action === Navigate.TODAY) {
+      setCalendarDate(new Date())
+      return
+    }
+
+    if (action === Navigate.PREVIOUS) {
+      setCalendarDate((currentDate) => addMonths(currentDate, -1))
+      return
+    }
+
+    if (action === Navigate.NEXT) {
+      setCalendarDate((currentDate) => addMonths(currentDate, 1))
+    }
+  }
 
   return (
     <>
@@ -382,23 +488,33 @@ export default function EventsPage() {
             ) : null}
 
             {status === 'success' && viewMode === 'calendar' ? (
-              <div className="events-calendar">
-                <Calendar<CalendarEvent, object>
-                  localizer={localizer}
-                  events={calendarEvents}
+              calendarView === Views.MONTH && isMobile ? (
+                <MonthCalendarGrid
                   date={calendarDate}
-                  view={calendarView}
+                  events={calendarEvents}
+                  onNavigate={onMonthNavigate}
                   onView={setCalendarView}
-                  onNavigate={(nextDate: Date) => setCalendarDate(nextDate)}
-                  startAccessor="start"
-                  endAccessor="end"
-                  eventPropGetter={calendarEventProps}
-                  style={{ height: isMobile ? 520 : 720 }}
-                  popup
-                  onSelectEvent={(event: CalendarEvent) => setSelectedEvent(event.resource)}
-                  components={{ toolbar: EventsToolbar, agenda: { event: AgendaEvent } }}
+                  onSelectEvent={setSelectedEvent}
                 />
-              </div>
+              ) : (
+                <div className="events-calendar">
+                  <Calendar<CalendarEvent, object>
+                    localizer={localizer}
+                    events={calendarEvents}
+                    date={calendarDate}
+                    view={calendarView}
+                    onView={setCalendarView}
+                    onNavigate={(nextDate: Date) => setCalendarDate(nextDate)}
+                    startAccessor="start"
+                    endAccessor="end"
+                    eventPropGetter={calendarEventProps}
+                    style={{ height: isMobile ? 520 : 720 }}
+                    popup
+                    onSelectEvent={(event: CalendarEvent) => setSelectedEvent(event.resource)}
+                    components={{ toolbar: EventsToolbar, agenda: { event: AgendaEvent } }}
+                  />
+                </div>
+              )
             ) : null}
           </div>
         </div>
@@ -452,13 +568,6 @@ export default function EventsPage() {
               >
                 Add to Google Calendar
               </a>
-              <button
-                type="button"
-                className="events-pill-btn"
-                onClick={() => downloadIcs(selectedEvent)}
-              >
-                Download .ics
-              </button>
             </div>
           </div>
         </div>

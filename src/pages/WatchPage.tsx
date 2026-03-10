@@ -8,6 +8,8 @@ import {
   type YouTubeVideo,
 } from '../services/youtube'
 
+const VIDEOS_PAGE_SIZE = 9
+
 export default function WatchPage() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([])
   const [selected, setSelected] = useState<YouTubeVideo | null>(null)
@@ -63,10 +65,12 @@ export default function WatchPage() {
         ? await searchChannelVideos({
             query: currentQuery,
             pageToken: nextPageToken,
+            maxResults: VIDEOS_PAGE_SIZE,
             useCache: false,
           })
         : await getLatestVideos({
             pageToken: nextPageToken,
+            maxResults: VIDEOS_PAGE_SIZE,
             useCache: false,
           })
       setVideos((prev) => [...prev, ...data.videos])
@@ -118,8 +122,12 @@ export default function WatchPage() {
       setError('')
       try {
         const data = debouncedQuery
-          ? await searchChannelVideos({ query: debouncedQuery, useCache: true })
-          : await getLatestVideos({ useCache: true })
+          ? await searchChannelVideos({
+              query: debouncedQuery,
+              maxResults: VIDEOS_PAGE_SIZE,
+              useCache: true,
+            })
+          : await getLatestVideos({ maxResults: VIDEOS_PAGE_SIZE, useCache: true })
         setVideos(data.videos)
         setNextPageToken(data.nextPageToken ?? null)
         setCurrentQuery(debouncedQuery)
@@ -353,6 +361,18 @@ export default function WatchPage() {
 
                 {videos.length === 0 && debouncedQuery && (
                   <div className="watch-state">No videos found matching "{debouncedQuery}".</div>
+                )}
+
+                {videos.length > 0 && nextPageToken && (
+                  <div className="watch-load-more">
+                    <button
+                      className="watch-load-more-button"
+                      onClick={handleLoadMore}
+                      disabled={isLoadingMore}
+                    >
+                      {isLoadingMore ? 'Loading...' : 'Show more videos'}
+                    </button>
+                  </div>
                 )}
              </div>
           )}

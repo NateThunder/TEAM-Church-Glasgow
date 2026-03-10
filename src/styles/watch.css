@@ -116,7 +116,7 @@
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 10px 20px rgba(6, 18, 28, 0.25);
+  box-shadow: none;
 
 }
 
@@ -139,6 +139,12 @@
 
   background: #ffffff;
   color: #1e1528;
+
+}
+
+.app-shell.is-home .watch-toggle-button.is-active {
+
+  color: #ffffff !important;
 
 }
 
@@ -483,9 +489,9 @@
   letter-spacing: 0.2px;
   cursor: pointer;
   transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
-  background: linear-gradient(135deg, #5b2cc7, #7b3fe6 55%, #9a5bff);
-  color: #f8f5ff;
-  box-shadow: 0 12px 24px rgba(88, 48, 160, 0.35);
+  background: var(--royal-purple);
+  color: #ffffff;
+  box-shadow: none;
 
 }
 
@@ -597,6 +603,10 @@
 }
 
 @media (max-width: 768px) {
+  .watch-page-wrapper {
+    padding-top: 24px;
+  }
+
   .watch-container {
     padding: 0 16px;
   }
@@ -689,13 +699,13 @@
 
   background: rgba(17, 24, 39, 0.06);
   border: 1px solid rgba(17, 24, 39, 0.12);
-  box-shadow: 0 10px 20px rgba(16, 24, 40, 0.12);
+  box-shadow: none;
 
 }
 
 .app-shell.theme-light .watch-toggle-button {
 
-  color: #475569;
+  color: #000000;
 
 }
 
@@ -719,9 +729,15 @@
 }
 
 .app-shell.theme-light .watch-card {
-  background: #ffffff;
+  background: #f7f8fa;
   border-color: rgba(17, 24, 39, 0.1);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  transition: none;
+}
+
+.app-shell.theme-light .watch-card:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 .app-shell.theme-light .watch-card-info p {
@@ -763,9 +779,9 @@
 
 .app-shell.theme-light .watch-load-more-button {
 
-  background: linear-gradient(135deg, #4e2bb8, #6e39d1 55%, #8d4cff);
-  color: #fefcff;
-  box-shadow: 0 12px 24px rgba(74, 44, 138, 0.3);
+  background: var(--royal-purple);
+  color: #ffffff;
+  box-shadow: none;
 
 }
 

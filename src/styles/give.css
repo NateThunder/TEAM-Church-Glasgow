@@ -80,6 +80,32 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
+.give-status {
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid transparent;
+}
+
+.give-status-success {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #d8ffe7;
+}
+
+.give-status-neutral {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(96, 165, 250, 0.28);
+  color: #d9e8ff;
+}
+
+.give-status-error {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.34);
+  color: #ffdede;
+}
+
 .give-toggle {
   display: inline-flex;
   align-items: center;
@@ -124,13 +150,7 @@
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
-  transition: transform 200ms ease, box-shadow 200ms ease, border 200ms ease,
-    background 200ms ease;
-}
-
-.give-amount-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 22px rgba(6, 18, 28, 0.2);
+  transition: border 200ms ease, background 200ms ease;
 }
 
 .give-amount-btn.is-selected {
@@ -171,6 +191,30 @@
   color: #ffffff;
 }
 
+.give-summary {
+  display: grid;
+  gap: 8px;
+  padding: 18px 20px;
+  text-align: center;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.give-summary p,
+.give-summary span {
+  margin: 0;
+}
+
+.give-summary p {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.give-summary span {
+  color: rgba(255, 255, 255, 0.72);
+}
+
 .give-primary {
   display: inline-flex;
   align-items: center;
@@ -184,15 +228,17 @@
   font-weight: 700;
   font-size: 16px;
   cursor: pointer;
-  transition: transform 200ms ease, box-shadow 200ms ease;
+  transition: none;
   width: min(360px, 100%);
   margin: 0 auto;
-  box-shadow: 0 14px 24px rgba(120, 81, 169, 0.25);
+  box-shadow: none;
 }
 
-.give-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 18px 28px rgba(16, 8, 26, 0.36);
+.give-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+  box-shadow: none;
 }
 
 .give-toggle-btn:focus-visible,
@@ -204,13 +250,32 @@
 }
 
 .app-shell.theme-light .give-card {
-  background: #ffffff;
+  background: #f7f8fa;
   border: 1px solid rgba(17, 24, 39, 0.12);
-  box-shadow: 0 18px 32px rgba(16, 24, 40, 0.14);
+  box-shadow: none;
+  transition: none;
 }
 
 .app-shell.theme-light .give-card-body {
-  background: #ffffff;
+  background: #f7f8fa;
+}
+
+.app-shell.theme-light .give-status-success {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.22);
+  color: #166534;
+}
+
+.app-shell.theme-light .give-status-neutral {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.18);
+  color: #1d4ed8;
+}
+
+.app-shell.theme-light .give-status-error {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #b91c1c;
 }
 
 .app-shell.theme-light .give-toggle {
@@ -218,9 +283,13 @@
   border: 1px solid rgba(17, 24, 39, 0.12);
 }
 
+.app-shell.theme-light:not(.is-home) .give-toggle-btn {
+  color: #000000 !important;
+}
+
 .app-shell.theme-light .give-toggle-btn.is-active {
   background: #111827;
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
 .app-shell.theme-light .give-amount-btn {
@@ -250,6 +319,19 @@
 
 .app-shell.theme-light .give-currency {
   color: #111827;
+}
+
+.app-shell.theme-light .give-summary {
+  background: rgba(17, 24, 39, 0.03);
+  border: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.app-shell.theme-light .give-summary span {
+  color: rgba(17, 24, 39, 0.62);
+}
+
+.app-shell.theme-light:not(.is-home) .give-card-header h2 {
+  color: #ffffff !important;
 }
 
 @media (max-width: 768px) {

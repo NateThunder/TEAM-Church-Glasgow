@@ -97,9 +97,14 @@ export default function Layout({ navItems, children }: LayoutProps) {
   const isHome = location.pathname === '/'
   const isWatch = location.pathname === '/watch'
   const isGroups = location.pathname === '/groups'
+  const isServe = location.pathname === '/serve'
+  const isAbout = location.pathname === '/about'
   const headerRef = useRef<HTMLElement | null>(null)
+  const serviceBannerRef = useRef<HTMLDivElement | null>(null)
+  const hasPassedServiceBannerRef = useRef(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isPortraitMobile, setIsPortraitMobile] = useState(false)
+  const [hasPassedServiceBanner, setHasPassedServiceBanner] = useState(false)
   const [theme, setTheme] = useState<'light' | 'dark'>('dark')
   const [searchParams, setSearchParams] = useSearchParams()
   const query = searchParams.get('q') ?? ''
@@ -132,6 +137,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
 
     let frameId = 0
     const fadeRange = 120
+    let lastHasPassedServiceBanner = hasPassedServiceBannerRef.current
 
     const updateFrost = () => {
       frameId = 0
@@ -150,6 +156,28 @@ export default function Layout({ navItems, children }: LayoutProps) {
         '--header-height',
         `${header.offsetHeight}px`
       )
+
+      if (!isHome) {
+        if (lastHasPassedServiceBanner) {
+          lastHasPassedServiceBanner = false
+          hasPassedServiceBannerRef.current = false
+          setHasPassedServiceBanner(false)
+        }
+        return
+      }
+
+      const serviceBanner = serviceBannerRef.current
+      if (!serviceBanner) return
+
+      const headerBottom = header.getBoundingClientRect().bottom
+      const bannerBottom = serviceBanner.getBoundingClientRect().bottom
+      const hasPassed = headerBottom >= bannerBottom
+
+      if (hasPassed !== lastHasPassedServiceBanner) {
+        lastHasPassedServiceBanner = hasPassed
+        hasPassedServiceBannerRef.current = hasPassed
+        setHasPassedServiceBanner(hasPassed)
+      }
     }
 
     const onScroll = () => {
@@ -164,7 +192,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
       window.removeEventListener('scroll', onScroll)
       if (frameId) window.cancelAnimationFrame(frameId)
     }
-  }, [])
+  }, [isHome])
 
   useEffect(() => {
     const update = () => {
@@ -180,6 +208,10 @@ export default function Layout({ navItems, children }: LayoutProps) {
       window.removeEventListener('orientationchange', update)
     }
   }, [])
+
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [location.pathname, location.search])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -215,34 +247,10 @@ export default function Layout({ navItems, children }: LayoutProps) {
       }
     }
 
-    const scrollY = window.scrollY || window.pageYOffset
-    const body = document.body
-    const html = document.documentElement
-
-    body.style.position = 'fixed'
-    body.style.top = `-${scrollY}px`
-    body.style.left = '0'
-    body.style.right = '0'
-    body.style.width = '100%'
-    body.style.overflow = 'hidden'
-    html.style.height = '100%'
-    body.style.height = '100%'
-
     window.addEventListener('keydown', onKeyDown)
 
     return () => {
       window.removeEventListener('keydown', onKeyDown)
-      const top = body.style.top
-      body.style.position = ''
-      body.style.top = ''
-      body.style.left = ''
-      body.style.right = ''
-      body.style.width = ''
-      body.style.overflow = ''
-      html.style.height = ''
-      body.style.height = ''
-      const y = top ? -parseInt(top, 10) : 0
-      window.scrollTo(0, y)
     }
   }, [isMenuOpen])
 
@@ -265,7 +273,9 @@ export default function Layout({ navItems, children }: LayoutProps) {
     <div
       className={`app-shell theme-${theme} ${isHome ? 'is-home' : ''} ${
         isWatch ? 'is-watch' : ''
-      } ${isGroups ? 'is-groups' : ''} ${isPortraitMobile ? 'is-portrait' : ''}`}
+      } ${isGroups ? 'is-groups' : ''} ${isServe ? 'is-serve' : ''} ${isAbout ? 'is-about' : ''} ${
+        isPortraitMobile ? 'is-portrait' : ''
+      } ${hasPassedServiceBanner && theme === 'light' ? 'home-nav-text-dark' : ''}`}
     >
       {isHome ? (
         <div className="video-hero" aria-hidden="true">
@@ -275,19 +285,25 @@ export default function Layout({ navItems, children }: LayoutProps) {
             loop
             muted
             playsInline
+            preload="metadata"
             poster="/Video/TEAM%20Church%20Banner.png"
           >
+            <source src="/Video/team-church-banner-compressed.mp4" type="video/mp4" />
             <source src="/Video/TEAM%20Church%20Banner.mp4" type="video/mp4" />
-            </video>
+          </video>
             <div className="video-overlay" />
-            <div className="hero-service-banner" aria-live="polite">
+            <div
+              className="hero-service-banner"
+              aria-live="polite"
+              ref={serviceBannerRef}
+            >
               <div className="hero-service-banner-inner">
                 <div className="hero-service-info">
                   <span className="hero-service-icon" aria-hidden="true">
                     <FontAwesomeIcon icon={faClock} />
                   </span>
                   <span className="hero-service-text">
-                    Every Sunday at 11:00 AM {'\u00B7'} 12 Whitehill Street, Glasgow G31 2LH
+                    Every Sunday at 11:00 AM{' \u00A0|\u00A0'}12 Whitehill Street, Glasgow G31 2LH
                   </span>
                 </div>
                 <NavLink to="/watch?mode=live" className="hero-service-button">

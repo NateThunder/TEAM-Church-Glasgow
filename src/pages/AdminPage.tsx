@@ -275,10 +275,6 @@ export default function AdminPage() {
             <h2>Groups</h2>
             <p>Publish and edit small groups.</p>
           </div>
-          <div className="admin-card">
-            <h2>Announcements</h2>
-            <p>Post updates for the church.</p>
-          </div>
         </div>
       </div>
     </section>

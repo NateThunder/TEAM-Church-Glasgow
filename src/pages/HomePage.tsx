@@ -1,6 +1,6 @@
 import '../styles/home.css'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faLocationDot,
@@ -14,6 +14,7 @@ type LoadState = 'idle' | 'loading' | 'error'
 
 export default function HomePage() {
   const welcomeImage = '/optimized/home-welcome.jpg'
+  const navigate = useNavigate()
   const [videos, setVideos] = useState<YouTubeVideo[]>([])
   const [status, setStatus] = useState<LoadState>('idle')
   const [errorMessage, setErrorMessage] = useState('')
@@ -92,7 +93,7 @@ export default function HomePage() {
           <div className="welcome-body">
             <p>
               We’re a diverse community of Christ-followers in the heart of
-              Denistone. Whether you’re exploring faith for the first time or
+              Dennistoun. Whether you’re exploring faith for the first time or
               have followed Jesus for years, there’s a place for you here.
             </p>
             <p>
@@ -100,7 +101,11 @@ export default function HomePage() {
               coffee, find a seat, and experience authentic community.
             </p>
           </div>
-          <button type="button" className="welcome-cta">
+          <button
+            type="button"
+            className="welcome-cta"
+            onClick={() => navigate('/about')}
+          >
             Learn More About Us
             <span className="welcome-cta-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
