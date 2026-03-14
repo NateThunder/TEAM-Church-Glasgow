@@ -10,7 +10,7 @@
 
 ## 🔗 Live Site
 
-🌍 https://team-church-glasgow.netlify.app/
+🌍 https://teamchurchglasgow.com
 
 ---
 
