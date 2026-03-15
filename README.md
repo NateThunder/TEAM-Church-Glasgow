@@ -1,4 +1,4 @@
-# TEAM Church Glasgow Website
+I'm# TEAM Church Glasgow Website
 
 <p align="center">
   <strong>Official website for TEAM Church Glasgow</strong><br/>
@@ -83,11 +83,3 @@ team-church-glasgow
 ├── package.json           Project dependencies and scripts
 ├── tsconfig.json          TypeScript configuration
 └── vite.config.ts         Vite configuration
-
----
-
-## Website Preview
-
-<p align="center">
-  <img src="screenshot.png" alt="TEAM Church Glasgow Website Preview" width="800"/>
-</p>
