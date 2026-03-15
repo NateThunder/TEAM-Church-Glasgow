@@ -46,20 +46,3 @@ The goal of the project is to provide a clean, responsive, and accessible web pr
   <img src="screenshot.png" alt="TEAM Church Glasgow Website Preview" width="800"/>
 </p>
 
----
-
-## Stripe Giving Setup
-
-The `/give` page now starts a Stripe Checkout session through a Netlify function.
-
-Required Netlify environment variable:
-
-- `STRIPE_SECRET_KEY` = your Stripe secret key
-
-Optional client override:
-
-- `VITE_STRIPE_CHECKOUT_ENDPOINT` = alternate checkout endpoint if you are not using the default `/.netlify/functions/create-stripe-checkout`
-
-Local testing note:
-
-- Use `netlify dev` if you want the frontend and the Netlify function to run together locally. `npm run dev` only starts the Vite app.
