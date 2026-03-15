@@ -22,6 +22,10 @@ https://teamchurchglasgow.com
   <img src="https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white" />
 </p>
 
+<p align="center">
+  <img src="screenshot.png" alt="TEAM Church Glasgow Website Preview" width="800"/>
+</p>
+
 **Core technologies**
 
 - React for building the user interface  
