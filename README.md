@@ -1,4 +1,4 @@
-I'm# TEAM Church Glasgow Website
+# TEAM Church Glasgow Website
 
 <p align="center">
   <strong>Official website for TEAM Church Glasgow</strong><br/>
