@@ -84,10 +84,8 @@ export default function HomePage() {
     <section className="page">
       <div className="welcome-section">
         <div className="welcome-content">
-          <h2 className="welcome-kicker">Welcome to Team Church</h2>
           <h2 className="welcome-title">
-            <span>Real People.</span>
-            <span className="welcome-accent">Real Faith.</span>
+            <span className="welcome-accent">Welcome to Team Church</span>
           </h2>
           <div className="welcome-body">
             <p>
