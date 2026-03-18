@@ -50,7 +50,7 @@ export default function HomePage() {
     {
       title: 'New Here?',
       description:
-        'We’d love to meet you! Plan your first visit and know what to expect.',
+        "We’d love to meet you. Plan your first visit and see what to expect.",
       linkText: 'Plan a Visit',
       to: '/connect',
       icon: faLocationDot,
@@ -65,8 +65,7 @@ export default function HomePage() {
     },
     {
       title: 'Serve With Us',
-      description:
-        'Use your gifts to make a difference. There’s a place for everyone.',
+      description: "Use your gifts to make a difference. There’s a place for everyone.",
       linkText: 'Get Involved',
       to: '/serve',
       icon: faHandHoldingHeart,
@@ -85,20 +84,22 @@ export default function HomePage() {
     <section className="page">
       <div className="welcome-section">
         <div className="welcome-content">
-          <span className="welcome-kicker">WELCOME TO TEAM CHURCH</span>
+          <h2 className="welcome-kicker">Welcome to Team Church</h2>
           <h2 className="welcome-title">
             <span>Real People.</span>
             <span className="welcome-accent">Real Faith.</span>
           </h2>
           <div className="welcome-body">
             <p>
-              We’re a diverse community of Christ-followers in the heart of
-              Dennistoun. Whether you’re exploring faith for the first time or
-              have followed Jesus for years, there’s a place for you here.
+              We’re a local church in Glasgow made up of people from all walks of
+              life who gather to learn about Jesus, pray together, and support one
+              another.
             </p>
             <p>
-              Our doors are open every Sunday at 11:00am. Come as you are—grab a
-              coffee, find a seat, and experience authentic community.
+              Our heart is to create a place where people can experience God,
+              build meaningful relationships, and grow in faith. Whether you’ve
+              been part of church for years or you’re just curious and exploring,
+              you are always welcome here.
             </p>
           </div>
           <button
@@ -152,25 +153,25 @@ export default function HomePage() {
                   {status === 'loading' || !featured ? (
                     <div className="latest-skeleton latest-skeleton-featured" />
                   ) : (
-                <Link
-                  className="latest-featured-card"
-                  to={`/watch?v=${featured.id}`}
-                  aria-label={`Play ${featured.title}`}
-                >
-                  <div className="latest-featured-media">
-                    <img src={featured.thumbnailUrl} alt={featured.title} />
-                    <div className="latest-featured-overlay" />
+                    <Link
+                      className="latest-featured-card"
+                      to={`/watch?v=${featured.id}`}
+                      aria-label={`Play ${featured.title}`}
+                    >
+                      <div className="latest-featured-media">
+                        <img src={featured.thumbnailUrl} alt={featured.title} />
+                        <div className="latest-featured-overlay" />
                         <span className="latest-play" aria-hidden="true">
                           <svg viewBox="0 0 24 24" focusable="false">
                             <path d="M9 7l8 5-8 5z" />
                           </svg>
                         </span>
                       </div>
-                  <div className="latest-featured-body">
-                    <h3>{featured.title}</h3>
-                    <p>Team Church Glasgow</p>
-                  </div>
-                </Link>
+                      <div className="latest-featured-body">
+                        <h3>{featured.title}</h3>
+                        <p>Team Church Glasgow</p>
+                      </div>
+                    </Link>
                   )}
                 </div>
                 <div className="latest-list">
@@ -182,23 +183,23 @@ export default function HomePage() {
                     </>
                   ) : (
                     list.map((video) => (
-                  <Link
-                    key={video.id}
-                    className="latest-item"
-                    to={`/watch?v=${video.id}`}
-                    aria-label={`Play ${video.title}`}
-                  >
-                    <div className="latest-thumb">
-                      <img src={video.thumbnailUrl} alt={video.title} />
-                    </div>
-                    <div className="latest-item-body">
-                      <h4>{video.title}</h4>
-                      <p>Team Church Glasgow</p>
-                    </div>
-                  </Link>
-                ))
-              )}
-            </div>
+                      <Link
+                        key={video.id}
+                        className="latest-item"
+                        to={`/watch?v=${video.id}`}
+                        aria-label={`Play ${video.title}`}
+                      >
+                        <div className="latest-thumb">
+                          <img src={video.thumbnailUrl} alt={video.title} />
+                        </div>
+                        <div className="latest-item-body">
+                          <h4>{video.title}</h4>
+                          <p>Team Church Glasgow</p>
+                        </div>
+                      </Link>
+                    ))
+                  )}
+                </div>
               </div>
             )}
           </section>
@@ -214,8 +215,7 @@ export default function HomePage() {
             Take Your Next Step
           </h2>
           <p className="next-steps-subtitle">
-            Wherever you are in your journey, there’s a next step waiting for
-            you.
+            Wherever you are in your journey, there’s a next step waiting for you.
           </p>
         </div>
         <div className="next-steps-grid">
@@ -238,4 +238,3 @@ export default function HomePage() {
     </section>
   )
 }
-

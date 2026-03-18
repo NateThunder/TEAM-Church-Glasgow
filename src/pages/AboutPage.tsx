@@ -1,6 +1,20 @@
 import '../styles/about.css'
 import { Link } from 'react-router-dom'
-import collageImage from '../assets/join.png'
+
+const leaders = [
+  { name: 'Yinka Ogunnoiki', role: 'Pastor' },
+  { name: 'Tolani Adegoroye', role: 'Children' },
+  { name: 'Unoma Thomas', role: 'Choir' },
+  { name: 'Ifedade Thomas', role: 'Media' },
+  { name: 'Tracey Godwin', role: 'Ushering' },
+  { name: 'Ayo Idowu-Obolo', role: 'Women' },
+  { name: 'Jonathan Pettit', role: 'Welcome' },
+  { name: 'Seyi Adegoroye', role: 'Men' },
+  { name: 'Betty Jackson', role: 'Prayer' },
+  { name: 'Kingsley Oghagbon', role: 'Maintenance' },
+  { name: 'Lewa Thomas', role: 'Young Children' },
+  { name: 'Sandra Oghagbon', role: 'Hospitality' },
+]
 
 export default function AboutPage() {
   const storyImages = [
@@ -26,41 +40,48 @@ export default function AboutPage() {
     <section className="page about-page">
       <section className="about-story">
         <div className="about-story-text">
-          <span className="about-kicker">OUR STORY</span>
-          <h1>A Church For Glasgow</h1>
+          <span className="about-kicker">ABOUT TEAM CHURCH</span>
+          <h1>About Us</h1>
           <p>
-            Team Church Glasgow began in 2010 when a small group of
-            Christ-followers gathered with a simple dream: to build a church
-            where everyone belongs and faith comes alive.
+            Team Church Glasgow is a community of people who love Jesus and are
+            passionate about seeing lives transformed by His presence.
           </p>
           <p>
-            What started as 30 people meeting in a community centre has grown
-            into a vibrant, diverse community of hundreds who gather each week
-            to worship, grow, and serve together.
+            For more than 20 years, our church has been part of the city of
+            Glasgow. Our heart is simple: to spread the knowledge of Christ and to
+            see His Kingdom come in our city.
           </p>
           <p>
-            We’re not perfect people. We’re simply ordinary people who have
-            encountered the extraordinary love of Jesus and want to share that
-            with our city. Whether you’re exploring faith or have followed Jesus
-            for decades, there’s a place for you here.
+            Whether you have been following Jesus for many years or you are
+            looking for a church to call home, you are welcome here.
           </p>
+          <div className="about-story-extension">
+            <span className="about-kicker">WHAT WE ARE ABOUT</span>
+            <h2>What We Are About</h2>
+            <p>Everything we do centres on Jesus.</p>
+            <p>
+              We believe the Bible is the Word of God and that the Holy Spirit is
+              actively moving today. As a Spirit-filled church, we desire to
+              encounter God through worship, prayer, and the teaching of
+              Scripture.
+            </p>
+            <p>
+              Our gatherings are a place where people can experience the
+              presence of God, grow in their faith, and be strengthened in
+              community.
+            </p>
+          </div>
         </div>
         <div className="about-collage">
           {storyImages.map((image) => (
-            <img key={image.src} src={image.src} alt={image.alt} loading="lazy" decoding="async" />
+            <img
+              key={image.src}
+              src={image.src}
+              alt={image.alt}
+              loading="lazy"
+              decoding="async"
+            />
           ))}
-        </div>
-      </section>
-
-      <section className="about-mission">
-        <div className="about-mission-inner">
-          <span className="about-kicker light">OUR MISSION</span>
-          <h2>Helping People Find &amp; Follow Jesus</h2>
-          <p>
-            Everything we do flows from this simple mission. We want to create
-            environments where people can encounter God, connect with
-            community, and discover their purpose.
-          </p>
         </div>
       </section>
 
@@ -84,7 +105,7 @@ export default function AboutPage() {
               </p>
             </article>
             <article className="about-value-card">
-              <span className="about-value-icon" aria-hidden="true">👥</span>
+              <span className="about-value-icon" aria-hidden="true">🎉</span>
               <h3>Love People</h3>
               <p>
                 We believe everyone matters to God, so everyone matters to us.
@@ -92,7 +113,7 @@ export default function AboutPage() {
               </p>
             </article>
             <article className="about-value-card">
-              <span className="about-value-icon" aria-hidden="true">🌍</span>
+              <span className="about-value-icon" aria-hidden="true">🙏</span>
               <h3>Make Disciples</h3>
               <p>
                 We’re committed to helping people take their next steps of faith
@@ -105,47 +126,20 @@ export default function AboutPage() {
 
       <section className="about-team">
         <div className="about-section-header">
-          <span className="about-kicker">LEADERSHIP</span>
-          <h2>Meet Our Team</h2>
+          <span className="about-kicker">OUR LEADERS</span>
+          <h2>Our Leaders</h2>
           <p>
-            Our pastoral team is passionate about serving this community and
-            helping you grow.
+            Our leadership team are committed to serving this community with love,
+            prayer, and welcome.
           </p>
         </div>
-        <div className="about-team-grid">
-          <article className="about-team-card">
-            <div className="about-team-photo">
-              <img src={collageImage} alt="Pastor James and Sarah Mitchell" />
-            </div>
-            <h3>Pastor Yinka</h3>
-            <span className="about-role">Head Pastors</span>
-            <p>
-              Pastor Yinka founded Team Church Glasgow in 2010 with a vision
-              to see lives transformed by the Gospel.
-            </p>
-          </article>
-          <article className="about-team-card">
-            <div className="about-team-photo">
-              <img src={collageImage} alt="David Thompson" />
-            </div>
-            <h3>Unoma Thomas</h3>
-            <span className="about-role">Worship Leader</span>
-            <p>
-              David leads our worship ministry and is passionate about creating
-              space for authentic encounters with God.
-            </p>
-          </article>
-          <article className="about-team-card">
-            <div className="about-team-photo">
-              <img src={collageImage} alt="Emma Robertson" />
-            </div>
-            <h3>Emma Robertson</h3>
-            <span className="about-role">Community Pastor</span>
-            <p>
-              Emma oversees our small groups and connection ministries, helping
-              everyone find their place in community.
-            </p>
-          </article>
+        <div className="about-team-grid about-leaders-grid">
+          {leaders.map((leader) => (
+            <article key={leader.name} className="about-team-card">
+              <h3>{leader.name}</h3>
+              <p className="about-role">{leader.role}</p>
+            </article>
+          ))}
         </div>
       </section>
 

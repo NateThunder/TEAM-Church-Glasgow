@@ -259,9 +259,10 @@
 
   font-size: 12px;
   letter-spacing: 0.3em;
-  text-transform: uppercase;
+  text-transform: none;
   color: #7851a9;
   font-weight: 600;
+  margin: 0;
 
 }
 
