@@ -39,7 +39,16 @@ export function ServeTeamCard({
       {isOpen && (
         <div className="serve-join-panel" id={`${team.id}-form`}>
           {isSubmitted && <div className="serve-success">Thanks! We'll be in touch soon.</div>}
-          <form onSubmit={(event) => onSubmit(event, team)}>
+          <form
+            name="serve-team-interest"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+            onSubmit={(event) => onSubmit(event, team)}
+          >
+            <input type="hidden" name="form-name" value="serve-team-interest" />
+            <input type="hidden" name="bot-field" />
+            <input type="hidden" name="teamName" value={team.name} />
+            <input type="hidden" name="teamKey" value={team.id} />
             <label>
               Name
               <input name="name" type="text" required placeholder="Your name" />

@@ -127,6 +127,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
+  align-items: start;
 
 }
 
@@ -139,6 +140,7 @@
   background: var(--surface-matted);
   border: 1px solid var(--surface-border);
   box-shadow: var(--shadow-soft);
+  align-self: start;
 
 }
 
@@ -212,26 +214,6 @@
   gap: 8px 14px;
   color: rgba(255, 255, 255, 0.7);
   font-size: 13px;
-
-}
-
-.groups-cta {
-
-  width: 100%;
-  min-height: 44px;
-  border: none;
-  border-radius: 999px;
-  background: #7851a9;
-  color: #ffffff;
-  font-weight: 700;
-  cursor: pointer;
-
-}
-
-.groups-cta:focus-visible {
-
-  outline: 2px solid #7851a9;
-  outline-offset: 2px;
 
 }
 
@@ -359,11 +341,5 @@
 .app-shell.theme-light .groups-info {
 
   color: rgba(17, 24, 39, 0.7);
-
-}
-
-.app-shell.theme-light .groups-cta {
-
-  color: #ffffff !important;
 
 }

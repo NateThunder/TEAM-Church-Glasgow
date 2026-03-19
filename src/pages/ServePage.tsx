@@ -3,8 +3,8 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { ServeTeamGroup } from '../components/serve/ServeTeamGroup'
 import { useServeTeamExpansion } from '../hooks/useServeTeamExpansion'
 import { useBelieversClass } from '../services/believersClass'
+import { submitNetlifyForm } from '../services/netlifyForms'
 import { useServingTeams } from '../services/servingTeams'
-import { createServeSignup } from '../services/serveSignups'
 
 type Eligibility = 'yes' | 'no' | null
 
@@ -87,12 +87,12 @@ export default function ServePage() {
     setSubmitErrors((prev) => ({ ...prev, [team.id]: null }))
 
     try {
-      await createServeSignup({
+      await submitNetlifyForm('serve-team-interest', {
         teamKey: team.id,
         teamName: team.name,
-        applicantName: name,
+        name,
         email,
-        phoneNumber: phone,
+        phone,
         message,
       })
       setSubmittedTeams((prev) => ({ ...prev, [team.id]: true }))
@@ -128,13 +128,13 @@ export default function ServePage() {
     setBelieversError(null)
 
     try {
-      await createServeSignup({
+      await submitNetlifyForm('believers-class-registration', {
         teamKey: 'believers-class',
         teamName: 'Believers Class',
-        applicantName: name,
+        name,
         email,
-        phoneNumber: phone,
-        message: extraInformation || 'Believers Class registration request from Serve page.',
+        phone,
+        extraInformation,
       })
       setBelieversSubmitted(true)
       form.reset()
@@ -224,7 +224,20 @@ export default function ServePage() {
                   {believersSubmitted ? (
                     <div className="serve-success">Thanks! We&apos;ll be in touch soon.</div>
                   ) : null}
-                  <form onSubmit={(event) => void handleBelieversSubmit(event)}>
+                  <form
+                    name="believers-class-registration"
+                    data-netlify="true"
+                    netlify-honeypot="bot-field"
+                    onSubmit={(event) => void handleBelieversSubmit(event)}
+                  >
+                    <input
+                      type="hidden"
+                      name="form-name"
+                      value="believers-class-registration"
+                    />
+                    <input type="hidden" name="bot-field" />
+                    <input type="hidden" name="teamKey" value="believers-class" />
+                    <input type="hidden" name="teamName" value="Believers Class" />
                     <label>
                       Name
                       <input name="name" type="text" required placeholder="Your name" />

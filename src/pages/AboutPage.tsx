@@ -17,45 +17,47 @@ const leaders = [
 ]
 
 export default function AboutPage() {
-  const storyImages = [
-    {
-      src: '/optimized/about-story-1.jpg',
-      alt: 'Worship moment during service',
-    },
-    {
-      src: '/optimized/about-story-2.jpg',
-      alt: 'Worship leader singing at the front',
-    },
-    {
-      src: '/optimized/about-story-3.jpg',
-      alt: 'Speaker sharing at Sunday service',
-    },
-    {
-      src: '/optimized/about-story-4.jpg',
-      alt: 'Church leader sharing a testimony',
-    },
-  ]
-
   return (
     <section className="page about-page">
       <section className="about-story">
-        <div className="about-story-text">
-          <span className="about-kicker">ABOUT TEAM CHURCH</span>
-          <h1>About Us</h1>
-          <p>
-            Team Church Glasgow is a community of people who love Jesus and are
-            passionate about seeing lives transformed by His presence.
-          </p>
-          <p>
-            For more than 20 years, our church has been part of the city of
-            Glasgow. Our heart is simple: to spread the knowledge of Christ and to
-            see His Kingdom come in our city.
-          </p>
-          <p>
-            Whether you have been following Jesus for many years or you are
-            looking for a church to call home, you are welcome here.
-          </p>
-          <div className="about-story-extension">
+        <div className="about-story-row">
+          <div className="about-story-text">
+            <span className="about-kicker">ABOUT TEAM CHURCH</span>
+            <h1>About Us</h1>
+            <p>
+              Team Church Glasgow is a community of people who love Jesus and are
+              passionate about seeing lives transformed by His presence.
+            </p>
+            <p>
+              For more than 20 years, our church has been part of the city of
+              Glasgow. Our heart is simple: to spread the knowledge of Christ and
+              to see His Kingdom come in our city.
+            </p>
+            <p>
+              Whether you have been following Jesus for many years or you are
+              looking for a church to call home, you are welcome here.
+            </p>
+          </div>
+          <div className="about-story-media">
+            <img
+              src="/optimized/about-story-4.jpg"
+              alt="Church leader sharing during a service"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </div>
+
+        <div className="about-story-row about-story-row-reverse">
+          <div className="about-story-media">
+            <img
+              src="/optimized/about-story-3.jpg"
+              alt="Speaker preaching at the front of church"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div className="about-story-text about-story-extension">
             <span className="about-kicker">WHAT WE ARE ABOUT</span>
             <h2>What We Are About</h2>
             <p>Everything we do centres on Jesus.</p>
@@ -72,17 +74,6 @@ export default function AboutPage() {
             </p>
           </div>
         </div>
-        <div className="about-collage">
-          {storyImages.map((image) => (
-            <img
-              key={image.src}
-              src={image.src}
-              alt={image.alt}
-              loading="lazy"
-              decoding="async"
-            />
-          ))}
-        </div>
       </section>
 
       <section className="tone-section about-values-tone">
@@ -97,7 +88,9 @@ export default function AboutPage() {
           </div>
           <div className="about-values-grid">
             <article className="about-value-card">
-              <span className="about-value-icon" aria-hidden="true">❤</span>
+              <span className="about-value-icon" aria-hidden="true">
+                Love
+              </span>
               <h3>Love God</h3>
               <p>
                 We pursue an authentic, passionate relationship with Jesus that
@@ -105,7 +98,9 @@ export default function AboutPage() {
               </p>
             </article>
             <article className="about-value-card">
-              <span className="about-value-icon" aria-hidden="true">🎉</span>
+              <span className="about-value-icon" aria-hidden="true">
+                Care
+              </span>
               <h3>Love People</h3>
               <p>
                 We believe everyone matters to God, so everyone matters to us.
@@ -113,10 +108,12 @@ export default function AboutPage() {
               </p>
             </article>
             <article className="about-value-card">
-              <span className="about-value-icon" aria-hidden="true">🙏</span>
+              <span className="about-value-icon" aria-hidden="true">
+                Grow
+              </span>
               <h3>Make Disciples</h3>
               <p>
-                We’re committed to helping people take their next steps of faith
+                We&apos;re committed to helping people take their next steps of faith
                 and grow as followers of Jesus.
               </p>
             </article>
@@ -148,11 +145,11 @@ export default function AboutPage() {
           <div className="about-visit-inner">
             <h2>Ready to Visit?</h2>
             <p>
-              We’d love to meet you this Sunday. Plan your visit and let us know
-              you’re coming!
+              We&apos;d love to meet you this Sunday. Plan your visit and let us know
+              you&apos;re coming!
             </p>
             <Link className="about-visit-cta" to="/connect">
-              Plan Your Visit <span aria-hidden="true">→</span>
+              Plan Your Visit <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>
         </div>
