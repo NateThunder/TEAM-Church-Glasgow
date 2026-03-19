@@ -583,6 +583,16 @@ export default function Layout({ navItems, children }: LayoutProps) {
 
       <footer className="site-footer">
         <p>{'\u00A9'} 2026 Team Church Glasgow</p>
+        <p className="site-footer-credit">
+          Website by{' '}
+          <a
+            href="https://nathansomevi.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Nathan Somevi
+          </a>
+        </p>
       </footer>
     </div>
   )

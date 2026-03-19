@@ -502,6 +502,15 @@ body {
   border-top: 1px solid #1c3342;
   font-size: 14px;
   color: #b7c2cb;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+
+}
+
+.site-footer p {
+  margin: 0;
 
 }
 
@@ -684,6 +693,21 @@ body {
 
   .nav-search {
     display: none;
+  }
+ 
+  .site-footer {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .site-footer p {
+    margin: 0;
+  }
+
+  .site-footer-credit {
+    margin-left: auto;
+    white-space: nowrap;
   }
 
 }
