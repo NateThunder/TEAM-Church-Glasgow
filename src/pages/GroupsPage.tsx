@@ -1,7 +1,8 @@
 import '../styles/groups.css'
-import { useMemo, useState, type FormEvent } from 'react'
+import '../styles/serve.css'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { createServeSignup } from '../services/serveSignups'
+import { submitNetlifyForm } from '../services/netlifyForms'
 
 type GroupItem = {
   id: string
@@ -95,6 +96,24 @@ export default function GroupsPage() {
     setOpenGroupId((current) => (current === groupId ? null : groupId))
   }
 
+  useEffect(() => {
+    if (!openGroupId) return
+
+    const handlePointerDown = (event: MouseEvent) => {
+      const target = event.target
+      const root = document.getElementById(`group-card-${openGroupId}`)
+      if (!root || !(target instanceof Node)) return
+      if (!root.contains(target)) {
+        setOpenGroupId(null)
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown, true)
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown, true)
+    }
+  }, [openGroupId])
+
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>,
     group: GroupItem,
@@ -119,12 +138,14 @@ export default function GroupsPage() {
     setSubmitErrors((prev) => ({ ...prev, [group.id]: null }))
 
     try {
-      await createServeSignup({
+      await submitNetlifyForm('group-interest', {
         teamKey: `group-${group.id}`,
         teamName: `Group: ${group.title}`,
-        applicantName: name,
+        groupId: group.id,
+        groupTitle: group.title,
+        name,
         email,
-        phoneNumber: phone,
+        phone,
         message,
       })
       setSubmittedGroups((prev) => ({ ...prev, [group.id]: true }))
@@ -194,7 +215,11 @@ export default function GroupsPage() {
 
         <div className="groups-grid">
           {visibleGroups.map((group) => (
-            <article key={group.id} className="groups-card">
+            <article
+              key={group.id}
+              id={`group-card-${group.id}`}
+              className="groups-card"
+            >
               <div className="groups-card-body">
                 <span className="groups-pill">{group.category}</span>
                 <h3 className="groups-title">{group.title}</h3>
@@ -207,7 +232,7 @@ export default function GroupsPage() {
                 </div>
                 <button
                   type="button"
-                  className="groups-cta"
+                  className="serve-secondary-button serve-join-button"
                   onClick={() => toggleGroupForm(group.id)}
                   aria-expanded={openGroupId === group.id}
                   aria-controls={`${group.id}-form`}
@@ -220,7 +245,16 @@ export default function GroupsPage() {
                     {submittedGroups[group.id] ? (
                       <div className="serve-success">Thanks! We&apos;ll be in touch soon.</div>
                     ) : null}
-                    <form onSubmit={(event) => void handleSubmit(event, group)}>
+                    <form
+                      name="group-interest"
+                      data-netlify="true"
+                      netlify-honeypot="bot-field"
+                      onSubmit={(event) => void handleSubmit(event, group)}
+                    >
+                      <input type="hidden" name="form-name" value="group-interest" />
+                      <input type="hidden" name="bot-field" />
+                      <input type="hidden" name="groupId" value={group.id} />
+                      <input type="hidden" name="groupTitle" value={group.title} />
                       <label>
                         Name
                         <input name="name" type="text" required placeholder="Your name" />
@@ -251,7 +285,7 @@ export default function GroupsPage() {
                       ) : null}
                       <button
                         type="submit"
-                        className="serve-primary-button"
+                        className="serve-primary-button serve-submit-interest-button"
                         disabled={Boolean(submittingGroups[group.id])}
                       >
                         {submittingGroups[group.id] ? 'Submitting...' : 'Submit interest'}

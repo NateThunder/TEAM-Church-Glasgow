@@ -7,7 +7,7 @@ import {
   faEnvelope,
   faPhone,
 } from '@fortawesome/free-solid-svg-icons'
-import { createGetInTouchSubmission } from '../services/getInTouch'
+import { submitNetlifyForm } from '../services/netlifyForms'
 
 const CHURCH_LAT = 55.8589
 const CHURCH_LNG = -4.2186
@@ -22,6 +22,11 @@ const buildMapSrc = () => {
 }
 
 const tabs = ['Plan a Visit', 'Prayer Request', 'Contact Us'] as const
+const NETLIFY_FORM_NAMES = {
+  'Plan a Visit': 'connect-plan-visit',
+  'Prayer Request': 'connect-prayer-request',
+  'Contact Us': 'connect-contact-us',
+} as const
 
 export default function ConnectPage() {
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>('Plan a Visit')
@@ -57,11 +62,11 @@ export default function ConnectPage() {
           return
         }
 
-        await createGetInTouchSubmission({
+        await submitNetlifyForm(NETLIFY_FORM_NAMES['Plan a Visit'], {
           formType: 'plan_visit',
           name,
           email,
-          phoneNumber: phone,
+          phone,
           additionalInfo,
         })
       }
@@ -78,13 +83,13 @@ export default function ConnectPage() {
           return
         }
 
-        await createGetInTouchSubmission({
+        await submitNetlifyForm(NETLIFY_FORM_NAMES['Prayer Request'], {
           formType: 'prayer_request',
           name,
           email,
-          phoneNumber: phone,
-          prayerRequest: request,
-          confidential,
+          phone,
+          request,
+          confidential: String(confidential),
         })
       }
 
@@ -100,11 +105,11 @@ export default function ConnectPage() {
           return
         }
 
-        await createGetInTouchSubmission({
+        await submitNetlifyForm(NETLIFY_FORM_NAMES['Contact Us'], {
           formType: 'contact_us',
           name,
           email,
-          phoneNumber: phone,
+          phone,
           subject,
           message,
         })
@@ -220,7 +225,16 @@ export default function ConnectPage() {
             {submitError ? <p className="connect-error">{submitError}</p> : null}
 
             {activeTab === 'Plan a Visit' ? (
-              <form className="connect-form" onSubmit={handleSubmit}>
+              <form
+                className="connect-form"
+                name="connect-plan-visit"
+                data-netlify="true"
+                netlify-honeypot="bot-field"
+                onSubmit={handleSubmit}
+              >
+                <input type="hidden" name="form-name" value="connect-plan-visit" />
+                <input type="hidden" name="bot-field" />
+                <input type="hidden" name="formType" value="plan_visit" />
                 <label>
                   Your Name *
                   <input name="name" type="text" required />
@@ -248,7 +262,16 @@ export default function ConnectPage() {
             ) : null}
 
             {activeTab === 'Prayer Request' ? (
-              <form className="connect-form" onSubmit={handleSubmit}>
+              <form
+                className="connect-form"
+                name="connect-prayer-request"
+                data-netlify="true"
+                netlify-honeypot="bot-field"
+                onSubmit={handleSubmit}
+              >
+                <input type="hidden" name="form-name" value="connect-prayer-request" />
+                <input type="hidden" name="bot-field" />
+                <input type="hidden" name="formType" value="prayer_request" />
                 <label>
                   Name
                   <input name="name" type="text" />
@@ -276,7 +299,16 @@ export default function ConnectPage() {
             ) : null}
 
             {activeTab === 'Contact Us' ? (
-              <form className="connect-form" onSubmit={handleSubmit}>
+              <form
+                className="connect-form"
+                name="connect-contact-us"
+                data-netlify="true"
+                netlify-honeypot="bot-field"
+                onSubmit={handleSubmit}
+              >
+                <input type="hidden" name="form-name" value="connect-contact-us" />
+                <input type="hidden" name="bot-field" />
+                <input type="hidden" name="formType" value="contact_us" />
                 <label>
                   Name *
                   <input name="name" type="text" required />
