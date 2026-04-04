@@ -162,22 +162,22 @@ export default function ConnectPage() {
                 <p>Sundays at 11:00am</p>
               </div>
             </div>
-            <a className="connect-info-item connect-info-link" href="mailto:hello@teamchurchglasgow.org">
+            <a className="connect-info-item connect-info-link" href="mailto:teamsglasgow@gmail.com">
               <span className="connect-icon" aria-hidden="true">
                 <FontAwesomeIcon icon={faEnvelope} />
               </span>
               <div>
                 <h3>Email</h3>
-                <p>hello@teamchurchglasgow.org</p>
+                <p>teamsglasgow@gmail.com</p>
               </div>
             </a>
-            <a className="connect-info-item connect-info-link" href="tel:+441234567890">
+            <a className="connect-info-item connect-info-link" href="tel:+447832223042">
               <span className="connect-icon" aria-hidden="true">
                 <FontAwesomeIcon icon={faPhone} />
               </span>
               <div>
                 <h3>Phone</h3>
-                <p>+44 123 456 7890</p>
+                <p>+447832 223042</p>
               </div>
             </a>
           </div>
