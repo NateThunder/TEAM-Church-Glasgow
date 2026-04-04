@@ -13,6 +13,8 @@ const DEFAULT_BELIEVERS_CLASS = {
   startsLabel: 'Sunday, 16 March 2026',
 }
 
+const getServeTeamFormName = (teamId: string) => `serve-team-interest-${teamId}`
+
 export default function ServePage() {
   const [eligibility, setEligibility] = useState<Eligibility>(null)
   const [believersSubmitting, setBelieversSubmitting] = useState(false)
@@ -87,7 +89,7 @@ export default function ServePage() {
     setSubmitErrors((prev) => ({ ...prev, [team.id]: null }))
 
     try {
-      await submitNetlifyForm('serve-team-interest', {
+      await submitNetlifyForm(getServeTeamFormName(team.id), {
         teamKey: team.id,
         teamName: team.name,
         name,

@@ -14,6 +14,8 @@ type GroupItem = {
   location: string
 }
 
+const getGroupFormName = (groupId: string) => `group-interest-${groupId}`
+
 const groups: GroupItem[] = [
   {
     id: 'young-adults',
@@ -138,7 +140,7 @@ export default function GroupsPage() {
     setSubmitErrors((prev) => ({ ...prev, [group.id]: null }))
 
     try {
-      await submitNetlifyForm('group-interest', {
+      await submitNetlifyForm(getGroupFormName(group.id), {
         teamKey: `group-${group.id}`,
         teamName: `Group: ${group.title}`,
         groupId: group.id,
@@ -246,12 +248,16 @@ export default function GroupsPage() {
                       <div className="serve-success">Thanks! We&apos;ll be in touch soon.</div>
                     ) : null}
                     <form
-                      name="group-interest"
+                      name={getGroupFormName(group.id)}
                       data-netlify="true"
                       netlify-honeypot="bot-field"
                       onSubmit={(event) => void handleSubmit(event, group)}
                     >
-                      <input type="hidden" name="form-name" value="group-interest" />
+                      <input
+                        type="hidden"
+                        name="form-name"
+                        value={getGroupFormName(group.id)}
+                      />
                       <input type="hidden" name="bot-field" />
                       <input type="hidden" name="groupId" value={group.id} />
                       <input type="hidden" name="groupTitle" value={group.title} />
