@@ -1,6 +1,8 @@
 import type { FormEvent } from 'react'
 import type { ServingTeam } from '../../services/servingTeams'
 
+const getServeTeamFormName = (teamId: string) => `serve-team-interest-${teamId}`
+
 type ServeTeamCardProps = {
   team: ServingTeam
   isOpen: boolean
@@ -40,12 +42,16 @@ export function ServeTeamCard({
         <div className="serve-join-panel" id={`${team.id}-form`}>
           {isSubmitted && <div className="serve-success">Thanks! We'll be in touch soon.</div>}
           <form
-            name="serve-team-interest"
+            name={getServeTeamFormName(team.id)}
             data-netlify="true"
             netlify-honeypot="bot-field"
             onSubmit={(event) => onSubmit(event, team)}
           >
-            <input type="hidden" name="form-name" value="serve-team-interest" />
+            <input
+              type="hidden"
+              name="form-name"
+              value={getServeTeamFormName(team.id)}
+            />
             <input type="hidden" name="bot-field" />
             <input type="hidden" name="teamName" value={team.name} />
             <input type="hidden" name="teamKey" value={team.id} />
