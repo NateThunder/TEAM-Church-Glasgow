@@ -51,6 +51,12 @@ const toDate = (value: string) => {
   return isValid(date) ? date : null
 }
 
+const isCurrentOrUpcomingEvent = (event: EventItem, now: Date) => {
+  const end = toDate(event.end)
+  if (!end) return true
+  return end.getTime() >= now.getTime()
+}
+
 const buildGoogleCalendarUrl = (event: EventItem) => {
   const start = toDate(event.start)
   const end = toDate(event.end)
@@ -281,9 +287,15 @@ export default function EventsPage() {
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list')
   const [calendarView, setCalendarView] = useState<string>(Views.MONTH)
   const [calendarDate, setCalendarDate] = useState<Date>(new Date())
+  const [now, setNow] = useState<Date>(() => new Date())
   const [activeCategory, setActiveCategory] = useState<EventCategory>('All')
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null)
   const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const interval = window.setInterval(() => setNow(new Date()), 60_000)
+    return () => window.clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 768px)')
@@ -314,10 +326,14 @@ export default function EventsPage() {
     }
   }, [selectedEvent])
 
+  const visibleEvents = useMemo(() => {
+    return events.filter((event) => isCurrentOrUpcomingEvent(event, now))
+  }, [events, now])
+
   const filteredEvents = useMemo(() => {
-    if (activeCategory === 'All') return events
-    return events.filter((event) => event.category === activeCategory)
-  }, [activeCategory, events])
+    if (activeCategory === 'All') return visibleEvents
+    return visibleEvents.filter((event) => event.category === activeCategory)
+  }, [activeCategory, visibleEvents])
 
   const listGroups = useMemo(() => {
     const sorted = [...filteredEvents].sort(
