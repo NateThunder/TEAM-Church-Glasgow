@@ -1,5 +1,19 @@
 # TEAM Church Glasgow Website
 
+---
+
+## Project Todo
+
+Use `[x]` when an item is complete.
+
+- [ ] Migrate the database to Cloudflare.
+- [ ] Migrate the full website to Cloudflare.
+- [ ] Get photos for the About page team leaders section.
+- [ ] Link the Stripe account to the website.
+- [ ] Merge the Food Bank content into the church website.
+
+---
+
 <p align="center">
   <strong>Official website for TEAM Church Glasgow</strong><br/>
   Built with modern web technologies and deployed on Netlify
