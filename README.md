@@ -11,6 +11,8 @@ Use `[x]` when an item is complete.
 - [ ] Get photos for the About page team leaders section.
 - [ ] Link the Stripe account to the website.
 - [ ] Merge the Food Bank content into the church website.
+- [ ] On admin page add series to when adding events on calender for example weekly monthly ect
+- [ ] improve position ox down arrow
 
 ---
 
