@@ -7,6 +7,7 @@
 Use `[x]` when an item is complete.
 
 - [ ] Migrate the database to Cloudflare.
+- [ ] change banner hero video to something more relevant
 - [ ] Migrate the full website to Cloudflare.
 - [ ] Get photos for the About page team leaders section.
 - [ ] Link the Stripe account to the website.
