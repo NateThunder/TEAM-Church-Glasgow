@@ -19,6 +19,11 @@ const cards = [
     to: '/admin/believers-class',
   },
   {
+    title: 'Foodbank',
+    description: 'Edit the Everlasting Foodbank page.',
+    to: '/admin/foodbank',
+  },
+  {
     title: 'Serve Signups',
     description: 'Review and manage Serve form submissions.',
     to: '/admin/serve-signups',

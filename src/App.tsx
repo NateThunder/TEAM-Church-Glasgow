@@ -8,6 +8,7 @@ import AboutPage from './pages/AboutPage'
 import HomePage from './pages/HomePage'
 import WatchPage from './pages/WatchPage'
 import ConnectPage from './pages/ConnectPage'
+import FoodbankPage from './pages/FoodbankPage'
 import GroupsPage from './pages/GroupsPage'
 import ServePage from './pages/ServePage'
 import EventsPage from './pages/EventsPage'
@@ -21,6 +22,7 @@ import AdminTeamsPage from './admin/AdminTeamsPage'
 import AdminGroupsPage from './admin/AdminGroupsPage'
 import AdminBelieversClassPage from './admin/AdminBelieversClassPage'
 import AdminServeSignupsPage from './admin/AdminServeSignupsPage'
+import AdminFoodbankPage from './admin/AdminFoodbankPage'
 import RequireAdminAuth from './admin/RequireAdminAuth'
 
 // Route table for the site. Add or remove pages here.
@@ -30,6 +32,7 @@ const routes = [
   { path: '/watch', label: 'Watch', element: <WatchPage /> },
   { path: '/about', label: 'About', element: <AboutPage /> },
   { path: '/connect', label: 'Connect', element: <ConnectPage /> },
+  { path: '/foodbank', label: 'Foodbank', element: <FoodbankPage /> },
   { path: '/groups', label: 'Groups', element: <GroupsPage /> },
   { path: '/serve', label: 'Serve', element: <ServePage /> },
   { path: '/events', label: 'Events', element: <EventsPage /> },
@@ -58,6 +61,7 @@ export default function App() {
               <Route path="/admin/events" element={<AdminEventsPage />} />
               <Route path="/admin/teams" element={<AdminTeamsPage />} />
               <Route path="/admin/serve-signups" element={<AdminServeSignupsPage />} />
+              <Route path="/admin/foodbank" element={<AdminFoodbankPage />} />
               <Route path="/admin/groups" element={<AdminGroupsPage />} />
               <Route path="/admin/believers-class" element={<AdminBelieversClassPage />} />
             </Route>

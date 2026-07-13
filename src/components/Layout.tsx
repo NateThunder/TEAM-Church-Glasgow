@@ -45,6 +45,14 @@ function DrawerIcon({ name }: { name: string }) {
           <path d="M10 12h4" />
         </svg>
       )
+    case 'Foodbank':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 10h14l-1.2 9H6.2z" />
+          <path d="M8 10l4-6 4 6" />
+          <path d="M9 14h6" />
+        </svg>
+      )
     case 'Groups':
       return (
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -99,6 +107,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
   const isGroups = location.pathname === '/groups'
   const isServe = location.pathname === '/serve'
   const isAbout = location.pathname === '/about'
+  const isFoodbank = location.pathname === '/foodbank'
   const headerRef = useRef<HTMLElement | null>(null)
   const serviceBannerRef = useRef<HTMLDivElement | null>(null)
   const hasPassedServiceBannerRef = useRef(false)
@@ -210,7 +219,8 @@ export default function Layout({ navItems, children }: LayoutProps) {
   }, [])
 
   useEffect(() => {
-    setIsMenuOpen(false)
+    const timeoutId = window.setTimeout(() => setIsMenuOpen(false), 0)
+    return () => window.clearTimeout(timeoutId)
   }, [location.pathname, location.search])
 
   useEffect(() => {
@@ -274,6 +284,8 @@ export default function Layout({ navItems, children }: LayoutProps) {
       className={`app-shell theme-${theme} ${isHome ? 'is-home' : ''} ${
         isWatch ? 'is-watch' : ''
       } ${isGroups ? 'is-groups' : ''} ${isServe ? 'is-serve' : ''} ${isAbout ? 'is-about' : ''} ${
+        isFoodbank ? 'is-foodbank' : ''
+      } ${
         isPortraitMobile ? 'is-portrait' : ''
       } ${hasPassedServiceBanner && theme === 'light' ? 'home-nav-text-dark' : ''}`}
     >
