@@ -15,6 +15,7 @@ const navItems = [
   { to: '/admin/events', label: 'Events' },
   { to: '/admin/teams', label: 'Teams' },
   { to: '/admin/serve-signups', label: 'Serve Signups' },
+  { to: '/admin/foodbank', label: 'Foodbank' },
   { to: '/admin/believers-class', label: 'Believers Class' },
   { to: '/admin/groups', label: 'Groups' },
 ]

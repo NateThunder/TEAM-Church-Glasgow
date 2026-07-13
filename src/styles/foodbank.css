@@ -1,0 +1,922 @@
+.foodbank-page {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 28px;
+}
+
+.app-shell.is-foodbank .page-content {
+  padding-top: 0;
+}
+
+.foodbank-hero {
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  min-height: clamp(560px, 70svh, 640px);
+  margin-left: -50vw;
+  display: flex;
+  align-items: flex-end;
+  background-position: center;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.foodbank-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(3, 13, 20, 0.9) 0%,
+    rgba(3, 13, 20, 0.72) 43%,
+    rgba(3, 13, 20, 0.28) 74%,
+    rgba(3, 13, 20, 0.12) 100%
+  );
+}
+
+.foodbank-hero-inner {
+  position: relative;
+  z-index: 1;
+  width: min(1200px, calc(100% - 64px));
+  margin: 0 auto;
+  padding: clamp(130px, 17vh, 174px) 0 clamp(54px, 7vh, 72px);
+  color: #ffffff;
+}
+
+.foodbank-kicker {
+  color: var(--royal-purple);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.foodbank-hero .foodbank-kicker {
+  color: #c7a5ed;
+}
+
+.foodbank-hero h1 {
+  max-width: 640px;
+  margin: 12px 0 14px;
+  font-size: clamp(52px, 6vw, 76px);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.foodbank-hero p {
+  max-width: 610px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: clamp(17px, 1.5vw, 20px);
+  line-height: 1.55;
+}
+
+.foodbank-hero-actions,
+.foodbank-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.foodbank-hero-actions {
+  margin-top: 26px;
+}
+
+.foodbank-button,
+.foodbank-submit {
+  min-height: 46px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 11px 20px;
+  font: inherit;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.foodbank-button-primary,
+.foodbank-submit {
+  background: var(--royal-purple);
+  color: #ffffff;
+}
+
+.foodbank-button-primary:hover,
+.foodbank-submit:hover:not(:disabled) {
+  background: #684296;
+}
+
+.foodbank-button-secondary {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(4, 20, 28, 0.4);
+  color: #ffffff;
+}
+
+.foodbank-button-secondary:hover {
+  background: rgba(4, 20, 28, 0.62);
+}
+
+.foodbank-button-muted {
+  border-color: color-mix(in srgb, currentColor 22%, transparent);
+  background: transparent;
+  color: currentColor;
+}
+
+.foodbank-button:focus-visible,
+.foodbank-submit:focus-visible,
+.foodbank-form input:focus-visible,
+.foodbank-form select:focus-visible,
+.foodbank-form textarea:focus-visible,
+.foodbank-contact-item:focus-visible,
+.foodbank-text-link:focus-visible {
+  outline: 2px solid var(--royal-purple);
+  outline-offset: 3px;
+}
+
+.foodbank-quickbar {
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  background: #7851a9;
+  color: #ffffff;
+}
+
+.foodbank-quickbar-inner {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: min(1200px, calc(100% - 56px));
+  margin: 0 auto;
+}
+
+.foodbank-quickbar-inner > div {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 20px 28px;
+  border-left: 1px solid rgba(255, 255, 255, 0.26);
+}
+
+.foodbank-quickbar-inner > div:first-child {
+  border-left: 0;
+}
+
+.foodbank-quickbar-icon {
+  padding-top: 2px;
+  color: #ffffff;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.foodbank-quickbar-copy {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.foodbank-quickbar-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.foodbank-quickbar strong {
+  color: #ffffff;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.foodbank-quickbar-action {
+  width: fit-content;
+  min-height: 38px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 8px;
+  padding: 8px 11px;
+  background: #ffffff;
+  color: #3f285d;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.foodbank-quickbar-action:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.foodbank-quickbar-action:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.foodbank-section {
+  width: min(1200px, 100%);
+  margin: clamp(52px, 6vw, 72px) auto 0;
+}
+
+.foodbank-tone-section {
+  margin-top: clamp(52px, 6vw, 72px);
+}
+
+.tone-section > .foodbank-tone-inner {
+  width: min(1200px, calc(100% - 64px));
+  max-width: 1200px;
+  padding: clamp(44px, 5vw, 64px) 0;
+}
+
+.foodbank-tone-inner > .foodbank-section {
+  margin-top: 0;
+}
+
+.foodbank-mission {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(34px, 6vw, 76px);
+  align-items: center;
+}
+
+.foodbank-mission-copy h2,
+.foodbank-committee-heading h2,
+.foodbank-support-copy h2,
+.foodbank-enquiry-copy h2 {
+  margin: 10px 0 14px;
+  font-size: clamp(30px, 3.4vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+.foodbank-mission-copy p,
+.foodbank-committee-heading p,
+.foodbank-support-copy p,
+.foodbank-panel p,
+.foodbank-enquiry-copy p {
+  margin: 0;
+  color: color-mix(in srgb, currentColor 78%, transparent);
+  line-height: 1.65;
+}
+
+.foodbank-text-link {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 20px;
+  color: var(--royal-purple);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.foodbank-text-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.foodbank-mission-image {
+  height: clamp(390px, 34vw, 480px);
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.foodbank-mission-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.foodbank-committee {
+  display: grid;
+  gap: 20px;
+}
+
+.foodbank-committee-heading {
+  max-width: 700px;
+}
+
+.foodbank-committee-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-block: 1px solid var(--surface-border);
+}
+
+.foodbank-committee-member {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 24px 20px;
+  border-left: 1px solid var(--surface-border);
+}
+
+.foodbank-committee-member:first-child {
+  border-left: 0;
+}
+
+.foodbank-committee-photo {
+  width: 104px;
+  height: 104px;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+}
+
+.foodbank-committee-member h3 {
+  margin: 4px 0 0;
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+.foodbank-committee-member p {
+  margin: 0;
+  color: var(--royal-purple);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.foodbank-support-composition {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.foodbank-support-column {
+  min-width: 0;
+  padding-right: clamp(8px, 2vw, 24px);
+}
+
+.foodbank-support-copy {
+  max-width: 520px;
+}
+
+.foodbank-support-copy > p {
+  max-width: 48ch;
+  font-size: 16px;
+}
+
+.foodbank-support-list {
+  margin-top: 22px;
+  border-block: 1px solid var(--surface-border);
+}
+
+.foodbank-support-list article {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 14px;
+  padding: 19px 0;
+  border-top: 1px solid var(--surface-border);
+}
+
+.foodbank-support-list article:first-child {
+  border-top: 0;
+}
+
+.foodbank-support-list h3 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.3;
+}
+
+.foodbank-support-list p {
+  margin: 4px 0 0;
+  color: color-mix(in srgb, currentColor 72%, transparent);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.foodbank-support-index {
+  padding-top: 3px;
+  color: var(--royal-purple);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+}
+
+.foodbank-panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: clamp(22px, 2.4vw, 30px);
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  background: var(--surface-matted);
+}
+
+.foodbank-panel h2 {
+  margin: 0;
+  font-size: clamp(25px, 2.2vw, 32px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.foodbank-muted-copy {
+  color: color-mix(in srgb, currentColor 68%, transparent) !important;
+}
+
+.foodbank-details {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.foodbank-details div {
+  display: grid;
+  gap: 3px;
+}
+
+.foodbank-details dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--royal-purple);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.foodbank-details dd {
+  margin: 0;
+  color: color-mix(in srgb, currentColor 80%, transparent);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.foodbank-panel .foodbank-action-row {
+  margin-top: auto;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.foodbank-panel .foodbank-button {
+  width: 100%;
+  padding-inline: 12px;
+}
+
+.foodbank-contact-band {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid var(--surface-border);
+  border-radius: 14px;
+  background: var(--surface-matted);
+}
+
+.foodbank-contact-item {
+  min-width: 0;
+  min-height: 94px;
+  box-sizing: border-box;
+  display: grid;
+  align-content: center;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 12px;
+  padding: 18px 20px;
+  border-left: 1px solid var(--surface-border);
+  color: inherit;
+  text-decoration: none;
+}
+
+.foodbank-contact-item:first-child {
+  border-left: 0;
+}
+
+.foodbank-contact-item > span {
+  color: var(--royal-purple);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.foodbank-contact-item strong,
+.foodbank-contact-item p {
+  margin: 0;
+}
+
+.foodbank-contact-item strong {
+  font-size: 14px;
+}
+
+.foodbank-contact-item p {
+  margin-top: 5px;
+  color: color-mix(in srgb, currentColor 70%, transparent);
+  font-size: 13px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+a.foodbank-contact-item:hover strong {
+  color: var(--royal-purple);
+}
+
+.foodbank-enquiry {
+  display: grid;
+  grid-template-columns: minmax(0, 0.38fr) minmax(0, 0.62fr);
+  gap: clamp(32px, 5vw, 64px);
+  align-items: start;
+  padding-bottom: 18px;
+}
+
+.foodbank-enquiry-copy {
+  max-width: 420px;
+}
+
+.foodbank-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: clamp(22px, 3vw, 30px);
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  background: var(--surface-matted);
+}
+
+.foodbank-form label {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.foodbank-form input,
+.foodbank-form select,
+.foodbank-form textarea {
+  width: 100%;
+  min-height: 46px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  padding: 11px 12px;
+  font: inherit;
+}
+
+.foodbank-form textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.foodbank-form option {
+  background: var(--deep-bg);
+  color: #ffffff;
+}
+
+.foodbank-form-message,
+.foodbank-consent,
+.foodbank-success,
+.foodbank-error,
+.foodbank-submit {
+  grid-column: 1 / -1;
+}
+
+.foodbank-consent {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.foodbank-consent input {
+  width: 18px;
+  height: 18px;
+  min-height: 0;
+  margin-top: 2px;
+  accent-color: var(--royal-purple);
+}
+
+.foodbank-consent label {
+  display: block;
+  font-weight: 500;
+}
+
+.foodbank-success,
+.foodbank-error {
+  margin: 0;
+  font-weight: 700;
+}
+
+.foodbank-success {
+  color: #22c55e;
+}
+
+.foodbank-error {
+  color: #f87171;
+}
+
+.foodbank-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1100px) {
+  .foodbank-support-composition {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .foodbank-support-column {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+    gap: 34px;
+    padding-right: 0;
+  }
+
+  .foodbank-support-list {
+    margin-top: 0;
+  }
+
+  .foodbank-contact-band {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .foodbank-contact-item:nth-child(3) {
+    border-left: 0;
+  }
+
+  .foodbank-contact-item:nth-child(n + 3) {
+    border-top: 1px solid var(--surface-border);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1100px) {
+  .app-shell.is-foodbank .site-header {
+    gap: 12px;
+    padding-inline: 24px;
+  }
+
+  .app-shell.is-foodbank .brand-logo {
+    height: 52px;
+  }
+
+  .app-shell.is-foodbank .nav-links {
+    gap: 2px;
+    flex-wrap: nowrap;
+  }
+
+  .app-shell.is-foodbank .nav-link {
+    padding: 8px 6px;
+    font-size: 13px;
+  }
+
+  .app-shell.is-foodbank .nav-actions {
+    gap: 6px;
+  }
+
+  .app-shell.is-foodbank .action-button,
+  .app-shell.is-foodbank .action-watch {
+    gap: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .app-shell.is-foodbank .action-watch .action-icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 900px) {
+  .foodbank-mission,
+  .foodbank-enquiry {
+    grid-template-columns: 1fr;
+  }
+
+  .foodbank-mission-image {
+    order: -1;
+  }
+
+  .foodbank-enquiry-copy {
+    max-width: 620px;
+  }
+}
+
+@media (max-width: 767px) {
+  .foodbank-hero {
+    min-height: 640px;
+    background-position: 56% center;
+  }
+
+  .foodbank-hero-inner {
+    width: calc(100% - 40px);
+    padding: 120px 0 54px;
+  }
+
+  .foodbank-hero h1 {
+    font-size: clamp(48px, 14vw, 62px);
+  }
+
+  .foodbank-hero-actions,
+  .foodbank-action-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .foodbank-button,
+  .foodbank-submit {
+    width: 100%;
+  }
+
+  .foodbank-quickbar-inner {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .foodbank-quickbar-inner > div {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.26);
+    border-left: 0;
+  }
+
+  .foodbank-quickbar-inner > div:first-child {
+    border-top: 0;
+  }
+
+  .foodbank-section {
+    margin-top: 48px;
+  }
+
+  .foodbank-tone-section {
+    margin-top: 48px;
+  }
+
+  .tone-section > .foodbank-tone-inner {
+    width: calc(100% - 40px);
+    padding: 44px 0;
+  }
+
+  .foodbank-mission-image,
+  .foodbank-mission-image img {
+    height: 300px;
+    min-height: 300px;
+  }
+
+  .foodbank-committee-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .foodbank-committee-member {
+    padding: 20px 12px;
+    border-top: 1px solid var(--surface-border);
+  }
+
+  .foodbank-committee-member:nth-child(-n + 2) {
+    border-top: 0;
+  }
+
+  .foodbank-committee-member:nth-child(odd) {
+    border-left: 0;
+  }
+
+  .foodbank-committee-member:nth-child(even) {
+    border-left: 1px solid var(--surface-border);
+  }
+
+  .foodbank-committee-photo {
+    width: 88px;
+    height: 88px;
+  }
+
+  .foodbank-support-composition,
+  .foodbank-support-column {
+    grid-template-columns: 1fr;
+  }
+
+  .foodbank-support-column {
+    display: grid;
+    gap: 22px;
+  }
+
+  .foodbank-support-copy h2 {
+    max-width: 10ch;
+    font-size: clamp(38px, 9vw, 48px);
+  }
+
+  .foodbank-support-list {
+    margin-top: 0;
+  }
+
+  .foodbank-form {
+    grid-template-columns: 1fr;
+  }
+
+  .foodbank-form-message,
+  .foodbank-consent,
+  .foodbank-success,
+  .foodbank-error,
+  .foodbank-submit {
+    grid-column: auto;
+  }
+}
+
+@media (min-width: 560px) and (max-width: 767px) {
+  .foodbank-support-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .foodbank-support-list article {
+    align-content: start;
+    padding: 20px 18px;
+  }
+
+  .foodbank-support-list article:nth-child(-n + 2) {
+    border-top: 0;
+  }
+
+  .foodbank-support-list article:nth-child(even) {
+    border-left: 1px solid var(--surface-border);
+  }
+}
+
+@media (max-width: 520px) {
+  .foodbank-contact-band {
+    grid-template-columns: 1fr;
+  }
+
+  .foodbank-contact-item {
+    border-top: 1px solid var(--surface-border);
+    border-left: 0;
+  }
+
+  .foodbank-contact-item:first-child {
+    border-top: 0;
+  }
+}
+
+.app-shell.theme-light .foodbank-panel,
+.app-shell.theme-light .foodbank-contact-band,
+.app-shell.theme-light .foodbank-form {
+  background: #f7f8fa;
+}
+
+.app-shell.theme-light .foodbank-form input,
+.app-shell.theme-light .foodbank-form select,
+.app-shell.theme-light .foodbank-form textarea {
+  border-color: rgba(17, 24, 39, 0.14);
+  background: #ffffff;
+}
+
+.app-shell.theme-light .foodbank-form option {
+  background: #ffffff;
+  color: #111827;
+}
+
+.app-shell.theme-light.is-foodbank .site-header {
+  color: #ffffff;
+  background: rgba(4, 20, 28, calc(var(--frost-alpha) * 5.5));
+  box-shadow: 0 4px 24px rgba(4, 20, 28, calc(var(--frost-shadow) * 0.35));
+}
+
+.app-shell.theme-light.is-foodbank .nav-link,
+.app-shell.theme-light.is-foodbank .nav-link-active {
+  color: #ffffff;
+}
+
+.app-shell.theme-light.is-foodbank .nav-link-active {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.app-shell.theme-light.is-foodbank .logo-dark {
+  display: block;
+}
+
+.app-shell.theme-light.is-foodbank .logo-light {
+  display: none;
+}
+
+.app-shell.theme-light .foodbank-hero :is(h1, p, span, a),
+.app-shell.theme-light .foodbank-button-primary,
+.app-shell.theme-light .foodbank-submit,
+.app-shell.theme-light .foodbank-quickbar-icon,
+.app-shell.theme-light .foodbank-quickbar-label,
+.app-shell.theme-light .foodbank-quickbar strong {
+  color: #ffffff !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foodbank-button,
+  .foodbank-submit {
+    transition: none;
+  }
+}

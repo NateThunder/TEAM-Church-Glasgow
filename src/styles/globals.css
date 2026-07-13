@@ -718,6 +718,10 @@ body {
     gap: 6px;
   }
 
+  .nav-link {
+    padding: 8px 12px;
+  }
+
   .nav-utility .watch-search {
     width: clamp(160px, 18vw, 280px);
   }

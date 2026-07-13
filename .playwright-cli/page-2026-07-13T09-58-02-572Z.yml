@@ -1,0 +1,220 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - link "Home" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - img "Team Church" [ref=e6]
+    - navigation [ref=e8]:
+      - link "Home" [ref=e9] [cursor=pointer]:
+        - /url: /
+      - link "Watch" [ref=e10] [cursor=pointer]:
+        - /url: /watch
+      - link "About" [ref=e11] [cursor=pointer]:
+        - /url: /about
+      - link "Connect" [ref=e13] [cursor=pointer]:
+        - /url: /connect
+      - link "Foodbank" [ref=e14] [cursor=pointer]:
+        - /url: /foodbank
+      - link "Groups" [ref=e15] [cursor=pointer]:
+        - /url: /groups
+      - link "Serve" [ref=e16] [cursor=pointer]:
+        - /url: /serve
+      - link "Events" [ref=e17] [cursor=pointer]:
+        - /url: /events
+      - link "Give" [ref=e18] [cursor=pointer]:
+        - /url: /give
+    - generic [ref=e19]:
+      - link "▶ Watch Live" [ref=e20] [cursor=pointer]:
+        - /url: /watch?mode=live
+        - generic [ref=e21]: ▶
+        - text: Watch Live
+      - link "♡ Give" [ref=e22] [cursor=pointer]:
+        - /url: /give
+        - generic [ref=e23]: ♡
+        - text: Give
+  - main [ref=e24]:
+    - generic [ref=e25]:
+      - generic [ref=e28]:
+        - text: OUR FOODBANK
+        - heading "Everlasting Foodbank" [level=1] [ref=e29]
+        - paragraph [ref=e30]: Our foodbank serves Dennistoun and beyond with practical food support, encouragement, and a warm welcome.
+        - generic [ref=e31]:
+          - link "Get help" [ref=e32] [cursor=pointer]:
+            - /url: "#foodbank-help"
+          - link "Support the Foodbank" [ref=e33] [cursor=pointer]:
+            - /url: https://www.everlastingfoodbank.org/donate
+      - generic "Foodbank essentials" [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e42]:
+            - generic [ref=e43]: Open
+            - strong [ref=e44]: "First and third Saturdays: 1:00 PM - 3:00 PM"
+            - link "View opening times" [ref=e45] [cursor=pointer]:
+              - /url: "#foodbank-help"
+          - generic [ref=e50]:
+            - generic [ref=e51]: Location
+            - strong [ref=e52]: 12 Whitehill Street, Glasgow G31 2LH
+            - link "Get directions" [ref=e53] [cursor=pointer]:
+              - /url: https://www.google.com/maps/dir/?api=1&destination=12+Whitehill+Street,+Glasgow+G31+2LH
+          - generic [ref=e58]:
+            - generic [ref=e59]: Contact
+            - strong [ref=e60]: "07983021283"
+            - link "Call now" [ref=e61] [cursor=pointer]:
+              - /url: tel:07983021283
+      - region [ref=e62]:
+        - generic [ref=e63]:
+          - text: MISSION AND HISTORY
+          - heading "Mission and history" [level=2] [ref=e64]
+          - paragraph [ref=e65]: The Everlasting Foodbank SCIO was founded in Glasgow in 2014 by the treasurer and Pastor of Everlasting Arms Ministries Church in Dennistoun. The Everlasting Foodbank is a Christian organisation that serves the community of Dennistoun and beyond by providing food to those in need. Although we are a foodbank, we believe that "man cannot live by bread alone" (Matthew 4:4). Our goal is not just to feed people for a day, but to give them the confidence and encouragement they need to prosper every day.
+          - link "Read more on the Foodbank website" [ref=e66] [cursor=pointer]:
+            - /url: https://www.everlastingfoodbank.org/about
+        - img "Team Church community gathering" [ref=e68]
+      - region [ref=e71]:
+        - generic [ref=e72]:
+          - text: THE COMMITTEE
+          - heading "Meet the committee" [level=2] [ref=e73]
+          - paragraph [ref=e74]: The Foodbank committee helps guide the work, steward donations, and support the practical running of the charity.
+        - generic [ref=e75]:
+          - article [ref=e76]:
+            - img "Yinka Ogunnoiki" [ref=e77]
+            - heading "Yinka Ogunnoiki" [level=3] [ref=e78]
+            - paragraph [ref=e79]: Treasurer
+          - article [ref=e80]:
+            - img "Tolani Hassan" [ref=e81]
+            - heading "Tolani Hassan" [level=3] [ref=e82]
+            - paragraph [ref=e83]: Chairman
+          - article [ref=e84]:
+            - img "Unoma Okudo" [ref=e85]
+            - heading "Unoma Okudo" [level=3] [ref=e86]
+            - paragraph [ref=e87]: Financial Secretary
+          - article [ref=e88]:
+            - img "Temilolu Agbede" [ref=e89]
+            - heading "Temilolu Agbede" [level=3] [ref=e90]
+            - paragraph [ref=e91]: Assistant Secretary
+          - article [ref=e92]:
+            - img "Annet Conde" [ref=e93]
+            - heading "Annet Conde" [level=3] [ref=e94]
+            - paragraph [ref=e95]: Secretary
+        - link "View committee on the Foodbank website" [ref=e96] [cursor=pointer]:
+          - /url: https://www.everlastingfoodbank.org/blank
+      - region [ref=e97]:
+        - generic [ref=e98]:
+          - generic [ref=e99]:
+            - text: VOLUNTEER & SUPPORT
+            - heading "Volunteer and support" [level=2] [ref=e100]
+            - paragraph [ref=e101]: Join the team by volunteering, donating food, or giving financially to help the Foodbank serve local people week by week.
+            - generic [ref=e102]:
+              - link "Volunteer with us" [ref=e103] [cursor=pointer]:
+                - /url: "#foodbank-enquiry"
+              - link "Donate instead" [ref=e104] [cursor=pointer]:
+                - /url: https://www.everlastingfoodbank.org/donate
+                - text: Donate instead
+                - generic [ref=e105]: →
+          - generic [ref=e106]:
+            - article [ref=e107]:
+              - generic [ref=e108]: "01"
+              - generic [ref=e109]:
+                - heading "Volunteer opportunities" [level=3] [ref=e110]
+                - paragraph [ref=e111]: There are currently no paid job positions available, but volunteer help is welcome.
+            - article [ref=e112]:
+              - generic [ref=e113]: "02"
+              - generic [ref=e114]:
+                - heading "Ways to support" [level=3] [ref=e115]
+                - paragraph [ref=e116]: You can get involved by volunteering time, donating food and essentials, or supporting the Foodbank financially.
+            - article [ref=e117]:
+              - generic [ref=e118]: "03"
+              - generic [ref=e119]:
+                - heading "Find us" [level=3] [ref=e120]
+                - paragraph [ref=e121]: The Foodbank operates from 12 Whitehill Street, Glasgow G31 2LH.
+            - article [ref=e122]:
+              - generic [ref=e123]: "04"
+              - generic [ref=e124]:
+                - heading "Opening times" [level=3] [ref=e125]
+                - paragraph [ref=e126]: The Foodbank opens on Saturdays, with extended hours on first and third Saturdays. Contact the team before visiting if you need current details.
+        - article [ref=e127]:
+          - heading "Need food support?" [level=2] [ref=e128]
+          - paragraph [ref=e129]: If you need food support, come during the opening times below or contact the Foodbank team directly before visiting.
+          - generic [ref=e130]:
+            - generic [ref=e131]:
+              - term [ref=e132]: First and third Saturdays
+              - definition [ref=e135]: 1:00 PM - 3:00 PM
+            - generic [ref=e136]:
+              - term [ref=e137]: Other Saturdays
+              - definition [ref=e140]: 1:00 PM - 2:00 PM
+            - generic [ref=e141]:
+              - term [ref=e142]: Address
+              - definition [ref=e145]: 12 Whitehill Street, Glasgow G31 2LH
+          - generic [ref=e146]:
+            - link "Contact the Foodbank" [ref=e147] [cursor=pointer]:
+              - /url: https://www.everlastingfoodbank.org/contact-us
+            - link "Get directions" [ref=e148] [cursor=pointer]:
+              - /url: https://www.google.com/maps/dir/?api=1&destination=12+Whitehill+Street,+Glasgow+G31+2LH
+        - article [ref=e149]:
+          - heading "Give or get involved" [level=2] [ref=e150]
+          - paragraph [ref=e151]: Support the Foodbank financially, volunteer your time, or help restock essentials for local families.
+          - paragraph [ref=e152]: Food, clothes and toiletries can be donated directly on Saturdays 12:00 PM - 3:00 PM and Sundays 9:00 AM - 1:30 PM.
+          - generic [ref=e153]:
+            - link "Donate money" [ref=e154] [cursor=pointer]:
+              - /url: https://www.everlastingfoodbank.org/donate
+            - link "Support options" [ref=e155] [cursor=pointer]:
+              - /url: https://www.everlastingfoodbank.org/support-us
+      - region "Foodbank contact details" [ref=e156]:
+        - link [ref=e157] [cursor=pointer]:
+          - /url: tel:07983021283
+          - generic [ref=e161]:
+            - strong [ref=e162]: Phone
+            - paragraph [ref=e163]: "07983021283"
+        - link [ref=e164] [cursor=pointer]:
+          - /url: mailto:contact@everlastingfoodbank.org
+          - generic [ref=e168]:
+            - strong [ref=e169]: Email
+            - paragraph [ref=e170]: contact@everlastingfoodbank.org
+        - link [ref=e171] [cursor=pointer]:
+          - /url: https://www.facebook.com/everlastingfoodbank
+          - generic [ref=e172]: f
+          - generic [ref=e173]:
+            - strong [ref=e174]: Facebook
+            - paragraph [ref=e175]: Everlasting Foodbank
+        - generic [ref=e176]:
+          - generic [ref=e177]: SC
+          - generic [ref=e178]:
+            - strong [ref=e179]: The Everlasting Foodbank SCIO
+            - paragraph [ref=e180]: "Registered Charity: SC047458"
+      - region [ref=e183]:
+        - generic [ref=e184]:
+          - text: GET IN TOUCH
+          - heading "Foodbank enquiry" [level=2] [ref=e185]
+          - paragraph [ref=e186]: Questions about volunteering, donations or partnership? Send the team an enquiry.
+        - generic [ref=e187]:
+          - generic [ref=e188]:
+            - text: Enquiry type
+            - combobox "Enquiry type" [ref=e189]:
+              - option "Choose one" [disabled] [selected]
+              - option "Volunteer"
+              - option "Donate items"
+              - option "Financial giving"
+              - option "Partner with the Foodbank"
+          - generic [ref=e190]:
+            - text: Name
+            - textbox "Name" [ref=e191]:
+              - /placeholder: Your name
+          - generic [ref=e192]:
+            - text: Email
+            - textbox "Email" [ref=e193]:
+              - /placeholder: you@email.com
+          - generic [ref=e194]:
+            - text: Phone number (optional)
+            - textbox "Phone number (optional)" [ref=e195]:
+              - /placeholder: +44 7123 456789
+          - generic [ref=e196]:
+            - text: Message (optional)
+            - textbox "Message (optional)" [ref=e197]:
+              - /placeholder: Share anything useful for the team.
+          - generic [ref=e198]:
+            - checkbox "I agree to be contacted about my Foodbank enquiry." [ref=e199]
+            - generic [ref=e200]: I agree to be contacted about my Foodbank enquiry.
+          - button "Submit enquiry" [ref=e201] [cursor=pointer]
+  - contentinfo [ref=e202]:
+    - paragraph [ref=e203]: © 2026 Team Church Glasgow
+    - paragraph [ref=e204]:
+      - text: Website by
+      - link "Nathan Somevi" [ref=e205] [cursor=pointer]:
+        - /url: https://nathansomevi.dev
