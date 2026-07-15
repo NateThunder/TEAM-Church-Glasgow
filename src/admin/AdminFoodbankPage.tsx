@@ -180,7 +180,7 @@ export default function AdminFoodbankPage() {
         <div className="admin-foodbank-section">
           <h2>Hero</h2>
           <div className="admin-form-grid admin-foodbank-grid">
-            {renderInput('Hero image URL', 'heroImageUrl', '/optimized/home-welcome.jpg')}
+            {renderInput('Hero image URL', 'heroImageUrl', '/foodbank/foodbank%20banner.png')}
             {renderInput('Kicker', 'heroKicker', 'OUR FOODBANK')}
             {renderInput('Title', 'heroTitle', 'Everlasting Foodbank')}
             {renderTextarea('Summary', 'heroSummary', 3)}

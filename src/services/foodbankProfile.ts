@@ -126,7 +126,7 @@ export const FOODBANK_PROFILE_SELECT = [
 
 export const DEFAULT_FOODBANK_PROFILE: FoodbankProfile = {
   profileKey: 'default-foodbank',
-  heroImageUrl: '/optimized/home-welcome.jpg',
+  heroImageUrl: '/foodbank/foodbank%20banner.png',
   heroKicker: 'OUR FOODBANK',
   heroTitle: 'Everlasting Foodbank',
   heroSummary:

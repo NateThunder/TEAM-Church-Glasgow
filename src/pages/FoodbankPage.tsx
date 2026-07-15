@@ -19,6 +19,7 @@ const enquiryOptions = [
 ]
 
 const netlifyFormName = 'foodbank-enquiry'
+const foodbankBannerUrl = '/foodbank/foodbank%20banner.png'
 
 const parseCommitteeMembers = (members: string) =>
   members
@@ -101,7 +102,7 @@ export default function FoodbankPage() {
     <section className="foodbank-page">
       <header
         className="foodbank-hero"
-        style={{ backgroundImage: `url("${profile.heroImageUrl}")` }}
+        style={{ backgroundImage: `url("${foodbankBannerUrl}")` }}
       >
         <div className="foodbank-hero-overlay" />
         <div className="foodbank-hero-inner">
@@ -171,7 +172,7 @@ export default function FoodbankPage() {
           </a>
         </div>
         <div className="foodbank-mission-image">
-          <img src="/optimized/about-story-2.jpg" alt="Team Church community gathering" />
+          <img src="/foodbank/kitchen.png" alt="Foodbank kitchen scene" />
         </div>
       </section>
 

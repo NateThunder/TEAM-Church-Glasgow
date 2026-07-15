@@ -300,7 +300,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
             preload="metadata"
             poster="/Video/TEAM%20Church%20Banner.png"
           >
-            <source src="/Video/team-church-banner_converted_converted.mp4" type="video/mp4" />
+            <source src="/Video/Team Church banner 2.mp4" type="video/mp4" />
             <source src="/Video/team-church-banner-compressed.mp4" type="video/mp4" />
           </video>
             <div className="video-overlay" />
