@@ -7,11 +7,11 @@
 Use `[x]` when an item is complete.
 
 - [ ] Migrate the database to Cloudflare.
-- [ ] Change banner hero video to something more relevant
+- [x] Change banner hero video to something more relevant
 - [ ] Migrate the full website to Cloudflare.
 - [ ] Get photos for the About page team leaders section.
 - [ ] Link the Stripe account to the website.
-- [ ] Merge the Food Bank content into the church website.
+- [x] Merge the Food Bank content into the church website.
 - [ ] On admin page add series to when adding events on calender for example weekly monthly ect
 - [ ] Improve position of down arrow on option field
 
