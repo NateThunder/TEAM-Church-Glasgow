@@ -298,7 +298,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
             muted
             playsInline
             preload="metadata"
-            poster="/Video/TEAM%20Church%20Banner.png"
+            poster="/Video/banner2%20screengrab.png"
           >
             <source src="/Video/Team Church banner 2.mp4" type="video/mp4" />
             <source src="/Video/team-church-banner-compressed.mp4" type="video/mp4" />
