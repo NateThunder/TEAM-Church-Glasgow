@@ -15,7 +15,7 @@ Use `[x]` when an item is complete.
 - [ ] On admin page add series to when adding events on calender for example weekly monthly ect
 - [ ] Improve position of down arrow on option field
 - [ ] fix dropdown clolour on all pages to match page theme and style
-- [ ] fix dropdown arrow on foodbank page, food-bank enquirey form section
+- [ ]  Improve position of down arrow on foodbank page, food-bank enquirey form section
 - [ ] fix look on Meet the committee section of foodbank page
 
 
