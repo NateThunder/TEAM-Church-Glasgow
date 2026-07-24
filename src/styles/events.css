@@ -100,9 +100,9 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(120, 81, 169, 0.35);
   background-color: rgba(8, 20, 28, 0.65);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%237851a9' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 11px 7px;
@@ -110,6 +110,12 @@
   padding: 10px 34px 10px 16px;
   font-weight: 600;
   cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.events-filter select:hover {
+  border-color: rgba(120, 81, 169, 0.6);
 }
 
 .events-state-card {
@@ -704,8 +710,12 @@
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 11px 7px;
-  border-color: rgba(15, 23, 42, 0.12);
+  border-color: rgba(120, 81, 169, 0.3);
   color: #111827;
+}
+
+.app-shell.theme-light .events-filter select:hover {
+  border-color: rgba(120, 81, 169, 0.5);
 }
 
 .app-shell.theme-light .events-state-card,

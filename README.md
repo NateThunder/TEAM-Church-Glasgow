@@ -7,6 +7,7 @@
 Use `[x]` when an item is complete.
 
 - [ ] Migrate the database to Cloudflare.
+- [ ] Add Google anylitics to see visitors
 - [x] Change banner hero video to something more relevant
 - [ ] Migrate the full website to Cloudflare.
 - [ ] Get photos for the About page team leaders section.
@@ -14,6 +15,10 @@ Use `[x]` when an item is complete.
 - [x] Merge the Food Bank content into the church website.
 - [ ] On admin page add series to when adding events on calender for example weekly monthly ect
 - [ ] Improve position of down arrow on option field
+- [ ] fix dropdown clolour on all pages to match page theme and style
+- [ ]  Improve position of down arrow on foodbank page, food-bank enquirey form section
+- [ ] fix look on Meet the committee section of foodbank page
+
 
 ---
 
