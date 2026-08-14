@@ -57,8 +57,10 @@
 }
 
 .events-filter {
+  position: relative;
   display: inline-flex;
   align-items: center;
+  min-width: 160px;
 }
 
 .events-toggle {
@@ -90,20 +92,71 @@
 .events-toggle-button:focus-visible,
 .events-pill-btn:focus-visible,
 .events-card:focus-visible,
-.events-filter select:focus-visible {
+.events-filter-button:focus-visible,
+.events-filter-option:focus-visible {
   outline: 2px solid #7851a9;
   outline-offset: 2px;
 }
 
-.events-filter select {
-  appearance: auto;
+.events-filter-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   background: rgba(8, 20, 28, 0.65);
   color: inherit;
-  padding: 10px 14px 10px 16px;
+  padding: 10px 16px;
   font-weight: 600;
   cursor: pointer;
+}
+
+.events-filter-chevron {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 150ms ease;
+}
+
+.events-filter.is-open .events-filter-chevron {
+  transform: translateY(3px) rotate(225deg);
+}
+
+.events-filter-options {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 12px;
+  background: #08141c;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.32);
+}
+
+.events-filter-option {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #ffffff;
+  padding: 9px 12px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.events-filter-option:hover,
+.events-filter-option:focus-visible,
+.events-filter-option.is-selected {
+  background: #7851a9;
 }
 
 .events-state-card {
@@ -692,10 +745,26 @@
   color: #ffffff;
 }
 
-.app-shell.theme-light .events-filter select {
-  background-color: rgba(255, 255, 255, 0.9);
+.app-shell.theme-light .events-filter-button {
+  background: rgba(255, 255, 255, 0.9);
   border-color: rgba(15, 23, 42, 0.12);
   color: #111827;
+}
+
+.app-shell.theme-light .events-filter-options {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+.app-shell.theme-light .events-filter-option {
+  color: #111827;
+}
+
+.app-shell.theme-light .events-filter-option:hover,
+.app-shell.theme-light .events-filter-option:focus-visible,
+.app-shell.theme-light .events-filter-option.is-selected {
+  background: #7851a9;
+  color: #ffffff;
 }
 
 .app-shell.theme-light .events-state-card,
@@ -801,7 +870,8 @@
     justify-content: space-between;
   }
 
-  .events-filter select {
+  .events-filter,
+  .events-filter-button {
     width: 100%;
   }
 
