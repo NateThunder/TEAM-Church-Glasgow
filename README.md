@@ -16,7 +16,7 @@ Use `[x]` when an item is complete.
 - [x] Merge the Food Bank content into the church website.
 - [ ] On admin page add series to when adding events on calender for example weekly monthly ect
 - [x] Improve position of down arrow on option field
-- [ ] fix dropdown clolour on all pages to match page theme and style
+- [x] fix dropdown clolour on all pages to match page theme and style
 - [ ]  Improve position of down arrow on foodbank page, food-bank enquirey form section
 - [ ] fix look on Meet the committee section of foodbank page
 
