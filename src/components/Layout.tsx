@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock, faLocationDot, faPlay } from '@fortawesome/free-solid-svg-icons'
 import { NavLink, useLocation, useSearchParams } from 'react-router-dom'
@@ -111,7 +111,12 @@ export default function Layout({ navItems, children }: LayoutProps) {
   const headerRef = useRef<HTMLElement | null>(null)
   const serviceBannerRef = useRef<HTMLDivElement | null>(null)
   const hasPassedServiceBannerRef = useRef(false)
+  const brandRef = useRef<HTMLAnchorElement | null>(null)
+  const navCenterRef = useRef<HTMLDivElement | null>(null)
+  const navLinksRef = useRef<HTMLElement | null>(null)
+  const navActionsRef = useRef<HTMLDivElement | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isNavOverflowing, setIsNavOverflowing] = useState(false)
   const [isPortraitMobile, setIsPortraitMobile] = useState(false)
   const [hasPassedServiceBanner, setHasPassedServiceBanner] = useState(false)
   const [theme, setTheme] = useState<'light' | 'dark'>('dark')
@@ -279,6 +284,47 @@ export default function Layout({ navItems, children }: LayoutProps) {
       )
     : navItems
 
+  useLayoutEffect(() => {
+    const header = headerRef.current
+    const brand = brandRef.current
+    const navCenter = navCenterRef.current
+    const navLinks = navLinksRef.current
+    const navActions = navActionsRef.current
+    if (!header || !brand || !navCenter || !navLinks || !navActions) return
+
+    const updateNavFit = () => {
+      // Keep the existing CSS breakpoint as the first rule. Above it, collapse
+      // only when the centre navigation would otherwise need another line.
+      if (window.matchMedia('(max-width: 768px)').matches) {
+        setIsNavOverflowing(false)
+        return
+      }
+
+      const headerStyle = window.getComputedStyle(header)
+      const horizontalPadding =
+        parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight)
+      const availableWidth =
+        header.clientWidth -
+        horizontalPadding -
+        brand.getBoundingClientRect().width -
+        navActions.getBoundingClientRect().width
+      const requiredWidth = navLinks.scrollWidth
+
+      setIsNavOverflowing(requiredWidth > availableWidth + 1)
+    }
+
+    const observer = new ResizeObserver(updateNavFit)
+    observer.observe(header)
+    observer.observe(brand)
+    observer.observe(navCenter)
+    observer.observe(navLinks)
+    observer.observe(navActions)
+    document.fonts?.ready.then(updateNavFit)
+    updateNavFit()
+
+    return () => observer.disconnect()
+  }, [navItemsForHeader, isWatch])
+
   return (
     <div
       className={`app-shell theme-${theme} ${isHome ? 'is-home' : ''} ${
@@ -287,7 +333,9 @@ export default function Layout({ navItems, children }: LayoutProps) {
         isFoodbank ? 'is-foodbank' : ''
       } ${
         isPortraitMobile ? 'is-portrait' : ''
-      } ${hasPassedServiceBanner && theme === 'light' ? 'home-nav-text-dark' : ''}`}
+      } ${hasPassedServiceBanner && theme === 'light' ? 'home-nav-text-dark' : ''} ${
+        isNavOverflowing ? 'nav-is-overflowing' : ''
+      }`}
     >
       {isHome ? (
         <div className="video-hero" aria-hidden="true">
@@ -336,7 +384,13 @@ export default function Layout({ navItems, children }: LayoutProps) {
       ) : null}
 
       <header className="site-header" ref={headerRef}>
-        <NavLink to="/" className="brand" aria-label="Home" onClick={closeMenu}>
+        <NavLink
+          ref={brandRef}
+          to="/"
+          className="brand"
+          aria-label="Home"
+          onClick={closeMenu}
+        >
           <img
             className="brand-logo logo-dark"
             src="/Logo/Logo-white.png"
@@ -369,7 +423,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
                   id="watch-search-mobile"
                   className="watch-search"
                   type="search"
-                  placeholder="Search"
+                  placeholder={isNavOverflowing ? 'Search videos' : 'Search'}
                   value={query}
                   disabled={mode === 'live'}
                   aria-disabled={mode === 'live'}
@@ -431,8 +485,8 @@ export default function Layout({ navItems, children }: LayoutProps) {
             )}
           </div>
         ) : null}
-        <div className="nav-center">
-          <nav className="nav-links">
+        <div className="nav-center" ref={navCenterRef}>
+          <nav className="nav-links" ref={navLinksRef}>
             {navItemsForHeader.map((item) => {
               const link = (
                 <NavLink
@@ -514,7 +568,7 @@ export default function Layout({ navItems, children }: LayoutProps) {
             })}
           </nav>
         </div>
-        <div className="nav-actions">
+        <div className="nav-actions" ref={navActionsRef}>
           <NavLink to="/watch?mode=live" className="action-button action-watch">
             <span className="action-icon">{'\u25B6'}</span>Watch Live
           </NavLink>
