@@ -7,6 +7,7 @@
 Use `[x]` when an item is complete.
 
 - [ ] Migrate the database to Cloudflare.
+- [ ] Switch watch page to hamburger button.
 - [ ] Add Google anylitics to see visitors
 - [x] Change banner hero video to something more relevant
 - [ ] Migrate the full website to Cloudflare.
