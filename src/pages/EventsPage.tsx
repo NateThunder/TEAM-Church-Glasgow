@@ -1,6 +1,6 @@
 import '../styles/events.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   Calendar,
   Navigate,
@@ -45,6 +45,97 @@ const localizer = dateFnsLocalizer({
 
 const categories: EventCategory[] = ['All', 'Worship', 'Community', 'Youth', 'Kids']
 const monthWeekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+function CategoryFilter({
+  value,
+  onChange,
+}: {
+  value: EventCategory
+  onChange: (category: EventCategory) => void
+}) {
+  const [isOpen, setIsOpen] = useState(false)
+  const filterRef = useRef<HTMLDivElement>(null)
+  const optionRefs = useRef<Array<HTMLButtonElement | null>>([])
+
+  useEffect(() => {
+    if (!isOpen) return
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (!filterRef.current?.contains(event.target as Node)) setIsOpen(false)
+    }
+    document.addEventListener('mousedown', closeOnOutsideClick)
+    return () => document.removeEventListener('mousedown', closeOnOutsideClick)
+  }, [isOpen])
+
+  const openAndFocus = (index: number) => {
+    setIsOpen(true)
+    requestAnimationFrame(() => optionRefs.current[index]?.focus())
+  }
+
+  const handleOptionKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) => {
+    if (event.key === 'Escape') {
+      setIsOpen(false)
+      filterRef.current?.querySelector<HTMLButtonElement>('.events-filter-button')?.focus()
+      return
+    }
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
+    event.preventDefault()
+    const direction = event.key === 'ArrowDown' ? 1 : -1
+    const nextIndex = (index + direction + categories.length) % categories.length
+    optionRefs.current[nextIndex]?.focus()
+  }
+
+  return (
+    <div className={`events-filter${isOpen ? ' is-open' : ''}`} ref={filterRef}>
+      <button
+        type="button"
+        className="events-filter-button"
+        aria-label="Filter events by category"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-controls="events-category-list"
+        onClick={() => {
+          if (isOpen) setIsOpen(false)
+          else openAndFocus(categories.indexOf(value))
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault()
+            openAndFocus(categories.indexOf(value))
+          }
+        }}
+      >
+        {value}
+        <span className="events-filter-chevron" aria-hidden="true" />
+      </button>
+      {isOpen ? (
+        <div className="events-filter-options" id="events-category-list" role="listbox">
+          {categories.map((category, index) => (
+            <button
+              key={category}
+              type="button"
+              role="option"
+              aria-selected={category === value}
+              className={`events-filter-option${category === value ? ' is-selected' : ''}`}
+              ref={(element) => {
+                optionRefs.current[index] = element
+              }}
+              onClick={() => {
+                onChange(category)
+                setIsOpen(false)
+              }}
+              onKeyDown={(event) => handleOptionKeyDown(event, index)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  )
+}
 
 const toDate = (value: string) => {
   const date = new Date(value)
@@ -421,21 +512,7 @@ export default function EventsPage() {
                 Calendar
               </button>
             </div>
-            <label className="events-filter">
-              <span className="sr-only">Filter events by category</span>
-              <select
-                value={activeCategory}
-                onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                  setActiveCategory(event.target.value as EventCategory)
-                }
-              >
-                {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <CategoryFilter value={activeCategory} onChange={setActiveCategory} />
           </div>
 
           <div className="events-content-shell">
