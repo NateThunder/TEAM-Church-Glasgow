@@ -245,7 +245,55 @@ body {
   display: flex;
   gap: 10px;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+
+}
+
+@media (min-width: 769px) {
+
+  .nav-is-overflowing .nav-center {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .nav-is-overflowing .nav-toggle {
+    display: inline-flex;
+    position: relative;
+    z-index: 6;
+  }
+
+  .nav-is-overflowing .nav-drawer {
+    display: block;
+  }
+
+  .nav-is-overflowing.is-watch .nav-utility-mobile {
+    display: flex;
+    margin: 0 6px;
+    flex: 0 1 auto;
+    max-width: none;
+    z-index: 1;
+  }
+
+  .nav-is-overflowing.is-watch .nav-utility-mobile .nav-utility {
+    width: auto;
+  }
+
+  .nav-is-overflowing.is-watch .nav-utility-mobile .watch-toggle {
+    display: flex;
+  }
+
+  .nav-is-overflowing.is-groups .nav-utility-mobile {
+    display: flex;
+    margin: 0 6px;
+    flex: 0 1 auto;
+    max-width: none;
+    z-index: 1;
+  }
+
+  .nav-is-overflowing.is-groups .nav-utility-mobile .nav-utility {
+    width: auto;
+  }
 
 }
 
