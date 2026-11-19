@@ -6,6 +6,7 @@
 
 Use `[x]` when an item is complete.
 
+- [ ] Add audio section for podcast and sermons 
 - [ ] Migrate the database to Cloudflare.
 - [ ] Switch watch page to hamburger button.
 - [ ] Add Google anylitics to see visitors
