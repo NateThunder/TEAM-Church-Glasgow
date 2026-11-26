@@ -1,0 +1,41 @@
+.connect-tab {
+  scroll-margin-top: 6rem;
+}
+
+.testimony-page p {
+  line-height: 1.6;
+}
+
+.testimony-page fieldset {
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.testimony-page legend {
+  padding: 0;
+  font-weight: 600;
+}
+
+.testimony-page .testimony-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+
+.testimony-choice input {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  min-height: 0;
+  accent-color: #7851a9;
+}
+
+.testimony-page input,
+.testimony-page textarea {
+  min-width: 0;
+  font: inherit;
+}

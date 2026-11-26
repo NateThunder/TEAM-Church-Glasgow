@@ -1,4 +1,6 @@
+import TestimonyForm from '../components/TestimonyForm'
 import '../styles/connect.css'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -21,7 +23,7 @@ const buildMapSrc = () => {
   return `https://www.openstreetmap.org/export/embed.html?bbox=${left}%2C${bottom}%2C${right}%2C${top}&marker=${CHURCH_LAT}%2C${CHURCH_LNG}`
 }
 
-const tabs = ['Plan a Visit', 'Prayer Request', 'Contact Us'] as const
+const tabs = ['Contact Us', 'Testimony', 'Prayer Request', 'Plan a Visit'] as const
 const NETLIFY_FORM_NAMES = {
   'Plan a Visit': 'connect-plan-visit',
   'Prayer Request': 'connect-prayer-request',
@@ -29,7 +31,10 @@ const NETLIFY_FORM_NAMES = {
 } as const
 
 export default function ConnectPage() {
-  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>('Plan a Visit')
+  const location = useLocation()
+  const navigate = useNavigate()
+  const tabId = (tab: string) => tab.toLowerCase().replaceAll(' ', '-')
+  const activeTab = tabs.find(tab => location.hash === '#' + tabId(tab)) ?? tabs[0]
   const [submitted, setSubmitted] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -205,12 +210,14 @@ export default function ConnectPage() {
             {tabs.map((tab) => (
               <button
                 key={tab}
+                id={tabId(tab)}
+                aria-controls="connect-form-panel"
                 type="button"
                 role="tab"
                 aria-selected={activeTab === tab}
                 className={`connect-tab${activeTab === tab ? ' is-active' : ''}`}
                 onClick={() => {
-                  setActiveTab(tab)
+                  navigate({ search: location.search, hash: tabId(tab) }, { replace: true })
                   setSubmitted(null)
                   setSubmitError(null)
                 }}
@@ -220,9 +227,10 @@ export default function ConnectPage() {
             ))}
           </div>
 
-          <div className="connect-panel">
-            {submitted ? <p className="connect-success">{submitted}</p> : null}
-            {submitError ? <p className="connect-error">{submitError}</p> : null}
+          <div className="connect-panel" id="connect-form-panel" role="tabpanel" aria-labelledby={tabId(activeTab)}>
+            {activeTab === 'Testimony' && <TestimonyForm />}
+            {activeTab !== 'Testimony' && submitted ? <p className="connect-success">{submitted}</p> : null}
+            {activeTab !== 'Testimony' && submitError ? <p className="connect-error">{submitError}</p> : null}
 
             {activeTab === 'Plan a Visit' ? (
               <form

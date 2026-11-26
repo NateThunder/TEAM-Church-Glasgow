@@ -53,6 +53,7 @@ export default function App() {
             {routes.map((route) => (
               <Route key={route.path} path={route.path} element={route.element} />
             ))}
+            <Route path="/testimony" element={<Navigate to="/connect#testimony" replace />} />
             <Route path="/teams" element={<Navigate to="/serve" replace />} />
             <Route path="/admin/login" element={<AdminPage />} />
             <Route path="/admin/reset-password" element={<AdminResetPasswordPage />} />

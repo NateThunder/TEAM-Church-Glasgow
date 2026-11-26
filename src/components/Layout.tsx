@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock, faLocationDot, faPlay } from '@fortawesome/free-solid-svg-icons'
-import { NavLink, useLocation, useSearchParams } from 'react-router-dom'
+import { Link, NavLink, useLocation, useSearchParams } from 'react-router-dom'
 
 interface NavItem {
   path: string
@@ -366,20 +366,25 @@ export default function Layout({ navItems, children }: LayoutProps) {
                     Every Sunday at 11:00 AM{' \u00A0|\u00A0'}12 Whitehill Street, Glasgow G31 2LH
                   </span>
                 </div>
-                <NavLink to="/watch?mode=live" className="hero-service-button">
-                  <span className="hero-service-button-icon" aria-hidden="true">
-                    <FontAwesomeIcon icon={faPlay} />
+                <div className="hero-service-actions">
+                  <NavLink to="/watch?mode=live" className="hero-service-button">
+                    <span className="hero-service-button-icon" aria-hidden="true">
+                      <FontAwesomeIcon icon={faPlay} />
+                    </span>
+                    Watch Live Sunday
+                  </NavLink>
+                  <NavLink to="/connect#testimony" className="hero-service-button">
+                    Share Your Testimony
+                  </NavLink>
+                </div>
+                <NavLink to="/connect" className="hero-cta">
+                  <span className="hero-cta-icon" aria-hidden="true">
+                    <FontAwesomeIcon icon={faLocationDot} />
                   </span>
-                  Watch Live Sunday
+                  Plan a Visit
                 </NavLink>
               </div>
             </div>
-            <NavLink to="/connect" className="hero-cta">
-              <span className="hero-cta-icon" aria-hidden="true">
-                <FontAwesomeIcon icon={faLocationDot} />
-            </span>
-            Plan a Visit
-          </NavLink>
         </div>
       ) : null}
 
@@ -625,6 +630,10 @@ export default function Layout({ navItems, children }: LayoutProps) {
                 <span className="nav-link-label">{item.label}</span>
               </NavLink>
             ))}
+            <Link className="nav-mobile-link" to="/connect#testimony" onClick={closeMenu}>
+              <span className="nav-link-icon"><DrawerIcon name="Connect" /></span>
+              <span className="nav-link-label">Share Your Testimony</span>
+            </Link>
           </nav>
           <div className="nav-mobile-actions">
             <NavLink
