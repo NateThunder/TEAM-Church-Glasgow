@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faLocationDot,
   faPeopleGroup,
-  faHandHoldingHeart,
   faHandsPraying,
+  faComment,
 } from '@fortawesome/free-solid-svg-icons'
 import { getLatestVideos, type YouTubeVideo } from '../services/youtube'
 
@@ -48,11 +48,26 @@ export default function HomePage() {
 
   const nextSteps = [
     {
+      title: 'Share Your Testimony',
+      description: 'Tell us what God has been doing in your life.',
+      linkText: 'Share your story',
+      to: '/connect#testimony',
+      icon: faComment,
+    },
+    {
+      title: 'Need Prayer?',
+      description:
+        'We believe in the power of prayer. Let us pray with you and for you.',
+      linkText: 'Submit Request',
+      to: '/connect#prayer-request',
+      icon: faHandsPraying,
+    },
+    {
       title: 'New Here?',
       description:
         "We’d love to meet you. Plan your first visit and see what to expect.",
       linkText: 'Plan a Visit',
-      to: '/connect',
+      to: '/connect#plan-a-visit',
       icon: faLocationDot,
     },
     {
@@ -62,21 +77,6 @@ export default function HomePage() {
       linkText: 'Find a Group',
       to: '/groups',
       icon: faPeopleGroup,
-    },
-    {
-      title: 'Serve With Us',
-      description: "Use your gifts to make a difference. There’s a place for everyone.",
-      linkText: 'Get Involved',
-      to: '/serve',
-      icon: faHandHoldingHeart,
-    },
-    {
-      title: 'Need Prayer?',
-      description:
-        'We believe in the power of prayer. Let us pray with you and for you.',
-      linkText: 'Submit Request',
-      to: '/connect',
-      icon: faHandsPraying,
     },
   ]
 

@@ -6,7 +6,6 @@
   min-height: 420px;
   overflow: hidden;
   z-index: 0;
-  --service-banner-height: 80px;
 
 }
 
@@ -92,10 +91,25 @@
 
 }
 
+.hero-service-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (min-width: 769px) {
+  .hero-service-actions {
+    flex: 0 0 auto;
+    flex-direction: row;
+  }
+}
+
 .hero-service-button {
 
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
   gap: 10px;
   padding: 10px 20px;
   border-radius: 999px;
@@ -139,7 +153,7 @@
 
   position: absolute;
   left: 50%;
-  bottom: calc(var(--service-banner-height) + 16px);
+  bottom: calc(100% + 16px);
   transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
@@ -167,10 +181,6 @@
 }
 
 @media (max-width: 768px) {
-  .video-hero {
-    --service-banner-height: 150px;
-  }
-
   .hero-cta {
     font-size: 12px;
     padding: 8px 16px;
@@ -232,7 +242,6 @@
 @media (max-width: 1024px) and (orientation: landscape) {
 
   .video-hero {
-    --service-banner-height: 120px;
   }
 
 }
