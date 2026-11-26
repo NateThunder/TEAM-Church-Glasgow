@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { submitNetlifyForm } from '../services/netlifyForms'
 import '../styles/connect.css'
 import '../styles/testimony.css'
@@ -10,6 +10,13 @@ const questions = [
 
 export default function TestimonyForm() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+
+  useEffect(() => {
+    if (status !== 'sent') return
+
+    const timeout = window.setTimeout(() => setStatus('idle'), 3000)
+    return () => window.clearTimeout(timeout)
+  }, [status])
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
