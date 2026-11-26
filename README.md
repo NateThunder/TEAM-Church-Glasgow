@@ -5,7 +5,7 @@
 ## Project Todo
 
 Use `[x]` when an item is complete.
-
+- [ ] Add testimony form
 - [ ] Add audio section for podcast and sermons 
 - [ ] Migrate the database to Cloudflare.
 - [ ] Switch watch page to hamburger button.
